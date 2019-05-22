@@ -18,8 +18,11 @@ namespace LayItOut.Components
             OnArrange();
         }
 
+        public SizeUnit Width { get; set; }
+        public SizeUnit Height { get; set; }
+
         protected virtual void OnArrange() { }
-        protected virtual Size OnMeasure(Size size) => Size.Empty;
+        protected virtual Size OnMeasure(Size size) => Size.Empty.ApplyIfSet(Width, Height);
 
         public Size DesiredSize { get; private set; }
         public Rectangle Layout { get; private set; }

@@ -8,6 +8,9 @@ namespace LayItOut.Components
         void Measure(Size size);
         void Arrange(Rectangle area);
 
+        SizeUnit Width { get; }
+        SizeUnit Height { get; }
+
         Size DesiredSize { get; }
         Rectangle Layout { get; }
         IEnumerable<IComponent> GetChildren();

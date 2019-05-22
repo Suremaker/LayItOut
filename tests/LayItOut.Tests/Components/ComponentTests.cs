@@ -36,6 +36,20 @@ namespace LayItOut.Tests.Components
         }
 
         [Fact]
+        public void Component_Measure_should_honor_Width_and_Height_but_otherwise_set_0()
+        {
+            var size = new Size(2, 3);
+            var component = new Component { Width = 10, Height = SizeUnit.Unlimited };
+            component.Measure(size);
+            component.DesiredSize.ShouldBe(new Size(10, 0));
+
+            component.Width = SizeUnit.Unlimited;
+            component.Height = 10;
+            component.Measure(size);
+            component.DesiredSize.ShouldBe(new Size(0, 10));
+        }
+
+        [Fact]
         public void Arrange_should_update_layout()
         {
             var expected = new Rectangle(5, 10, 15, 20);
