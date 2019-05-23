@@ -20,7 +20,7 @@ namespace LayItOut.Components
         public void Arrange(Rectangle area)
         {
             var actualSize = GetActualSize(area.Size);
-            var alignment = GetAlignmentShift(area.Size - actualSize);
+            var alignment = Alignment.GetShift(area.Size - actualSize);
             Layout = new Rectangle(area.Location + alignment, actualSize);
             OnArrange();
         }
@@ -28,21 +28,6 @@ namespace LayItOut.Components
         public virtual IEnumerable<IComponent> GetChildren() => Enumerable.Empty<IComponent>();
         protected virtual void OnArrange() { }
         protected virtual Size OnMeasure(Size size) => Size.Empty;
-
-        private Size GetAlignmentShift(Size remaining)
-        {
-            if (Alignment.Horizontal == HorizontalAlignment.Center)
-                remaining.Width /= 2;
-            else if (Alignment.Horizontal == HorizontalAlignment.Left)
-                remaining.Width = 0;
-
-            if (Alignment.Vertical == VerticalAlignment.Center)
-                remaining.Height /= 2;
-            else if (Alignment.Vertical == VerticalAlignment.Top)
-                remaining.Height = 0;
-
-            return remaining;
-        }
 
         private Size GetActualSize(Size areaSize)
         {

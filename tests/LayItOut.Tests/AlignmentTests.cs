@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using Shouldly;
 using Xunit;
@@ -30,6 +31,39 @@ namespace LayItOut.Tests
         {
             Alignment.Center.ShouldBe(new Alignment(VerticalAlignment.Center, HorizontalAlignment.Center));
             Alignment.TopLeft.ShouldBe(new Alignment(VerticalAlignment.Top, HorizontalAlignment.Left));
+        }
+
+        [Theory]
+        [InlineData(HorizontalAlignment.Center, 45, 22)]
+        [InlineData(HorizontalAlignment.Left, 45, 0)]
+        [InlineData(HorizontalAlignment.Right, 45, 45)]
+        [InlineData(HorizontalAlignment.Right, -1, 0)]
+        [InlineData(HorizontalAlignment.Left, -1, 0)]
+        [InlineData(HorizontalAlignment.Center, -1, 0)]
+        public void GetShift_should_calculate_horizontal_shift(HorizontalAlignment alignment, int remaining, int result)
+        {
+            alignment.GetShift(remaining).ShouldBe(new Size(result,0));
+        }
+
+        [Theory]
+        [InlineData(VerticalAlignment.Center, 45, 22)]
+        [InlineData(VerticalAlignment.Top, 45, 0)]
+        [InlineData(VerticalAlignment.Bottom, 45, 45)]
+        [InlineData(VerticalAlignment.Bottom, -1, 0)]
+        [InlineData(VerticalAlignment.Top, -1, 0)]
+        [InlineData(VerticalAlignment.Center, -1, 0)]
+        public void GetShift_should_calculate_vertical_shift(VerticalAlignment alignment, int remaining, int result)
+        {
+            alignment.GetShift(remaining).ShouldBe(new Size(0,result));
+        }
+
+        [Theory]
+        [InlineData(VerticalAlignment.Center, HorizontalAlignment.Center, 31, 41, 15, 20)]
+        [InlineData(VerticalAlignment.Bottom, HorizontalAlignment.Left, 31, 41, 0, 41)]
+        [InlineData(VerticalAlignment.Top, HorizontalAlignment.Right, 31, 41, 31, 0)]
+        public void GetShift_should_calculate_alignment_shift(VerticalAlignment vertical, HorizontalAlignment horizontal, int width, int height, int expectedWidth, int expectedHeight)
+        {
+            new Alignment(vertical, horizontal).GetShift(new Size(width, height)).ShouldBe(new Size(expectedWidth, expectedHeight));
         }
     }
 }

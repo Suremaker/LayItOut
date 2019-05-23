@@ -11,20 +11,7 @@ namespace LayItOut.Tests.Components
     public class StackTests
     {
         [Fact]
-        public void Stack_can_have_multiple_children()
-        {
-            var item1 = Mock.Of<IComponent>();
-            var item2 = Mock.Of<IComponent>();
-
-            var stack = new Stack();
-            stack.AddComponent(item1);
-            stack.AddComponent(item2);
-
-            stack.GetChildren().ShouldBe(new[] { item1, item2 });
-        }
-
-        [Fact]
-        public void Measure_should_return_stretch_to_fit_the_biggest_component()
+        public void Measure_should_stretch_to_fit_the_biggest_component()
         {
             var stack = new Stack();
             stack.AddComponent(new FixedMeasureComponent(10, 20));

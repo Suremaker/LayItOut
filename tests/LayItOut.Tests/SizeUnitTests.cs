@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Shouldly;
 using Xunit;
 // ReSharper disable EqualExpressionComparison
@@ -89,6 +90,13 @@ namespace LayItOut.Tests
             Assert.True(SizeUnit.NotSet != SizeUnit.Absolute(10));
             Assert.True(SizeUnit.Absolute(10) != SizeUnit.Unlimited);
             Assert.True(SizeUnit.Absolute(10) != SizeUnit.Absolute(11));
+        }
+
+        [Fact]
+        public void Distribute_returns_proper_values()
+        {
+            SizeUnit.Distribute(100, 7).ShouldBe(new[] { 14, 14, 14, 15, 14, 14, 15 });
+            SizeUnit.Distribute(100, 999999).Sum().ShouldBe(100);
         }
     }
 }

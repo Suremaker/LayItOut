@@ -63,8 +63,30 @@ namespace LayItOut
         {
             unchecked
             {
-                return (Value * 397) ^ (int) Mode;
+                return (Value * 397) ^ (int)Mode;
             }
+        }
+
+        public static int[] Distribute(int size, int parts)
+        {
+            if (parts <= 0)
+                return Array.Empty<int>();
+            var result = new int[parts];
+            float accumulated = 0;
+            int total = 0;
+            var step = size / (float)parts;
+
+            for (var i = 0; i < parts; ++i)
+            {
+                accumulated += step;
+                var integer = (int)accumulated;
+                result[i] = integer;
+                total += integer;
+                accumulated -= integer;
+            }
+
+            result[parts - 1] += size - total;
+            return result;
         }
     }
 }

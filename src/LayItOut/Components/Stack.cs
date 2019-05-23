@@ -1,23 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 
 namespace LayItOut.Components
 {
-    public class Stack : Component, IContainer
+    public class Stack : Container
     {
-        private readonly List<IComponent> _children = new List<IComponent>();
-        public void AddComponent(IComponent child)
-        {
-            _children.Add(child);
-        }
-
-        public override IEnumerable<IComponent> GetChildren() => _children;
-
         protected override Size OnMeasure(Size size)
         {
             var result = Size.Empty;
-            foreach (var component in _children)
+            foreach (var component in GetChildren())
             {
                 component.Measure(size);
                 result.Width = Math.Max(result.Width, component.DesiredSize.Width);
@@ -29,7 +20,7 @@ namespace LayItOut.Components
 
         protected override void OnArrange()
         {
-            foreach (var child in _children)
+            foreach (var child in GetChildren())
                 child.Arrange(Layout);
         }
     }
