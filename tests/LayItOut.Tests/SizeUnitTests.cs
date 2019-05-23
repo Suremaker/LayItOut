@@ -1,5 +1,9 @@
-﻿using Shouldly;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using Shouldly;
 using Xunit;
+// ReSharper disable EqualExpressionComparison
+#pragma warning disable CS1718
 
 namespace LayItOut.Tests
 {
@@ -51,6 +55,40 @@ namespace LayItOut.Tests
             SizeUnit.Unlimited.ApplyIfSet(input).ShouldBe(10);
             SizeUnit.NotSet.ApplyIfSet(input).ShouldBe(10);
             SizeUnit.Absolute(30).ApplyIfSet(input).ShouldBe(30);
+        }
+
+        [Fact]
+        public void Parse_should_properly_interpret_values()
+        {
+            SizeUnit.Parse("*").ShouldBe(SizeUnit.Unlimited);
+            SizeUnit.Parse("").ShouldBe(SizeUnit.NotSet);
+            SizeUnit.Parse(null).ShouldBe(SizeUnit.NotSet);
+            SizeUnit.Parse(" ").ShouldBe(SizeUnit.NotSet);
+            SizeUnit.Parse("15").ShouldBe(SizeUnit.Absolute(15));
+
+            Assert.Throws<ArgumentException>(() => SizeUnit.Parse("x")).Message.ShouldStartWith("Provided value is not a valid SizeUnit: x");
+        }
+
+        [Fact]
+        public void SizeUnit_should_have_equality_operators()
+        {
+            Assert.True(SizeUnit.Unlimited == SizeUnit.Unlimited);
+            Assert.True(SizeUnit.NotSet == SizeUnit.NotSet);
+            Assert.True(SizeUnit.Absolute(10) == SizeUnit.Absolute(10));
+
+            Assert.False(SizeUnit.Unlimited == SizeUnit.NotSet);
+            Assert.False(SizeUnit.NotSet == SizeUnit.Absolute(10));
+            Assert.False(SizeUnit.Absolute(10) == SizeUnit.Unlimited);
+            Assert.False(SizeUnit.Absolute(10) == SizeUnit.Absolute(11));
+
+            Assert.False(SizeUnit.Unlimited != SizeUnit.Unlimited);
+            Assert.False(SizeUnit.NotSet != SizeUnit.NotSet);
+            Assert.False(SizeUnit.Absolute(10) != SizeUnit.Absolute(10));
+
+            Assert.True(SizeUnit.Unlimited != SizeUnit.NotSet);
+            Assert.True(SizeUnit.NotSet != SizeUnit.Absolute(10));
+            Assert.True(SizeUnit.Absolute(10) != SizeUnit.Unlimited);
+            Assert.True(SizeUnit.Absolute(10) != SizeUnit.Absolute(11));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System;
+using System.Diagnostics.Contracts;
 
 namespace LayItOut
 {
@@ -40,5 +41,30 @@ namespace LayItOut
 
         [Pure]
         public int ApplyIfSet(int value) => IsAbsolute ? Value : value;
+
+        public static SizeUnit Parse(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return NotSet;
+
+            if (value == "*")
+                return Unlimited;
+
+            return int.TryParse(value, out var absolute)
+                ? Absolute(absolute)
+                : throw new ArgumentException($"Provided value is not a valid {nameof(SizeUnit)}: {value}", nameof(value));
+        }
+
+        public static bool operator ==(SizeUnit x, SizeUnit y) => x.Equals(y);
+        public static bool operator !=(SizeUnit x, SizeUnit y) => !x.Equals(y);
+        public bool Equals(SizeUnit other) => Value == other.Value && Mode == other.Mode;
+        public override bool Equals(object obj) => obj is SizeUnit other && Equals(other);
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (Value * 397) ^ (int) Mode;
+            }
+        }
     }
 }
