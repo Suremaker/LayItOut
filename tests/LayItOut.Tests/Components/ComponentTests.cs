@@ -1,6 +1,6 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using LayItOut.Components;
+using LayItOut.Tests.Components.TestHelpers;
 using Shouldly;
 using Xunit;
 
@@ -8,15 +8,6 @@ namespace LayItOut.Tests.Components
 {
     public class ComponentTests
     {
-        class TestableComponent : Component
-        {
-            public Action<Rectangle> OnArrangeCallback = _ => { };
-            public Func<Size, Size> OnMeasureCallback = size => size;
-
-            protected override Size OnMeasure(Size size) => OnMeasureCallback(size);
-            protected override void OnArrange() => OnArrangeCallback(Layout);
-        }
-
         [Fact]
         public void GetChildren_returns_empty_collection()
         {

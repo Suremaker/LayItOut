@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 
 namespace LayItOut
 {
     public struct Spacer
     {
+        public static readonly Spacer None = new Spacer();
+
         public SizeUnit Top { get; }
         public SizeUnit Left { get; }
         public SizeUnit Bottom { get; }
@@ -29,6 +32,9 @@ namespace LayItOut
 
         public static Spacer Parse(string value)
         {
+            if (string.IsNullOrWhiteSpace(value))
+                return None;
+
             try
             {
                 var parts = value.Trim().Split(' ').Select(SizeUnit.Parse).ToArray();
@@ -49,5 +55,7 @@ namespace LayItOut
         {
             return $"{Top} {Left} {Bottom} {Right}";
         }
+
+        public Size GetAbsoluteSize() => new Size(Left.AbsoluteOrDefault() + Right.AbsoluteOrDefault(), Top.AbsoluteOrDefault() + Bottom.AbsoluteOrDefault());
     }
 }

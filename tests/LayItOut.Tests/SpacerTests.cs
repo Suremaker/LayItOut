@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using Shouldly;
 using Xunit;
 
@@ -49,12 +50,22 @@ namespace LayItOut.Tests
         [Fact]
         public void Parse_should_properly_parse_the_spacer()
         {
+            Spacer.Parse("").ShouldBe(Spacer.None);
             Spacer.Parse("10").ShouldBe(new Spacer(10));
             Spacer.Parse("15 20").ShouldBe(new Spacer(15, 20));
             Spacer.Parse("15 20 30 40").ShouldBe(new Spacer(15, 20, 30, 40));
             Spacer.Parse(" 15 20 30 40 ").ShouldBe(new Spacer(15, 20, 30, 40));
             Assert.Throws<ArgumentException>(() => Spacer.Parse("x")).Message.ShouldStartWith("Provided value is not a valid Spacer: x");
             Assert.Throws<ArgumentException>(() => Spacer.Parse("10 20 30")).Message.ShouldStartWith("Provided value is not a valid Spacer: 10 20 30");
+        }
+
+        [Theory]
+        [InlineData("10 5 20 7", 12, 30)]
+        [InlineData("* 5 20 -", 5, 20)]
+        [InlineData("20 * - 5", 5, 20)]
+        public void GetAbsoluteSize_should_return_size(string spacer, int expectedWidth, int expectedHeight)
+        {
+            Spacer.Parse(spacer).GetAbsoluteSize().ShouldBe(new Size(expectedWidth, expectedHeight));
         }
     }
 }

@@ -40,11 +40,11 @@ namespace LayItOut
         public static implicit operator SizeUnit(int value) => Absolute(value);
 
         [Pure]
-        public int ApplyIfSet(int value) => IsAbsolute ? Value : value;
+        public int AbsoluteOrDefault(int defaultValue = 0) => IsAbsolute ? Value : defaultValue;
 
         public static SizeUnit Parse(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(value) || value == "-")
                 return NotSet;
 
             if (value == "*")
@@ -53,6 +53,36 @@ namespace LayItOut
             return int.TryParse(value, out var absolute)
                 ? Absolute(absolute)
                 : throw new ArgumentException($"Provided value is not a valid {nameof(SizeUnit)}: {value}", nameof(value));
+        }
+
+        public int GetValue(Func<int> unlimitedValueFn, int notSetValue = 0)
+        {
+            switch (Mode)
+            {
+                case SizeMode.NotSet:
+                    return notSetValue;
+                case SizeMode.Unlimited:
+                    return unlimitedValueFn();
+                case SizeMode.Absolute:
+                    return Value;
+                default:
+                    throw new NotSupportedException($"{Mode} is not supported.");
+            }
+        }
+
+        public int GetValue(int unlimitedValueFn, int notSetValue = 0)
+        {
+            switch (Mode)
+            {
+                case SizeMode.NotSet:
+                    return notSetValue;
+                case SizeMode.Unlimited:
+                    return unlimitedValueFn;
+                case SizeMode.Absolute:
+                    return Value;
+                default:
+                    throw new NotSupportedException($"{Mode} is not supported.");
+            }
         }
 
         public static bool operator ==(SizeUnit x, SizeUnit y) => x.Equals(y);

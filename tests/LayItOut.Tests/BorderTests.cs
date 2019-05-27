@@ -9,6 +9,8 @@ namespace LayItOut.Tests
         [Fact]
         public void Parse_should_create_border()
         {
+            Border.Parse("").ShouldBe(Border.None);
+
             Border.Parse("10 red").ShouldBe(new Border(new BorderLine(10, Color.Red)));
 
             Border.Parse("15 red; 10 blue").ShouldBe(new Border(

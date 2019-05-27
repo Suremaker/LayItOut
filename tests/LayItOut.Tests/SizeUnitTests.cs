@@ -49,12 +49,12 @@ namespace LayItOut.Tests
         }
 
         [Fact]
-        public void ApplyIfSet_should_apply_proper_value()
+        public void AbsoluteOrDefault_should_apply_proper_value()
         {
             var input = 10;
-            SizeUnit.Unlimited.ApplyIfSet(input).ShouldBe(10);
-            SizeUnit.NotSet.ApplyIfSet(input).ShouldBe(10);
-            SizeUnit.Absolute(30).ApplyIfSet(input).ShouldBe(30);
+            SizeUnit.Unlimited.AbsoluteOrDefault(input).ShouldBe(10);
+            SizeUnit.NotSet.AbsoluteOrDefault(input).ShouldBe(10);
+            SizeUnit.Absolute(30).AbsoluteOrDefault(input).ShouldBe(30);
         }
 
         [Fact]
@@ -62,6 +62,7 @@ namespace LayItOut.Tests
         {
             SizeUnit.Parse("*").ShouldBe(SizeUnit.Unlimited);
             SizeUnit.Parse("").ShouldBe(SizeUnit.NotSet);
+            SizeUnit.Parse("-").ShouldBe(SizeUnit.NotSet);
             SizeUnit.Parse(null).ShouldBe(SizeUnit.NotSet);
             SizeUnit.Parse(" ").ShouldBe(SizeUnit.NotSet);
             SizeUnit.Parse("15").ShouldBe(SizeUnit.Absolute(15));
@@ -96,6 +97,16 @@ namespace LayItOut.Tests
         {
             SizeUnit.Distribute(100, 7).ShouldBe(new[] { 14, 14, 14, 15, 14, 14, 15 });
             SizeUnit.Distribute(100, 999999).Sum().ShouldBe(100);
+        }
+
+        [Theory]
+        [InlineData("*", 2)]
+        [InlineData("-", -1)]
+        [InlineData("5", 5)]
+        public void GetValue_returns_proper_value(string value, int expected)
+        {
+            SizeUnit.Parse(value).GetValue(() => 2, -1).ShouldBe(expected);
+            SizeUnit.Parse(value).GetValue(2, -1).ShouldBe(expected);
         }
     }
 }

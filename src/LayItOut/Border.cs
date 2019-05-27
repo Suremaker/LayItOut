@@ -5,6 +5,7 @@ namespace LayItOut
 {
     public struct Border
     {
+        public static readonly Border None = new Border();
         public BorderLine Top { get; }
         public BorderLine Left { get; }
         public BorderLine Bottom { get; }
