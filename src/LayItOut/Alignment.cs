@@ -9,7 +9,8 @@ namespace LayItOut
 
         public HorizontalAlignment Horizontal { get; }
         public VerticalAlignment Vertical { get; }
-
+        public Alignment(VerticalAlignment vertical) : this(vertical, default) { }
+        public Alignment(HorizontalAlignment horizontal) : this(default, horizontal) { }
         public Alignment(VerticalAlignment vertical, HorizontalAlignment horizontal)
         {
             Horizontal = horizontal;

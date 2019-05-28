@@ -13,7 +13,7 @@ namespace LayItOut.Components
         public Color BackgroundColor { get; set; }
         public Rectangle BorderLayout { get; private set; }
         public Rectangle PaddingLayout { get; private set; }
-        public Spacer ActualBorder => new Spacer(PaddingLayout.Top - BorderLayout.Top, PaddingLayout.Left - BorderLayout.Left, BorderLayout.Bottom - PaddingLayout.Bottom, BorderLayout.Right - PaddingLayout.Right);
+        public Spacer ActualBorder { get; private set; }
 
         public override IEnumerable<IComponent> GetChildren()
         {
@@ -38,8 +38,11 @@ namespace LayItOut.Components
 
             BorderLayout = Layout.ShrinkBy(GetRealSize(Margin, widths, heights));
             PaddingLayout = BorderLayout.ShrinkBy(GetRealSize(Border.AsSpacer(), widths, heights));
+            ActualBorder = CalculateActualBorder(PaddingLayout, BorderLayout);
             Inner?.Arrange(PaddingLayout.ShrinkBy(GetRealSize(Padding, widths, heights)));
         }
+
+        private static Spacer CalculateActualBorder(Rectangle padding, Rectangle border) => new Spacer(padding.Top - border.Top, padding.Left - border.Left,border.Bottom - padding.Bottom, border.Right - padding.Right);
 
         private (int[] widths, int[] heights) WithExpandable(params Spacer[] spacers)
         {

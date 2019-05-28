@@ -8,6 +8,13 @@ namespace LayItOut.Tests
     public class AlignmentTests
     {
         [Fact]
+        public void Ctor_should_allow_partial_constructions()
+        {
+            new Alignment(HorizontalAlignment.Right).ShouldBe(new Alignment(VerticalAlignment.Top, HorizontalAlignment.Right));
+            new Alignment(VerticalAlignment.Bottom).ShouldBe(new Alignment(VerticalAlignment.Bottom, HorizontalAlignment.Left));
+        }
+
+        [Fact]
         public void Parse_should_properly_interpret_values()
         {
             Alignment.Parse("center").ShouldBe(new Alignment(VerticalAlignment.Center, HorizontalAlignment.Center));
@@ -40,7 +47,7 @@ namespace LayItOut.Tests
         [InlineData(HorizontalAlignment.Center, -1, 0)]
         public void GetShift_should_calculate_horizontal_shift(HorizontalAlignment alignment, int remaining, int result)
         {
-            alignment.GetShift(remaining).ShouldBe(new Size(result,0));
+            alignment.GetShift(remaining).ShouldBe(new Size(result, 0));
         }
 
         [Theory]
@@ -52,7 +59,7 @@ namespace LayItOut.Tests
         [InlineData(VerticalAlignment.Center, -1, 0)]
         public void GetShift_should_calculate_vertical_shift(VerticalAlignment alignment, int remaining, int result)
         {
-            alignment.GetShift(remaining).ShouldBe(new Size(0,result));
+            alignment.GetShift(remaining).ShouldBe(new Size(0, result));
         }
 
         [Theory]
