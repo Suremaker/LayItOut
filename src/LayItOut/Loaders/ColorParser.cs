@@ -2,10 +2,11 @@
 using System.Drawing;
 using System.Globalization;
 
-namespace LayItOut
+namespace LayItOut.Loaders
 {
     public static class ColorParser
     {
+        [AttributeParser]
         public static Color Parse(string value)
         {
             if (string.IsNullOrWhiteSpace(value))

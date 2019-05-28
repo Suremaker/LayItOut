@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using LayItOut.Loaders;
 
 namespace LayItOut
 {
@@ -42,6 +43,7 @@ namespace LayItOut
         [Pure]
         public int AbsoluteOrDefault(int defaultValue = 0) => IsAbsolute ? Value : defaultValue;
 
+        [AttributeParser]
         public static SizeUnit Parse(string value)
         {
             if (string.IsNullOrWhiteSpace(value) || value == "-")

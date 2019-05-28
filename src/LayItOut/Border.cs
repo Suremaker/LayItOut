@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using LayItOut.Loaders;
 
 namespace LayItOut
 {
@@ -30,6 +31,7 @@ namespace LayItOut
         {
         }
 
+        [AttributeParser]
         public static Border Parse(string value)
         {
             var parts = value.Split(';').Select(BorderLine.Parse).ToArray();

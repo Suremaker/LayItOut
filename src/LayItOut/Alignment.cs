@@ -1,4 +1,5 @@
 ﻿using System;
+using LayItOut.Loaders;
 
 namespace LayItOut
 {
@@ -24,6 +25,7 @@ namespace LayItOut
             return $"{Vertical} {Horizontal}";
         }
 
+        [AttributeParser]
         public static Alignment Parse(string value)
         {
             if (string.Equals(value, "center", StringComparison.OrdinalIgnoreCase))

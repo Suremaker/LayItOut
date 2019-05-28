@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using LayItOut.Loaders;
 
 namespace LayItOut
 {
@@ -15,6 +16,7 @@ namespace LayItOut
             Color = color;
         }
 
+        [AttributeParser]
         public static BorderLine Parse(string value)
         {
             if (string.IsNullOrWhiteSpace(value))

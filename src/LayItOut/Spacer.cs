@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using LayItOut.Loaders;
 
 namespace LayItOut
 {
@@ -30,6 +31,7 @@ namespace LayItOut
         {
         }
 
+        [AttributeParser]
         public static Spacer Parse(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
