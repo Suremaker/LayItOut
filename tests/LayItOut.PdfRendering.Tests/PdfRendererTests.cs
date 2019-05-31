@@ -1,19 +1,24 @@
-using System;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
+using System.Text;
 using LayItOut.Components;
+using PdfSharp;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 using Xunit;
 
-namespace LayItOut.BitmapRendering.Tests
+namespace LayItOut.PdfRendering.Tests
 {
-    public class BitmapRendererTests
+    public class PdfRendererTests
     {
+        static PdfRendererTests()
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
         [Fact]
         public void It_should_render_panels_and_hboxes()
         {
-            var renderer = new BitmapRenderer();
+            var renderer = new PdfRenderer();
 
             var hbox = new HBox { Alignment = Alignment.Center };
             hbox.AddComponent(new Panel { BackgroundColor = Color.Yellow, Padding = new Spacer(5), Border = new Border(new BorderLine(3, Color.Red)), Alignment = new Alignment(VerticalAlignment.Bottom) });
@@ -29,11 +34,12 @@ namespace LayItOut.BitmapRendering.Tests
             };
             var form = new Form(panel);
 
-            using (var bmp = new Bitmap(50, 40, PixelFormat.Format24bppRgb))
-            {
-                renderer.Render(form, bmp);
-                BitmapComparer.CompareBitmaps("panels_hbox", bmp);
-            }
+            var doc = new PdfDocument();
+            var page = doc.AddPage();
+            page.Width = 50;
+            page.Height = 40;
+            renderer.Render(form, page);
+            PdfImageComparer.ComparePdfs("panels_hbox", doc);
         }
     }
 }
