@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using LayItOut.Components;
-using LayItOut.Tests.Components.TestHelpers;
+using LayItOut.Tests.TestHelpers;
 using Shouldly;
 using Xunit;
 
@@ -21,7 +21,7 @@ namespace LayItOut.Tests.Components
             {
                 OnMeasureCallback = s => new Size(100, 200)
             };
-            component.Measure(new Size(5, 10));
+            component.Measure(new Size(5, 10), TestRenderingContext.Instance);
             component.DesiredSize.ShouldBe(new Size(100, 200));
         }
 
@@ -30,12 +30,12 @@ namespace LayItOut.Tests.Components
         {
             var size = new Size(2, 3);
             var component = new Component { Width = 10, Height = SizeUnit.Unlimited };
-            component.Measure(size);
+            component.Measure(size, TestRenderingContext.Instance);
             component.DesiredSize.ShouldBe(new Size(10, 0));
 
             component.Width = SizeUnit.Unlimited;
             component.Height = 10;
-            component.Measure(size);
+            component.Measure(size, TestRenderingContext.Instance);
             component.DesiredSize.ShouldBe(new Size(0, 10));
         }
 
@@ -60,7 +60,7 @@ namespace LayItOut.Tests.Components
                     return fixedMeasureSize;
                 }
             };
-            component.Measure(inputSize);
+            component.Measure(inputSize, TestRenderingContext.Instance);
 
             component.DesiredSize.ShouldBe(new Size(desiredWidth, desiredHeight));
             receivedInputSize.ShouldBe(new Size(expectedWidth, expectedHeight));
@@ -73,7 +73,7 @@ namespace LayItOut.Tests.Components
             var received = Rectangle.Empty;
             var component = new TestableComponent { OnArrangeCallback = actual => received = actual };
 
-            component.Measure(expected.Size);
+            component.Measure(expected.Size, TestRenderingContext.Instance);
             component.Arrange(expected);
 
             component.Layout.ShouldBe(expected, "Layout was not updated");
@@ -92,7 +92,7 @@ namespace LayItOut.Tests.Components
                 OnMeasureCallback = _ => new Size(10, 20),
                 Alignment = Alignment.Parse(alignment)
             };
-            component.Measure(area.Size);
+            component.Measure(area.Size, TestRenderingContext.Instance);
             component.Arrange(area);
             component.Layout.ShouldBe(new Rectangle(expectedX, expectedY, expectedWidth, expectedHeight));
         }
@@ -110,7 +110,7 @@ namespace LayItOut.Tests.Components
                 Width = SizeUnit.Parse(width),
                 Height = SizeUnit.Parse(height)
             };
-            component.Measure(area.Size);
+            component.Measure(area.Size, TestRenderingContext.Instance);
             component.Arrange(area);
             component.Layout.ShouldBe(new Rectangle(expectedX, expectedY, expectedWidth, expectedHeight));
         }
@@ -120,7 +120,7 @@ namespace LayItOut.Tests.Components
         {
             var area = new Rectangle(20, 30, 45, 35);
             var component = new Component { Width = 100, Height = 100 };
-            component.Measure(area.Size);
+            component.Measure(area.Size, TestRenderingContext.Instance);
             component.Arrange(area);
             component.Layout.ShouldBe(area);
             component.DesiredSize.ShouldBe(new Size(100, 100));

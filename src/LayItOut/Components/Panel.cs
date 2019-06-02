@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using LayItOut.Rendering;
 
 namespace LayItOut.Components
 {
@@ -21,11 +22,11 @@ namespace LayItOut.Components
                 yield return Inner;
         }
 
-        protected override Size OnMeasure(Size size)
+        protected override Size OnMeasure(Size size, IRenderingContext context)
         {
             var panelSize = Margin.GetAbsoluteSize() + Padding.GetAbsoluteSize() + Border.AsSpacer().GetAbsoluteSize();
 
-            Inner?.Measure((size - panelSize).Union(Size.Empty));
+            Inner?.Measure((size - panelSize).Union(Size.Empty), context);
 
             return (Inner?.DesiredSize ?? Size.Empty) + panelSize;
         }

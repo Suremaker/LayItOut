@@ -2,7 +2,7 @@
 using LayItOut.Components;
 using Moq;
 
-namespace LayItOut.Tests.Components.TestHelpers
+namespace LayItOut.Tests.TestHelpers
 {
     static class MockExtensions
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using LayItOut.Components;
+using LayItOut.Rendering;
 
 namespace LayItOut
 {
@@ -13,9 +14,9 @@ namespace LayItOut
             Content = content ?? throw new ArgumentNullException(nameof(content));
         }
 
-        public void LayOut(Size size)
+        public void LayOut(Size size, IRenderingContext context)
         {
-            Content.Measure(size);
+            Content.Measure(size, context);
             Content.Arrange(new Rectangle(Point.Empty, size));
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using LayItOut.Rendering;
 
 namespace LayItOut.Components
 {
@@ -12,9 +13,9 @@ namespace LayItOut.Components
         public Size DesiredSize { get; private set; }
         public Rectangle Layout { get; private set; }
 
-        public void Measure(Size size)
+        public void Measure(Size size, IRenderingContext context)
         {
-            DesiredSize = OnMeasure(size.ApplyIfSet(Width, Height)).ApplyIfSet(Width, Height);
+            DesiredSize = OnMeasure(size.ApplyIfSet(Width, Height), context).ApplyIfSet(Width, Height);
         }
 
         public void Arrange(Rectangle area)
@@ -27,7 +28,7 @@ namespace LayItOut.Components
 
         public virtual IEnumerable<IComponent> GetChildren() => Enumerable.Empty<IComponent>();
         protected virtual void OnArrange() { }
-        protected virtual Size OnMeasure(Size size) => Size.Empty;
+        protected virtual Size OnMeasure(Size size, IRenderingContext context) => Size.Empty;
 
         private Size GetActualSize(Size areaSize)
         {

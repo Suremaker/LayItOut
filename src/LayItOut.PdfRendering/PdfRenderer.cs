@@ -14,16 +14,18 @@ namespace LayItOut.PdfRendering
         public PdfRenderer(Action<XGraphics> configureGraphics = null)
         {
             RegisterRenderer(new PanelRenderer());
+            RegisterRenderer(new LabelRenderer());
             _configureGraphics = configureGraphics;
         }
 
         public void Render(Form form, PdfPage pdfPage)
         {
-            form.LayOut(new Size(pdfPage.Width.ToLayout(), pdfPage.Height.ToLayout()));
+            var size = new Size(pdfPage.Width.ToLayout(), pdfPage.Height.ToLayout());
 
             using (var g = XGraphics.FromPdfPage(pdfPage, XGraphicsUnit.Point))
             {
                 ConfigureGraphics(g);
+                form.LayOut(size, new RendererContext(g));
                 Render(g, form.Content);
             }
         }

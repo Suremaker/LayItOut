@@ -1,7 +1,7 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using LayItOut.Components;
 using LayItOut.Rendering;
+using LayItOut.Tests.TestHelpers;
 using Moq;
 using Xunit;
 
@@ -43,7 +43,7 @@ namespace LayItOut.Tests.Renderers
             vbox.AddComponent(panel4);
 
             var form = new Form(hbox);
-            form.LayOut(new Size(int.MaxValue, Int32.MaxValue));
+            form.LayOut(new Size(int.MaxValue, int.MaxValue), TestRenderingContext.Instance);
             var g = new object();
 
             renderer.Render(g, form);

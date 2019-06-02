@@ -1,7 +1,8 @@
 ﻿using System.Drawing;
 using LayItOut.Components;
+using LayItOut.Rendering;
 
-namespace LayItOut.Tests.Components.TestHelpers
+namespace LayItOut.Tests.TestHelpers
 {
     class FixedMeasureComponent : Component
     {
@@ -12,6 +13,6 @@ namespace LayItOut.Tests.Components.TestHelpers
             _desiredSize = desiredSize;
         }
 
-        protected override Size OnMeasure(Size size) => _desiredSize;
+        protected override Size OnMeasure(Size size, IRenderingContext context) => _desiredSize;
     }
 }

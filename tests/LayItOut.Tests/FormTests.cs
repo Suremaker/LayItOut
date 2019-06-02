@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using LayItOut.Components;
+using LayItOut.Tests.TestHelpers;
 using Moq;
 using Shouldly;
 using Xunit;
@@ -30,14 +31,14 @@ namespace LayItOut.Tests
             var area = new Rectangle(Point.Empty, size);
             var content = new Mock<IComponent>(MockBehavior.Strict);
             var seq = new MockSequence();
-            content.InSequence(seq).Setup(x => x.Measure(size));
+            content.InSequence(seq).Setup(x => x.Measure(size, TestRenderingContext.Instance));
             content.InSequence(seq).Setup(x => x.Arrange(area));
 
             var form = new Form(content.Object);
-            form.LayOut(size);
+            form.LayOut(size, TestRenderingContext.Instance);
 
             content.Verify(x => x.Arrange(area));
-            content.Verify(x => x.Measure(size));
+            content.Verify(x => x.Measure(size, TestRenderingContext.Instance));
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Linq;
 using LayItOut.Components;
-using LayItOut.Tests.Components.TestHelpers;
+using LayItOut.Tests.TestHelpers;
 using Moq;
 using Shouldly;
 using Xunit;
@@ -18,7 +18,7 @@ namespace LayItOut.Tests.Components
             stack.AddComponent(new FixedMeasureComponent(30, 5));
             stack.AddComponent(new FixedMeasureComponent(5, 10));
 
-            stack.Measure(new Size(100, 100));
+            stack.Measure(new Size(100, 100), TestRenderingContext.Instance);
 
             stack.DesiredSize.ShouldBe(new Size(30, 20));
         }
@@ -32,9 +32,9 @@ namespace LayItOut.Tests.Components
             var stack = new Stack();
             stack.AddComponent(child.Object);
 
-            stack.Measure(size);
+            stack.Measure(size, TestRenderingContext.Instance);
 
-            child.Verify(x => x.Measure(size));
+            child.Verify(x => x.Measure(size, TestRenderingContext.Instance));
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace LayItOut.Tests.Components
             foreach (var child in children)
                 stack.AddComponent(child.Object);
 
-            stack.Measure(area.Size);
+            stack.Measure(area.Size, TestRenderingContext.Instance);
             stack.Arrange(area);
 
             stack.Layout.ShouldBe(new Rectangle(15, 25, 20, 30));

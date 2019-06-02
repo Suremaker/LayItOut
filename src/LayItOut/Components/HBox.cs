@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using LayItOut.Rendering;
 
 namespace LayItOut.Components
 {
@@ -7,13 +8,13 @@ namespace LayItOut.Components
     {
         public HorizontalAlignment ContentAlignment { get; set; }
 
-        protected override Size OnMeasure(Size size)
+        protected override Size OnMeasure(Size size, IRenderingContext context)
         {
             var result = Size.Empty;
 
             foreach (var child in GetChildren())
             {
-                child.Measure(size);
+                child.Measure(size, context);
                 var desiredSize = child.DesiredSize;
 
                 result.Width += desiredSize.Width;

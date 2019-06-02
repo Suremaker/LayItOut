@@ -1,9 +1,6 @@
 using System.Drawing;
-using System.Linq;
 using System.Text;
 using LayItOut.Components;
-using PdfSharp;
-using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using Xunit;
 
@@ -15,6 +12,7 @@ namespace LayItOut.PdfRendering.Tests
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
+
         [Fact]
         public void It_should_render_panels_and_hboxes()
         {
@@ -40,6 +38,53 @@ namespace LayItOut.PdfRendering.Tests
             page.Height = 40;
             renderer.Render(form, page);
             PdfImageComparer.ComparePdfs("panels_hbox", doc);
+        }
+
+        [Fact]
+        public void It_should_render_text()
+        {
+            var renderer = new PdfRenderer();
+            var content = new HBox { Width = SizeUnit.Unlimited };
+            content.AddComponent(new Panel
+            {
+                Width = 100,
+                Height = SizeUnit.Unlimited,
+                BackgroundColor = Color.Yellow,
+                Margin = new Spacer(1),
+                Border = new Border(new BorderLine(1, Color.Black)),
+                Padding = new Spacer(2),
+                Inner = new Label
+                {
+                    FontColor = Color.Red,
+                    Font = new Font(FontFamily.GenericSerif, 10, FontStyle.Underline | FontStyle.Italic, GraphicsUnit.World),
+                    Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?"
+                }
+            });
+
+            content.AddComponent(new Panel
+            {
+                Width = SizeUnit.Unlimited,
+                Height = SizeUnit.Unlimited,
+                BackgroundColor = Color.DarkSeaGreen,
+                Margin = new Spacer(1),
+                Border = new Border(new BorderLine(1, Color.Black)),
+                Padding = new Spacer(2),
+                Inner = new Label
+                {
+                    FontColor = Color.Blue,
+                    Font = new Font(FontFamily.GenericSerif, 14, FontStyle.Bold, GraphicsUnit.World),
+                    Text = "How are you doing today?"
+                }
+            });
+
+            var form = new Form(content);
+
+            var doc = new PdfDocument();
+            var page = doc.AddPage();
+            page.Width = 200;
+            page.Height = 400;
+            renderer.Render(form, page);
+            PdfImageComparer.ComparePdfs("text_box", doc);
         }
     }
 }

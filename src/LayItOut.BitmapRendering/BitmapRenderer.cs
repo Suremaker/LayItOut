@@ -19,9 +19,9 @@ namespace LayItOut.BitmapRendering
 
         public void Render(Form form, Bitmap target)
         {
-            form.LayOut(target.Size);
             using (var g = Graphics.FromImage(target))
             {
+                form.LayOut(target.Size, new RenderingContext(g));
                 ConfigureGraphics(g);
                 Render(g, form.Content);
             }
