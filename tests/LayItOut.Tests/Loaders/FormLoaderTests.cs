@@ -28,6 +28,15 @@ namespace LayItOut.Tests.Loaders
             vbox.Height.ShouldBe(SizeUnit.Unlimited);
         }
 
+        [Fact]
+        public void It_should_throw_meaningful_exception_if_cannot_parse_the_element()
+        {
+            var text = "<Form><unknown /></Form>";
+            var loader = new FormLoader();
+            var ex = Assert.Throws<InvalidOperationException>(() => loader.Load(new StringReader(text)));
+            ex.Message.ShouldBe("Unable to parse element 'unknown' - no corresponding type were registered.");
+        }
+
         private static Form LoadForm(string formName)
         {
             using (var stream = File.OpenRead($"{AppContext.BaseDirectory}\\Loaders\\{formName}"))

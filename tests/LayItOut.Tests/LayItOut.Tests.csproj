@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\TestHelpers\**" />
+    <EmbeddedResource Remove="Components\TestHelpers\**" />
+    <None Remove="Components\TestHelpers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="Moq" Version="4.10.1" />
     <PackageReference Include="Shouldly" Version="3.0.2" />
@@ -19,13 +25,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Loaders\ahronbd.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Loaders\form.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Components\TestHelpers\" />
   </ItemGroup>
 
 </Project>

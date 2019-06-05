@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -8,10 +9,22 @@ using LayItOut.Components;
 
 namespace LayItOut.Loaders
 {
-    public class FormLoader
+    public class FormLoader : IDisposable
     {
         private readonly Dictionary<string, Type> _types = new Dictionary<string, Type>();
         private readonly Dictionary<Type, Func<string, object>> _attributeParsers = new Dictionary<Type, Func<string, object>>();
+        public IFontLoader FontParser { get; }
+        public IBitmapLoader BitmapLoader { get; }
+
+        public FormLoader(IFontLoader fontParser = null, IBitmapLoader bitmapLoader = null)
+        {
+            FontParser = fontParser ?? new FontParser();
+            BitmapLoader = bitmapLoader ?? new BitmapLoader();
+
+            WithTypesFrom(typeof(FormLoader).Assembly);
+            _attributeParsers[typeof(Font)] = LoadFont;
+            _attributeParsers[typeof(Bitmap)] = LoadBitmap;
+        }
 
         public FormLoader WithTypesFrom(params Assembly[] assemblies)
         {
@@ -27,14 +40,11 @@ namespace LayItOut.Loaders
             return this;
         }
 
-        public FormLoader()
-        {
-            WithTypesFrom(typeof(FormLoader).Assembly);
-        }
 
-        public Form Load(Stream stream)
+        public Form Load(Stream stream) => Load(new StreamReader(stream));
+        public Form Load(TextReader reader)
         {
-            var doc = XDocument.Load(stream);
+            var doc = XDocument.Load(reader);
 
             if (doc.Root?.Name.LocalName != "Form")
                 throw new InvalidOperationException($"Expected {nameof(Form)}, but got {doc.Root?.Name.LocalName}");
@@ -77,7 +87,9 @@ namespace LayItOut.Loaders
 
         private Type Resolve(XName type)
         {
-            return _types[type.LocalName];
+            if (_types.TryGetValue(type.LocalName, out var t))
+                return t;
+            throw new InvalidOperationException($"Unable to parse element '{type.LocalName}' - no corresponding type were registered.");
         }
 
         private object DeserializeAttribute(Type targetType, string value)
@@ -85,6 +97,14 @@ namespace LayItOut.Loaders
             if (_attributeParsers.TryGetValue(targetType, out var parser))
                 return parser(value);
             return Convert.ChangeType(value, targetType);
+        }
+        private object LoadBitmap(string src) => BitmapLoader.Load(src);
+        private object LoadFont(string font) => FontParser.Parse(font);
+
+        public void Dispose()
+        {
+            BitmapLoader.Dispose();
+            FontParser.Dispose();
         }
     }
 }
