@@ -44,7 +44,7 @@ namespace LayItOut.PdfRendering.Tests
         }
 
         [Fact]
-        public void It_should_render_text()
+        public void It_should_render_text_with_links()
         {
             var renderer = new PdfRenderer();
             var content = new HBox { Width = SizeUnit.Unlimited };
@@ -72,11 +72,12 @@ namespace LayItOut.PdfRendering.Tests
                 Margin = new Spacer(1),
                 Border = new Border(new BorderLine(1, Color.Black)),
                 Padding = new Spacer(2),
-                Inner = new Label
+                Inner = new Link
                 {
                     FontColor = Color.Blue,
                     Font = new Font(FontFamily.GenericSerif, 14, FontStyle.Bold, GraphicsUnit.World),
-                    Text = "How are you doing today?"
+                    Text = "How are you doing today?",
+                    Href = "http://google.com"
                 }
             });
 

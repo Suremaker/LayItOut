@@ -22,7 +22,7 @@ namespace LayItOut.TextFormatting
                 var space = line.Any() ? area.SpacePadding : 0;
                 if (area.Block.IsLineBreak || totalLength + space + area.Size.Width > maxWidth)
                 {
-                    y += Arrange(line, y, totalLength, maxWidth, GetBiggestFont(line, area.Block.Font));
+                    y += Arrange(line, y, totalLength, maxWidth, GetBiggestFont(line, area.Block.Metadata.Font));
                     totalLength = 0;
                     results.AddRange(line);
                     line.Clear();
@@ -36,14 +36,14 @@ namespace LayItOut.TextFormatting
 
             if (line.Any())
             {
-                Arrange(line, y, totalLength, maxWidth, GetBiggestFont(line, line.First().Block.Font));
+                Arrange(line, y, totalLength, maxWidth, GetBiggestFont(line, line.First().Block.Metadata.Font));
                 results.AddRange(line);
             }
 
             return new TextLayout(results);
         }
 
-        private Font GetBiggestFont(List<TextArea> line, Font defaultFont) => line.Aggregate(defaultFont, (c, a) => c.Size > a.Block.Font.Size ? c : a.Block.Font);
+        private Font GetBiggestFont(List<TextArea> line, Font defaultFont) => line.Select(l=>l.Block.Metadata).Aggregate(defaultFont, (c, m) => c.Size > m.Font.Size ? c : m.Font);
 
         private float Arrange(List<TextArea> line, float top, float totalLength, int maxWidth, Font lineFont)
         {
@@ -63,8 +63,8 @@ namespace LayItOut.TextFormatting
         private TextArea ToTextArea(TextBlock block)
         {
             var text = block.Text;
-            var size = block.IsLineBreak ? SizeF.Empty : _context.MeasureText(text, block.Font);
-            var space = block.IsLineBreak ? 0f : _context.GetSpaceWidth(block.Font);
+            var size = block.IsLineBreak ? SizeF.Empty : _context.MeasureText(text, block.Metadata.Font);
+            var space = block.IsLineBreak ? 0f : _context.GetSpaceWidth(block.Metadata.Font);
             return new TextArea(size, block, space);
         }
     }

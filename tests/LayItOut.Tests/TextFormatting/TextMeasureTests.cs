@@ -41,8 +41,8 @@ namespace LayItOut.Tests.TextFormatting
             layout.Areas.Count.ShouldBe(4);
             foreach (var area in layout.Areas)
             {
-                area.Size.ShouldBe(TestRenderingContext.Instance.MeasureText(area.Block.Text, area.Block.Font));
-                area.SpacePadding.ShouldBe(TestRenderingContext.Instance.GetSpaceWidth(area.Block.Font));
+                area.Size.ShouldBe(TestRenderingContext.Instance.MeasureText(area.Block.Text, area.Block.Metadata.Font));
+                area.SpacePadding.ShouldBe(TestRenderingContext.Instance.GetSpaceWidth(area.Block.Metadata.Font));
             }
         }
 
@@ -82,7 +82,7 @@ namespace LayItOut.Tests.TextFormatting
         //TODO: text alignment!
         private TextBlock Block(string text, bool isInline = false)
         {
-            return new TextBlock(_font, text, Color.Blue, isInline);
+            return new TextBlock(text, new TextMetadata(_font, Color.Blue), isInline);
         }
     }
 }

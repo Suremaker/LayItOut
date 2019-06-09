@@ -10,20 +10,18 @@ namespace LayItOut.TextFormatting
         private static readonly char[] CharsToNormalize = new[] { '\r', '\t' };
         private static readonly char[] InlineCharsToNormalize = new[] { '\r', '\n', '\t' };
         private static readonly char[] CharsToBreakOn = new[] { ' ', '\r', '\n', '\t' };
-        public Font Font { get; }
-        public Color Color { get; }
         public string Text { get; }
+        public ITextMetadata Metadata { get; }
         public bool IsInline { get; }
         public bool IsNormalized { get; }
         public bool IsLineBreak => Text == LineBreak;
 
-        public TextBlock(Font font, string text, Color color, bool isInline) : this(font, text, color, isInline, IsTextNormalized(isInline, text)) { }
+        public TextBlock(string text, ITextMetadata metadata, bool isInline) : this(text, metadata, isInline, IsTextNormalized(isInline, text)) { }
 
-        private TextBlock(Font font, string text, Color color, bool isInline, bool isNormalized)
+        private TextBlock(string text, ITextMetadata metadata, bool isInline, bool isNormalized)
         {
-            Font = font;
             Text = text;
-            Color = color;
+            Metadata = metadata;
             IsInline = isInline;
             IsNormalized = isNormalized;
         }
@@ -81,8 +79,8 @@ namespace LayItOut.TextFormatting
 
             int FindLastNonSpace()
             {
-                int pos = builder.Length-1;
-                while (pos >= 0&& builder[pos] == ' ') --pos;
+                int pos = builder.Length - 1;
+                while (pos >= 0 && builder[pos] == ' ') --pos;
                 return pos;
             }
 
@@ -107,7 +105,7 @@ namespace LayItOut.TextFormatting
 
         private TextBlock CloneNormalized(string text)
         {
-            return new TextBlock(Font, text, Color, true, true);
+            return new TextBlock(text, Metadata, true, true);
         }
     }
 }

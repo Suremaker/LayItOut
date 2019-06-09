@@ -8,7 +8,13 @@ namespace LayItOut.Tests.TextFormatting
 {
     public class TextBlockTests
     {
-        private readonly Font _font = new Font(FontFamily.GenericSerif, 14);
+        private readonly ITextMetadata _meta;
+
+        public TextBlockTests()
+        {
+            var font = new Font(FontFamily.GenericSerif, 14);
+            _meta = new TextMetadata(font, Color.AliceBlue);
+        }
 
         [Theory]
         [InlineData("Hello world!?", true, true)]
@@ -21,7 +27,7 @@ namespace LayItOut.Tests.TextFormatting
         [InlineData("Hello\rworld!?", true, false)]
         public void Should_determine_if_text_is_normalized(string text, bool isInline, bool expectedIsNormalized)
         {
-            new TextBlock(_font, text, Color.AliceBlue, isInline).IsNormalized.ShouldBe(expectedIsNormalized);
+            new TextBlock(text, _meta, isInline).IsNormalized.ShouldBe(expectedIsNormalized);
         }
 
         [Theory]
@@ -29,22 +35,20 @@ namespace LayItOut.Tests.TextFormatting
         [InlineData("\r\t Hello my friend!\r\nHow\tare\ryou?\r\t ", true, "Hello my friend! How are you?")]
         public void Normalize_should_split_blocks_and_normalize_text(string text, bool isInline, params string[] expectedBlocks)
         {
-            var font = _font;
-            var blocks = new TextBlock(font, text, Color.AliceBlue, isInline)
+            var blocks = new TextBlock(text, _meta, isInline)
                 .Normalize()
                 .ToArray();
 
             blocks.Select(b => b.Text).ShouldBe(expectedBlocks);
             blocks.ShouldAllBe(x => x.IsNormalized);
             blocks.ShouldAllBe(x => x.IsInline);
-            blocks.ShouldAllBe(x => x.Color == Color.AliceBlue);
-            blocks.ShouldAllBe(x => Equals(x.Font, font));
+            blocks.ShouldAllBe(x => x.Metadata == _meta);
         }
 
         [Fact]
         public void Normalize_of_normalized_block_should_return_self()
         {
-            var original = new TextBlock(_font, "Hi!\r", Color.Aqua, true);
+            var original = new TextBlock("Hi!\r", _meta, true);
             var normalized = original.Normalize().Single();
 
             normalized.ShouldNotBeSameAs(original);
@@ -54,7 +58,7 @@ namespace LayItOut.Tests.TextFormatting
         [Fact]
         public void IsLineBreak_should_identify_line_breaks()
         {
-            var blocks = new TextBlock(_font, "Hi\nBob", Color.AliceBlue, false).Normalize().ToArray();
+            var blocks = new TextBlock("Hi\nBob", _meta, false).Normalize().ToArray();
             blocks.Select(b => b.Text).ShouldBe(new[] { "Hi", "\n", "Bob" });
             blocks.Select(b => b.IsLineBreak).ShouldBe(new[] { false, true, false });
         }

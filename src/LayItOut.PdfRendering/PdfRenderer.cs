@@ -16,6 +16,7 @@ namespace LayItOut.PdfRendering
         {
             RegisterRenderer(new PanelRenderer());
             RegisterRenderer(new LabelRenderer());
+            RegisterRenderer(new LinkRenderer());
             RegisterRenderer(new ImageRenderer());
             _configureGraphics = configureGraphics;
             _adjustPageSize = adjustPageSize;
