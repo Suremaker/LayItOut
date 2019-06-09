@@ -107,6 +107,25 @@ namespace LayItOut.Tests.Components
             c1.Layout.ShouldBe(area);
         }
 
+        [Fact]
+        public void Arrange_should_layout_items_honoring_their_desired_size()
+        {
+            var area = new Rectangle(5, 5, 100, 100);
+            var box = new HBox { Width = 100};
+            var c1 = new Component { Width = 40, Height = 100 };
+            var c2 = new TestableComponent { Width = SizeUnit.Unlimited, Height = 100,OnMeasureCallback = _=>new Size(50,100)};
+            var c3 = new Component { Width = 40, Height = 100 };
+            box.AddComponent(c1);
+            box.AddComponent(c2);
+            box.AddComponent(c3);
+
+            box.Measure(area.Size, TestRenderingContext.Instance);
+            box.Arrange(area);
+            c1.Layout.ShouldBe(new Rectangle(5,5,40,100));
+            c2.Layout.ShouldBe(new Rectangle(45,5,50,100));
+            c3.Layout.ShouldBe(new Rectangle(95,5,10,100));
+        }
+
         [Theory]
         [InlineData(HorizontalAlignment.Center)]
         [InlineData(HorizontalAlignment.Left)]

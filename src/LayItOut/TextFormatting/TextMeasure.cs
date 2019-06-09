@@ -11,7 +11,8 @@ namespace LayItOut.TextFormatting
 
         public TextMeasure(IRenderingContext context) => _context = context;
 
-        public TextLayout LayOut(int maxWidth, params TextBlock[] blocks)
+        public TextLayout LayOut(int maxWidth, params TextBlock[] blocks) => LayOut(maxWidth, blocks.AsEnumerable());
+        public TextLayout LayOut(int maxWidth, IEnumerable<TextBlock> blocks)
         {
             var results = new List<TextArea>();
             var line = new List<TextArea>();
@@ -43,7 +44,7 @@ namespace LayItOut.TextFormatting
             return new TextLayout(results);
         }
 
-        private Font GetBiggestFont(List<TextArea> line, Font defaultFont) => line.Select(l=>l.Block.Metadata).Aggregate(defaultFont, (c, m) => c.Size > m.Font.Size ? c : m.Font);
+        private Font GetBiggestFont(List<TextArea> line, Font defaultFont) => line.Select(l => l.Block.Metadata).Aggregate(defaultFont, (c, m) => c.Size > m.Font.Size ? c : m.Font);
 
         private float Arrange(List<TextArea> line, float top, float totalLength, int maxWidth, Font lineFont)
         {

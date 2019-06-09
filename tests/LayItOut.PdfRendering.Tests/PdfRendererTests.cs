@@ -44,7 +44,7 @@ namespace LayItOut.PdfRendering.Tests
         }
 
         [Fact]
-        public void It_should_render_text_with_links()
+        public void It_should_render_text()
         {
             var renderer = new PdfRenderer();
             var content = new HBox { Width = SizeUnit.Unlimited };
@@ -66,7 +66,7 @@ namespace LayItOut.PdfRendering.Tests
 
             content.AddComponent(new Panel
             {
-                Width = SizeUnit.Unlimited,
+                Width = 100,
                 Height = SizeUnit.Unlimited,
                 BackgroundColor = Color.DarkSeaGreen,
                 Margin = new Spacer(1),
@@ -81,11 +81,29 @@ namespace LayItOut.PdfRendering.Tests
                 }
             });
 
+            var textBox = new TextBox();
+            textBox.AddComponent(new Label { Text = "Hello!\n", FontColor = Color.Green, Font = new Font(FontFamily.GenericMonospace, 20, FontStyle.Underline, GraphicsUnit.World) });
+            textBox.AddComponent(new Label { Text = "Hi Bob, nice to see you after", FontColor = Color.Black, Font = new Font(FontFamily.GenericSansSerif, 10, GraphicsUnit.World) });
+            textBox.AddComponent(new Label { Text = "20", FontColor = Color.Red, Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold, GraphicsUnit.World) });
+            textBox.AddComponent(new Label { Text = "years!\n", FontColor = Color.Black, Font = new Font(FontFamily.GenericSansSerif, 10, GraphicsUnit.World) });
+            textBox.AddComponent(new Label { Text = "I'm sure you'd love to see my new", FontColor = Color.Black, Font = new Font(FontFamily.GenericSansSerif, 10, GraphicsUnit.World) });
+            textBox.AddComponent(new Link { Text = "website", FontColor = Color.Blue, Font = new Font(FontFamily.GenericSansSerif, 12, FontStyle.Italic, GraphicsUnit.World), Href = "http://google.com" });
+            content.AddComponent(new Panel
+            {
+                Width = SizeUnit.Unlimited,
+                Height = SizeUnit.Unlimited,
+                BackgroundColor = Color.LightYellow,
+                Margin = new Spacer(1),
+                Border = new Border(new BorderLine(1, Color.Black)),
+                Padding = new Spacer(2),
+                Inner = textBox
+            });
+
             var form = new Form(content);
 
             var doc = new PdfDocument();
             var page = doc.AddPage();
-            page.Width = 200;
+            page.Width = 320;
             page.Height = 400;
             renderer.Render(form, page);
             PdfImageComparer.ComparePdfs("text_box", doc);

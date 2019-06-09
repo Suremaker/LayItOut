@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using LayItOut.Components;
 using LayItOut.PdfRendering.Renderers;
 using LayItOut.Rendering;
 using PdfSharp.Drawing;
@@ -15,8 +16,9 @@ namespace LayItOut.PdfRendering
         public PdfRenderer(Action<XGraphics> configureGraphics = null, bool adjustPageSize = false)
         {
             RegisterRenderer(new PanelRenderer());
-            RegisterRenderer(new LabelRenderer());
-            RegisterRenderer(new LinkRenderer());
+            RegisterRenderer(new TextRenderer<Link>());
+            RegisterRenderer(new TextRenderer<Label>());
+            RegisterRenderer(new TextRenderer<TextBox>());
             RegisterRenderer(new ImageRenderer());
             _configureGraphics = configureGraphics;
             _adjustPageSize = adjustPageSize;

@@ -24,6 +24,5 @@ namespace LayItOut.Tests.Components
             label.Measure(box, TestRenderingContext.Instance);
             label.DesiredSize.ShouldBe(new Size(text.Length, (int)Math.Ceiling(font.GetHeight())));
         }
-
     }
 }

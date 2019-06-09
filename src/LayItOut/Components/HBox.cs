@@ -59,7 +59,7 @@ namespace LayItOut.Components
             }
 
             if (unlimited > 0)
-                return (Size.Empty, SizeUnit.Distribute(remaining, unlimited));
+                return (Size.Empty, SizeUnit.Distribute(Math.Max(0,remaining), unlimited));
             return (ContentAlignment.GetShift(remaining), Array.Empty<int>());
         }
     }

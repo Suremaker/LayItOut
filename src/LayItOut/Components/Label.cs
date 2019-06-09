@@ -4,7 +4,7 @@ using LayItOut.TextFormatting;
 
 namespace LayItOut.Components
 {
-    public class Label : Component
+    public class Label : Component, ITextComponent
     {
         public Font Font { get; set; }
         public Color FontColor { get; set; } = Color.Black;
@@ -13,10 +13,11 @@ namespace LayItOut.Components
         public TextLayout TextLayout { get; private set; }
         public override string ToString() => Text;
 
+        public TextBlock GetTextBlock() => new TextBlock(Text, GetTextMetadata(), Inline);
+
         protected override Size OnMeasure(Size size, IRenderingContext context)
         {
-            var block = new TextBlock(Text, GetTextMetadata(), Inline);
-            TextLayout = new TextMeasure(context).LayOut(size.Width, block);
+            TextLayout = new TextMeasure(context).LayOut(size.Width, GetTextBlock());
             return TextLayout.Size;
         }
 
