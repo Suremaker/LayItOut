@@ -110,6 +110,41 @@ namespace LayItOut.PdfRendering.Tests
         }
 
         [Fact]
+        public void It_should_render_text_with_alignments()
+        {
+            var renderer = new PdfRenderer();
+            var content = new HBox { Width = SizeUnit.Unlimited };
+            foreach (var align in new[] { TextAlignment.Left, TextAlignment.Right, TextAlignment.Center, TextAlignment.Justify })
+            {
+                content.AddComponent(new Panel
+                {
+                    Width = 100,
+                    Height = SizeUnit.Unlimited,
+                    BackgroundColor = Color.Yellow,
+                    Margin = new Spacer(1),
+                    Border = new Border(new BorderLine(1, Color.Black)),
+                    Padding = new Spacer(2),
+                    Inner = new Label
+                    {
+                        FontColor = Color.Red,
+                        TextAlignment = align,
+                        Font = new Font(FontFamily.GenericSerif, 10, FontStyle.Underline | FontStyle.Italic, GraphicsUnit.World),
+                        Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?"
+                    }
+                });
+            }
+
+            var form = new Form(content);
+
+            var doc = new PdfDocument();
+            var page = doc.AddPage();
+            page.Width = 400;
+            page.Height = 400;
+            renderer.Render(form, page);
+            PdfImageComparer.ComparePdfs("text_box_align", doc);
+        }
+
+        [Fact]
         public void It_should_render_images()
         {
             var redBlue = CreateBitmap(Brushes.Red, Brushes.Blue, 400, 400);

@@ -10,6 +10,7 @@ namespace LayItOut.Components
         public Color FontColor { get; set; } = Color.Black;
         public string Text { get; set; }
         public bool Inline { get; set; }
+        public TextAlignment TextAlignment { get; set; }
         public TextLayout TextLayout { get; private set; }
         public override string ToString() => Text;
 
@@ -17,7 +18,7 @@ namespace LayItOut.Components
 
         protected override Size OnMeasure(Size size, IRenderingContext context)
         {
-            TextLayout = new TextMeasure(context).LayOut(size.Width, GetTextBlock());
+            TextLayout = new TextMeasure(context).LayOut(size.Width, TextAlignment, GetTextBlock());
             return TextLayout.Size;
         }
 

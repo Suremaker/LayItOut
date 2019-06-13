@@ -8,6 +8,7 @@ namespace LayItOut.Components
 {
     public class TextBox : Component, IContainer, ITextComponent
     {
+        public TextAlignment TextAlignment { get; set; }
         public TextLayout TextLayout { get; private set; }
         private readonly List<TextBlock> _blocks = new List<TextBlock>();
         public void AddComponent(IComponent child)
@@ -19,7 +20,7 @@ namespace LayItOut.Components
 
         protected override Size OnMeasure(Size size, IRenderingContext context)
         {
-            TextLayout = new TextMeasure(context).LayOut(size.Width, _blocks);
+            TextLayout = new TextMeasure(context).LayOut(size.Width, TextAlignment, _blocks);
             return TextLayout.Size;
         }
     }
