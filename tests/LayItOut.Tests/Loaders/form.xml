@@ -3,6 +3,7 @@
   <HBox>
     <Panel Margin="10" Padding="20 5" BackgroundColor="black" Border="5 #fafaff; 3 red">
       <VBox Width="*" Height="*">
+        <Label Text="Hello world!" Font="Aharoni;10" TextAlignment="center"/>
       </VBox>
     </Panel>
   </HBox>

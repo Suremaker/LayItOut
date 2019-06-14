@@ -96,6 +96,8 @@ namespace LayItOut.Loaders
         {
             if (_attributeParsers.TryGetValue(targetType, out var parser))
                 return parser(value);
+            if (targetType.IsEnum)
+                return Enum.Parse(targetType, value.Trim(), true);
             return Convert.ChangeType(value, targetType);
         }
         private object LoadBitmap(string src) => BitmapLoader.Load(src);

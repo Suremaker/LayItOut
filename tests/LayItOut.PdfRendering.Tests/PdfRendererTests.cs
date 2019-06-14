@@ -110,6 +110,66 @@ namespace LayItOut.PdfRendering.Tests
         }
 
         [Fact]
+        public void It_should_render_text_with_different_line_heights()
+        {
+            var renderer = new PdfRenderer();
+            var content = new HBox { Width = SizeUnit.Unlimited };
+            content.AddComponent(new Panel
+            {
+                Width = 100,
+                Height = SizeUnit.Unlimited,
+                BackgroundColor = Color.Yellow,
+                Margin = new Spacer(1),
+                Inner = new Label
+                {
+                    FontColor = Color.Red,
+                    Font = new Font(FontFamily.GenericSerif, 10, FontStyle.Underline | FontStyle.Italic, GraphicsUnit.World),
+                    Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?",
+                    LineHeight = 1.2f
+                }
+            });
+
+            content.AddComponent(new Panel
+            {
+                Width = 100,
+                Height = SizeUnit.Unlimited,
+                BackgroundColor = Color.Yellow,
+                Margin = new Spacer(1),
+                Inner = new Label
+                {
+                    FontColor = Color.Red,
+                    Font = new Font(FontFamily.GenericSerif, 10, FontStyle.Underline | FontStyle.Italic, GraphicsUnit.World),
+                    Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?",
+                    LineHeight = 2f
+                }
+            });
+
+            content.AddComponent(new Panel
+            {
+                Width = 100,
+                Height = SizeUnit.Unlimited,
+                BackgroundColor = Color.Yellow,
+                Margin = new Spacer(1),
+                Inner = new Label
+                {
+                    FontColor = Color.Red,
+                    Font = new Font(FontFamily.GenericSerif, 10, FontStyle.Underline | FontStyle.Italic, GraphicsUnit.World),
+                    Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?",
+                    LineHeight = 0.8f
+                }
+            });
+
+            var form = new Form(content);
+
+            var doc = new PdfDocument();
+            var page = doc.AddPage();
+            page.Width = 300;
+            page.Height = 400;
+            renderer.Render(form, page);
+            PdfImageComparer.ComparePdfs("text_box_line_height", doc);
+        }
+
+        [Fact]
         public void It_should_render_text_with_alignments()
         {
             var renderer = new PdfRenderer();

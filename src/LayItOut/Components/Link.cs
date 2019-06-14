@@ -8,7 +8,7 @@ namespace LayItOut.Components
 
         protected override TextMetadata GetTextMetadata()
         {
-            return new TextMetadata(Font, FontColor) {LinkHref = Href};
+            return new TextMetadata(Font, FontColor, LineHeight) { LinkHref = Href };
         }
     }
 }

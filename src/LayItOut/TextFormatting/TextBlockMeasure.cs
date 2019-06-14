@@ -13,6 +13,7 @@ namespace LayItOut.TextFormatting
 
         public TextBlock Block { get; }
         public SizeF Measure { get; }
+        public SizeF ActualMeasure => new SizeF(Measure.Width, Measure.Height * Block.Metadata.LineHeight);
         public float SpacePadding { get; }
     }
 }

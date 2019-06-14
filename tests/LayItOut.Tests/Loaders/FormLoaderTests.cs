@@ -26,6 +26,11 @@ namespace LayItOut.Tests.Loaders
             var vbox = panel.Inner.ShouldBeOfType<VBox>();
             vbox.Width.ShouldBe(SizeUnit.Unlimited);
             vbox.Height.ShouldBe(SizeUnit.Unlimited);
+
+            var label = vbox.GetChildren().Single().ShouldBeOfType<Label>();
+            label.Text.ShouldBe("Hello world!");
+            label.TextAlignment.ShouldBe(TextAlignment.Center);
+            label.Font.FontFamily.Name.ShouldBe("Aharoni");
         }
 
         [Fact]
@@ -41,7 +46,10 @@ namespace LayItOut.Tests.Loaders
         {
             using (var stream = File.OpenRead($"{AppContext.BaseDirectory}\\Loaders\\{formName}"))
             {
-                return new FormLoader().Load(stream);
+                var fontParser = new FontParser();
+                fontParser.AddFont($"{AppContext.BaseDirectory}\\Loaders\\ahronbd.ttf");
+                var loader = new FormLoader(fontParser);
+                return loader.Load(stream);
             }
         }
     }

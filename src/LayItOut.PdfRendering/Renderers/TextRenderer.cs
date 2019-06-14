@@ -19,7 +19,6 @@ namespace LayItOut.PdfRendering.Renderers
             {
                 var rect = area.Area;
                 rect.Offset(element.Layout.Location);
-                rect.Intersect(element.Layout);
 
                 if (!(rect.Width > 0) || !(rect.Height > 0))
                     continue;
@@ -33,12 +32,17 @@ namespace LayItOut.PdfRendering.Renderers
                         meta.LinkHref);
                 }
 
+                var state = graphics.Save();
+
+                graphics.IntersectClip(element.Layout.ToXRect());
                 graphics.DrawString(
                     area.Block.Text,
                     new XFont(meta.Font),
                     new XSolidBrush(meta.Color.ToXColor()),
                     rect.ToXRect(),
                     format);
+
+                graphics.Restore(state);
             }
         }
     }

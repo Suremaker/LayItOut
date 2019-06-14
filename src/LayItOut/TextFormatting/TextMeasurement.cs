@@ -64,11 +64,10 @@ namespace LayItOut.TextFormatting
         }
 
 
-        private float GetHeight(List<TextBlockMeasure> line, TextBlockMeasure defaultArea)
+        private float GetHeight(List<TextBlockMeasure> line, TextBlockMeasure defaultMeasure)
         {
-            var max = defaultArea.Block.Metadata.Font;
-            max = line.Select(l => l.Block.Metadata.Font).Aggregate(max, (current, f) => f.Size > current.Size ? f : current);
-            return max.GetHeight();
+            var max = defaultMeasure;
+            return line.Select(l => l).Aggregate(max, (current, f) => f.ActualMeasure.Height > current.ActualMeasure.Height ? f : current).ActualMeasure.Height;
         }
 
         private IEnumerable<TextArea> Arrange(TextLineMeasure line, float top, int actualWidth, TextAlignment alignment)
@@ -111,7 +110,7 @@ namespace LayItOut.TextFormatting
             foreach (var block in textBlocks.SelectMany(b => b.Normalize()))
             {
                 var text = block.Text;
-                var size = block.IsLineBreak ? SizeF.Empty : context.MeasureText(text, block.Metadata.Font);
+                var size = context.MeasureText(text, block.Metadata.Font);
                 var space = block.IsLineBreak ? 0f : context.GetSpaceWidth(block.Metadata.Font);
                 yield return new TextBlockMeasure(block, size, space);
             }

@@ -103,10 +103,25 @@ namespace LayItOut.Tests.TextFormatting
             });
         }
 
-        //TODO: different font size tests
-        private TextBlock Block(string text, bool isInline = false)
+        [Fact]
+        public void LayOut_should_honor_line_height()
         {
-            return new TextBlock(text, new TextMetadata(_font, Color.Blue), isInline);
+            var lineHeight = 0.5f;
+            var origHeight = _font.GetHeight();
+            var measure = _measurement.Measure(TestRenderingContext.Instance, 10, Block("Hello Bob my friend", lineHeight));
+            var layout = _measurement.LayOut(10, TextAlignment.Right, measure);
+            layout.Areas.Select(a => a.Position).ShouldBe(new[]
+            {
+                new PointF(1,-origHeight*lineHeight/2),
+                new PointF(7,-origHeight*lineHeight/2),
+                new PointF(1,origHeight*lineHeight/2),
+                new PointF(4,origHeight*lineHeight/2)
+            });
+        }
+
+        private TextBlock Block(string text, float lineHeight = 1, bool isInline = false)
+        {
+            return new TextBlock(text, new TextMetadata(_font, Color.Blue, lineHeight), isInline);
         }
     }
 }

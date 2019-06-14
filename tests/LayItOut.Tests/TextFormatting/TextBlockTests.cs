@@ -13,7 +13,7 @@ namespace LayItOut.Tests.TextFormatting
         public TextBlockTests()
         {
             var font = new Font(FontFamily.GenericSerif, 14);
-            _meta = new TextMetadata(font, Color.AliceBlue);
+            _meta = new TextMetadata(font, Color.AliceBlue, 1);
         }
 
         [Theory]
