@@ -10,7 +10,10 @@ namespace LayItOut.Components
     {
         public TextAlignment TextAlignment { get; set; }
         public TextLayout TextLayout { get; private set; }
+        public TextMeasure TextMeasure { get; private set; }
         private readonly List<TextBlock> _blocks = new List<TextBlock>();
+        private static readonly TextMeasurement TextMeasurement = new TextMeasurement();
+
         public void AddComponent(IComponent child)
         {
             if (!(child is Label label))
@@ -20,8 +23,13 @@ namespace LayItOut.Components
 
         protected override Size OnMeasure(Size size, IRenderingContext context)
         {
-            TextLayout = new TextMeasure(context).LayOut(size.Width, TextAlignment, _blocks);
-            return TextLayout.Size;
+            TextMeasure = TextMeasurement.Measure(context, size.Width, _blocks);
+            return TextMeasure.Measure;
+        }
+
+        protected override void OnArrange()
+        {
+            TextLayout = TextMeasurement.LayOut(Layout.Width, TextAlignment, TextMeasure);
         }
     }
 }

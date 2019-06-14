@@ -113,10 +113,11 @@ namespace LayItOut.PdfRendering.Tests
         public void It_should_render_text_with_alignments()
         {
             var renderer = new PdfRenderer();
-            var content = new HBox { Width = SizeUnit.Unlimited };
+
+            var labelBox = new HBox { Width = SizeUnit.Unlimited };
             foreach (var align in new[] { TextAlignment.Left, TextAlignment.Right, TextAlignment.Center, TextAlignment.Justify })
             {
-                content.AddComponent(new Panel
+                labelBox.AddComponent(new Panel
                 {
                     Width = 100,
                     Height = SizeUnit.Unlimited,
@@ -126,6 +127,7 @@ namespace LayItOut.PdfRendering.Tests
                     Padding = new Spacer(2),
                     Inner = new Label
                     {
+                        Width = SizeUnit.Unlimited,
                         FontColor = Color.Red,
                         TextAlignment = align,
                         Font = new Font(FontFamily.GenericSerif, 10, FontStyle.Underline | FontStyle.Italic, GraphicsUnit.World),
@@ -133,6 +135,49 @@ namespace LayItOut.PdfRendering.Tests
                     }
                 });
             }
+
+            var areaBox = new HBox { Width = SizeUnit.Unlimited };
+            foreach (var align in new[] { TextAlignment.Left, TextAlignment.Right, TextAlignment.Center, TextAlignment.Justify })
+            {
+                var textBox = new TextBox
+                {
+                    Width = SizeUnit.Unlimited,
+                    TextAlignment = align
+                };
+                textBox.AddComponent(new Label
+                {
+                    FontColor = Color.Red,
+                    Text = "Hi Bob!",
+                    Font = new Font(FontFamily.GenericSerif, 10, FontStyle.Underline | FontStyle.Italic, GraphicsUnit.World)
+                });
+
+                textBox.AddComponent(new Link
+                {
+                    FontColor = Color.Black,
+                    Text = "Check out this: ",
+                    Font = new Font(FontFamily.GenericSerif, 12, FontStyle.Regular, GraphicsUnit.World)
+                });
+                textBox.AddComponent(new Link
+                {
+                    FontColor = Color.Purple,
+                    Text = "great link!!!",
+                    Font = new Font(FontFamily.GenericSerif, 8, FontStyle.Underline, GraphicsUnit.World)
+                });
+                areaBox.AddComponent(new Panel
+                {
+                    Width = 100,
+                    Height = SizeUnit.Unlimited,
+                    BackgroundColor = Color.Green,
+                    Margin = new Spacer(1),
+                    Border = new Border(new BorderLine(1, Color.Black)),
+                    Padding = new Spacer(2),
+                    Inner = textBox
+                });
+            }
+
+            var content = new VBox { Width = SizeUnit.Unlimited };
+            content.AddComponent(labelBox);
+            content.AddComponent(areaBox);
 
             var form = new Form(content);
 

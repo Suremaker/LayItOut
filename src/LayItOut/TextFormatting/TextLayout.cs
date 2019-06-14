@@ -7,9 +7,9 @@ namespace LayItOut.TextFormatting
     public class TextLayout
     {
         public Size Size { get; }
-        public IReadOnlyList<ITextArea> Areas { get; }
+        public IReadOnlyList<TextArea> Areas { get; }
 
-        public TextLayout(IReadOnlyList<ITextArea> areas)
+        public TextLayout(IReadOnlyList<TextArea> areas)
         {
             Areas = areas;
             float width = 0, height = 0;
