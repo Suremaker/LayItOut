@@ -221,7 +221,8 @@ namespace LayItOut.PdfRendering.Tests
                 {
                     FontColor = Color.Purple,
                     Text = "great link!!!",
-                    Font = new Font(FontFamily.GenericSerif, 8, FontStyle.Underline, GraphicsUnit.World)
+                    Font = new Font(FontFamily.GenericSerif, 8, FontStyle.Underline, GraphicsUnit.World),
+                    Href = "http://google.com"
                 });
                 areaBox.AddComponent(new Panel
                 {
