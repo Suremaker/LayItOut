@@ -39,7 +39,30 @@ namespace LayItOut.PdfRendering.Renderers
             if (panel.BackgroundColor.A == 0)
                 return;
             var brush = new XSolidBrush(panel.BackgroundColor.ToXColor());
-            graphics.DrawRectangle(brush, panel.PaddingLayout.ToXRect());
+
+            if (panel.BorderRadius.Equals(BorderRadius.None))
+                graphics.DrawRectangle(brush, panel.PaddingLayout.ToXRect());
+            else
+            {
+                var rect = panel.PaddingLayout;
+                var radius = panel.ActualRadius;
+                var path = new XGraphicsPath { FillMode = XFillMode.Alternate };
+
+                path.AddLine(rect.X + radius.TopLeft, rect.Y, rect.Right - radius.TopRight, rect.Y);
+                if (radius.TopRight > 0)
+                    path.AddArc(rect.Right - radius.TopRight, rect.Y, radius.TopRight, radius.TopRight, 270, 90);
+                path.AddLine(rect.Right, rect.Y + radius.TopRight, rect.Right, rect.Bottom - radius.BottomRight);
+                if (radius.BottomRight > 0)
+                    path.AddArc(rect.Right-radius.BottomRight, rect.Bottom - radius.BottomRight, radius.BottomRight, radius.BottomRight, 0, 90);
+                path.AddLine(rect.Right - radius.BottomRight, rect.Bottom, rect.X + radius.BottomLeft, rect.Bottom);
+                if (radius.BottomLeft > 0)
+                    path.AddArc(rect.X, rect.Bottom-radius.BottomLeft, radius.BottomLeft, radius.BottomLeft, 90, 90);
+                path.AddLine(rect.Left, rect.Bottom - radius.BottomLeft, rect.Left, rect.Top + radius.TopLeft);
+                if (radius.TopLeft > 0)
+                    path.AddArc(rect.Left, rect.Top, radius.TopLeft, radius.TopLeft, 180, 90);
+                path.CloseFigure();
+                graphics.DrawPath(brush, path);
+            }
         }
     }
 }

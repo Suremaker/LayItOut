@@ -51,5 +51,89 @@ namespace LayItOut.PdfRendering.Tests
             renderer.Render(form, page);
             PdfImageComparer.ComparePdfs("panels_hbox", doc);
         }
+
+        [Fact]
+        public void It_should_render_rounded_panels()
+        {
+            var renderer = new PdfRenderer();
+
+            var vbox = new HBox();
+
+            var borders = new[]
+            {
+                new []{"10 0 0 0","0 10 0 0","0 0 10 0","0 0 0 10" },
+                new []{"10 10 0 0","10 0 10 0","10 0 0 10","0 0 10 10" },
+                new []{"10 10 10 0","10 0 10 10","10 10 0 10","10 10 10 10" }
+            };
+
+            foreach (var boxLine in borders)
+            {
+                var hbox = new HBox();
+                foreach (var border in boxLine)
+                    hbox.AddComponent(new Panel
+                    {
+                        Margin = new Spacer(1),
+                        BackgroundColor = Color.Blue,
+                        Width = 22,
+                        Height = 22,
+                        BorderRadius = BorderRadius.Parse(border)
+                    });
+                vbox.AddComponent(hbox);
+            }
+
+            var doc = new PdfDocument();
+            var page = doc.AddPage();
+            renderer.Render(new Form(vbox), page, new PdfRendererOptions { AdjustPageSize = true });
+            PdfImageComparer.ComparePdfs("panels_rounded", doc);
+        }
+
+        [Fact]
+        public void It_should_render_rounded_panels_with_borders()
+        {
+            var renderer = new PdfRenderer();
+
+            var vbox = new VBox();
+
+            var borders = new[]
+            {
+                new []{"10 0 0 0","0 10 0 0","0 0 10 0","0 0 0 10" },
+                new []{"10 10 0 0","10 0 10 0","10 0 0 10","0 0 10 10" },
+                new []{"10 10 10 0","10 0 10 10","10 10 0 10","10 10 10 10" }
+            };
+            var borderLines = new[]
+            {
+                "1 black",
+                "1 black;;;",
+                ";1 black;;",
+                ";;1 black;",
+                ";;;1 black",
+                "1 black;",
+                ";1 black",
+                "1 black;1 black;1 black;",
+                "1 black;;1 black;1 black",
+                "1 black;2 black;3 black;4 black"
+            };
+            foreach (var borderLine in borderLines)
+                foreach (var boxLine in borders)
+                {
+                    var hbox = new HBox();
+                    foreach (var border in boxLine)
+                        hbox.AddComponent(new Panel
+                        {
+                            Margin = new Spacer(1),
+                            BackgroundColor = Color.Orange,
+                            Width = 24,
+                            Height = 24,
+                            Border = Border.Parse(borderLine),
+                            BorderRadius = BorderRadius.Parse(border)
+                        });
+                    vbox.AddComponent(hbox);
+                }
+
+            var doc = new PdfDocument();
+            var page = doc.AddPage();
+            renderer.Render(new Form(vbox), page, new PdfRendererOptions { AdjustPageSize = true });
+            PdfImageComparer.ComparePdfs("panels_rounded_border", doc);
+        }
     }
 }

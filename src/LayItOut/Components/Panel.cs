@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using LayItOut.Rendering;
@@ -11,10 +12,12 @@ namespace LayItOut.Components
         public Spacer Margin { get; set; }
         public Spacer Padding { get; set; }
         public Border Border { get; set; }
+        public BorderRadius BorderRadius { get; set; }
         public Color BackgroundColor { get; set; }
         public Rectangle BorderLayout { get; private set; }
         public Rectangle PaddingLayout { get; private set; }
         public Spacer ActualBorder { get; private set; }
+        public BorderRadius ActualRadius { get; private set; }
 
         public override IEnumerable<IComponent> GetChildren()
         {
@@ -41,9 +44,25 @@ namespace LayItOut.Components
             PaddingLayout = BorderLayout.ShrinkBy(GetRealSize(Border.AsSpacer(), widths, heights));
             ActualBorder = CalculateActualBorder(PaddingLayout, BorderLayout);
             Inner?.Arrange(PaddingLayout.ShrinkBy(GetRealSize(Padding, widths, heights)));
+            ActualRadius = CalculateActualRadius();
         }
 
-        private static Spacer CalculateActualBorder(Rectangle padding, Rectangle border) => new Spacer(padding.Top - border.Top, padding.Left - border.Left,border.Bottom - padding.Bottom, border.Right - padding.Right);
+        private BorderRadius CalculateActualRadius()
+        {
+            if (BorderRadius.Equals(BorderRadius.None))
+                return BorderRadius;
+
+            var maxRadius = Math.Min(BorderLayout.Width, BorderLayout.Height) * 0.5f;
+
+            var tl = Math.Min(BorderRadius.TopLeft, maxRadius);
+            var tr = Math.Min(BorderRadius.TopRight, maxRadius);
+            var bl = Math.Min(BorderRadius.BottomLeft, maxRadius);
+            var br = Math.Min(BorderRadius.BottomRight, maxRadius);
+
+            return new BorderRadius(tl, tr, br, bl);
+        }
+
+        private static Spacer CalculateActualBorder(Rectangle padding, Rectangle border) => new Spacer(padding.Top - border.Top, padding.Left - border.Left, border.Bottom - padding.Bottom, border.Right - padding.Right);
 
         private (int[] widths, int[] heights) WithExpandable(params Spacer[] spacers)
         {
