@@ -11,41 +11,38 @@ namespace LayItOut.PdfRendering
 {
     public class PdfRenderer : Renderer<XGraphics>
     {
-        private readonly Action<XGraphics> _configureGraphics;
-        private readonly bool _adjustPageSize;
-
-        public PdfRenderer(Action<XGraphics> configureGraphics = null, bool adjustPageSize = false)
+        public PdfRenderer()
         {
             RegisterRenderer(new PanelRenderer());
             RegisterRenderer(new TextRenderer<Link>());
             RegisterRenderer(new TextRenderer<Label>());
             RegisterRenderer(new TextRenderer<TextBox>());
             RegisterRenderer(new ImageRenderer());
-            _configureGraphics = configureGraphics;
-            _adjustPageSize = adjustPageSize;
         }
 
-        public void Render(Form form, PdfPage pdfPage)
+        public void Render(Form form, PdfPage pdfPage, PdfRendererOptions options = null)
         {
-            var size = _adjustPageSize
+            options = options ?? PdfRendererOptions.Default;
+            var size = options.AdjustPageSize
                 ? new Size(int.MaxValue, int.MaxValue)
                 : new Size(pdfPage.Width.ToLayout(), pdfPage.Height.ToLayout());
 
-            using (var g = CreateGraphics(pdfPage))
+            using (var g = CreateGraphics(pdfPage, options))
             {
                 form.LayOut(size, new RendererContext(g));
 
-                if (_adjustPageSize)
+                if (options.AdjustPageSize)
                     AdjustPageSize(form, pdfPage, g);
             }
-            using (var g = CreateGraphics(pdfPage))
+            using (var g = CreateGraphics(pdfPage, options))
                 Render(g, form.Content);
         }
 
-        private XGraphics CreateGraphics(PdfPage pdfPage)
+        private XGraphics CreateGraphics(PdfPage pdfPage, PdfRendererOptions options)
         {
             var g = XGraphics.FromPdfPage(pdfPage, XGraphicsUnit.Point);
-            ConfigureGraphics(g);
+            g.SmoothingMode = XSmoothingMode.HighQuality;
+            options.ConfigureGraphics?.Invoke(g);
             return g;
         }
 
@@ -63,12 +60,6 @@ namespace LayItOut.PdfRendering
             var height = Math.Max(0, points.Max(y => y.Y));
             pdfPage.Width = width;
             pdfPage.Height = height;
-        }
-
-        private void ConfigureGraphics(XGraphics g)
-        {
-            g.SmoothingMode = XSmoothingMode.HighQuality;
-            _configureGraphics?.Invoke(g);
         }
     }
 }

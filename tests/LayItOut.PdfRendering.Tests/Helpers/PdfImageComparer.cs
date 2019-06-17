@@ -1,12 +1,15 @@
 using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using Ghostscript.NET;
 using Ghostscript.NET.Rasterizer;
 using PdfSharp.Pdf;
 using Xunit;
 
-namespace LayItOut.PdfRendering.Tests
+namespace LayItOut.PdfRendering.Tests.Helpers
 {
     class PdfImageComparer
     {
@@ -14,12 +17,10 @@ namespace LayItOut.PdfRendering.Tests
         {
             using (var pdfStream = new MemoryStream())
             using (var actualStream = new MemoryStream())
-            using (var rasterizer = new GhostscriptRasterizer())
             {
                 doc.Save(pdfStream);
                 pdfStream.Seek(0, SeekOrigin.Begin);
-                rasterizer.Open(pdfStream, new GhostscriptVersionInfo("gsdll64.dll"), false);
-                var image = rasterizer.GetPage(72, 72, 1);
+                var image = GetImage(pdfStream);
                 image.Save(actualStream, ImageFormat.Bmp);
                 var actual = actualStream.ToArray();
 
@@ -36,11 +37,21 @@ namespace LayItOut.PdfRendering.Tests
             }
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private static Image GetImage(MemoryStream pdfStream)
+        {
+            using (var rasterizer = new GhostscriptRasterizer())
+            {
+                rasterizer.Open(pdfStream, new GhostscriptVersionInfo("gsdll64.dll"), false);
+                return rasterizer.GetPage(72, 72, 1);
+            }
+        }
+
         private static bool IsTheSame(byte[] actual, byte[] expected)
         {
             if (actual.Length != expected.Length) return false;
             int diff = 0;
-            for(int i=0;i<actual.Length;++i)
+            for (int i = 0; i < actual.Length; ++i)
             {
                 if (actual[i] != expected[i]) ++diff;
             }
