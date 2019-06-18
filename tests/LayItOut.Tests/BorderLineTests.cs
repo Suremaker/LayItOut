@@ -10,21 +10,21 @@ namespace LayItOut.Tests
         [Fact]
         public void Parse_should_handle_size_and_color()
         {
-            BorderLine.Parse("10 red").ShouldBe(new BorderLine(10, Color.Red));
-            BorderLine.Parse("* #112233").ShouldBe(new BorderLine(SizeUnit.Unlimited, Color.FromArgb(0x11, 0x22, 0x33)));
+            Border.Parse("10 red").ShouldBe(new Border(10, Color.Red));
+            Border.Parse("1 #112233").ShouldBe(new Border(1, Color.FromArgb(0x11, 0x22, 0x33)));
         }
 
         [Fact]
         public void Parse_should_handle_empty_value()
         {
-            BorderLine.Parse("").ShouldBe(new BorderLine(SizeUnit.NotSet, Color.Empty));
+            Border.Parse("").ShouldBe(new Border(0, Color.Empty));
         }
 
         [Fact]
         public void Parse_should_throw_meaningful_exception()
         {
-            Assert.Throws<ArgumentException>(() => BorderLine.Parse("abc")).Message.StartsWith("Provided value is not a valid BorderLine: abc");
-            Assert.Throws<ArgumentException>(() => BorderLine.Parse("abc def")).Message.StartsWith("Provided value is not a valid BorderLine: abc def");
+            Assert.Throws<ArgumentException>(() => Border.Parse("abc")).Message.StartsWith("Provided value is not a valid Border: abc");
+            Assert.Throws<ArgumentException>(() => Border.Parse("abc def")).Message.StartsWith("Provided value is not a valid Border: abc def");
         }
     }
 }

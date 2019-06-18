@@ -29,22 +29,16 @@ namespace LayItOut.Tests.Components
                 Inner = new FixedMeasureComponent(1, 2),
                 Margin = new Spacer(10, 20, 30, 40),
                 Padding = new Spacer(100, 200, 300, 400),
-                Border = new Border(
-                    new BorderLine(1000, Color.Black),
-                    new BorderLine(2000, Color.Black),
-                    new BorderLine(3000, Color.Black),
-                    new BorderLine(4000, Color.Black)
-                )
+                Border = new Border(1000, Color.Black)
             };
             panel.Measure(new Size(int.MaxValue, int.MaxValue), TestRenderingContext.Instance);
-            panel.DesiredSize.ShouldBe(new Size(6661, 4442));
+            panel.DesiredSize.ShouldBe(new Size(2661, 2442));
         }
 
         [Theory]
-        [InlineData("10 -", "10 red; * black", "* 5", 2 * 5 + 10, 10 + 2 * 10 + 2 * 10)]
+        [InlineData("10 -", "1 red", "* 5", 2*1+2*5+10,2*10+2*1+10)]
         [InlineData("10 5 * -", "", "- * 30 2", 10 + 5 + 2, 10 + 10 + 30)]
-        public void Measure_should_only_include_absolute_values_of_Margin_Passing_and_Border(
-            string margin, string border, string padding, int expectedWidth, int expectedHeight)
+        public void Measure_should_only_include_absolute_values_of_Margin_and_Padding(string margin, string border, string padding, int expectedWidth, int expectedHeight)
         {
             var panel = new Panel
             {
@@ -64,22 +58,16 @@ namespace LayItOut.Tests.Components
             {
                 Margin = new Spacer(10, 20, 30, 40),
                 Padding = new Spacer(100, 200, 300, 400),
-                Border = new Border(
-                    new BorderLine(1000, Color.Black),
-                    new BorderLine(2000, Color.Black),
-                    new BorderLine(3000, Color.Black),
-                    new BorderLine(4000, Color.Black)
-                )
+                Border = new Border(1000, Color.Black)
             };
             panel.Measure(new Size(int.MaxValue, int.MaxValue), TestRenderingContext.Instance);
-            panel.DesiredSize.ShouldBe(new Size(6660, 4440));
+            panel.DesiredSize.ShouldBe(new Size(2660, 2440));
         }
 
         [Theory]
-        [InlineData(200, 200, 80, 140)]
+        [InlineData(200, 200, 100, 140)]
         [InlineData(60, 60, 0, 0)]
-        public void Measure_should_pass_size_to_Inner_component_decreased_by_Margin_Padding_and_Border_but_not_less_than_0(
-            int width, int height, int expectedWidth, int expectedHeight)
+        public void Measure_should_pass_size_to_Inner_component_decreased_by_Margin_Padding_and_Border_but_not_less_than_0(int width, int height, int expectedWidth, int expectedHeight)
         {
             var captured = Size.Empty;
             var inner = new TestableComponent
@@ -96,13 +84,7 @@ namespace LayItOut.Tests.Components
                 Inner = inner,
                 Margin = new Spacer(10, 20, 10, 20),
                 Padding = new Spacer(10, 20, 10, 20),
-                Border = new Border(
-                    new BorderLine(10, Color.Black),
-                    new BorderLine(20, Color.Black),
-                    new BorderLine(10, Color.Black),
-                    new BorderLine(20, Color.Black)
-                )
-            };
+                Border = new Border(10,Color.Black)};
 
             panel.Measure(new Size(width, height), TestRenderingContext.Instance);
             captured.ShouldBe(new Size(expectedWidth, expectedHeight));
@@ -115,7 +97,7 @@ namespace LayItOut.Tests.Components
             var panel = new Panel
             {
                 Margin = new Spacer(10),
-                Border = new Border(new BorderLine(1, Color.Black)),
+                Border = new Border(1, Color.Black),
                 Padding = new Spacer(5),
                 Inner = new Component { Width = 20, Height = 10 }
             };
@@ -137,7 +119,7 @@ namespace LayItOut.Tests.Components
             var panel = new Panel
             {
                 Margin = new Spacer(10),
-                Border = new Border(new BorderLine(10, Color.Black)),
+                Border = new Border(10, Color.Black),
                 Padding = new Spacer(10),
                 Inner = new Component { Width = 20, Height = 20 }
             };
@@ -159,7 +141,7 @@ namespace LayItOut.Tests.Components
             var panel = new Panel
             {
                 Margin = new Spacer(10),
-                Border = new Border(new BorderLine(10, Color.Black)),
+                Border = new Border(10, Color.Black),
                 Padding = new Spacer(10),
                 Inner = new Component { Width = 20, Height = 20 }
             };
@@ -181,7 +163,7 @@ namespace LayItOut.Tests.Components
             var panel = new Panel
             {
                 Margin = new Spacer(10),
-                Border = new Border(new BorderLine(10, Color.Black)),
+                Border = new Border(10, Color.Black),
                 Padding = new Spacer(10),
                 Inner = new Component { Width = 20, Height = 20 }
             };
@@ -203,7 +185,7 @@ namespace LayItOut.Tests.Components
             var panel = new Panel
             {
                 Margin = new Spacer(10),
-                Border = new Border(new BorderLine(10, Color.Black)),
+                Border = new Border(10, Color.Black),
                 Padding = new Spacer(10),
                 Inner = new Component { Width = 20, Height = 20 }
             };
@@ -225,7 +207,7 @@ namespace LayItOut.Tests.Components
             {
                 Inner = new Component { Width = SizeUnit.Unlimited, Height = SizeUnit.Unlimited },
                 Margin = Spacer.Parse("* 10 * 10"),
-                Border = Border.Parse("10 red; * red; * red; 20 red"),
+                Border = Border.Parse("5 red"),
                 Padding = Spacer.Parse("10 0 0 *"),
                 Width = SizeUnit.Unlimited,
                 Height = SizeUnit.Unlimited
@@ -235,13 +217,13 @@ namespace LayItOut.Tests.Components
             panel.Measure(size, TestRenderingContext.Instance);
             panel.Arrange(new Rectangle(Point.Empty, size));
 
-            //hor 3
-            //ver 4
-            //tot w 10+10+20 = 40 => 100-40 = 60 / 3 = 20
-            //tot h 10+10 = 20 => 100-20 = 80 / 4 = 20
-            panel.BorderLayout.ShouldBe(new Rectangle(10, 20, 80, 60));
-            panel.PaddingLayout.ShouldBe(new Rectangle(30, 30, 40, 30));
-            panel.Inner.Layout.ShouldBe(new Rectangle(30, 40, 20, 20));
+            //hor 2
+            //ver 3
+            //tot w 10+10+10 = 30 => 100-30 = 70 / 2 = 35
+            //tot h 10+10 = 30 => 100-30 = 80 / 3 = 26.6
+            panel.BorderLayout.ShouldBe(new Rectangle(10, 26, 80, 47));
+            panel.PaddingLayout.ShouldBe(new Rectangle(15, 31, 70, 37));
+            panel.Inner.Layout.ShouldBe(new Rectangle(15, 41, 35, 27));
         }
     }
 }

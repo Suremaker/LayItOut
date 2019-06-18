@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using Shouldly;
 using Xunit;
 
@@ -37,9 +36,9 @@ namespace LayItOut.Tests
         {
             var topLeft = 5;
             var topRight = 10;
-            var bottomLeft = 15;
-            var bottomRight = 20;
-            var spacer = new BorderRadius(topLeft, topRight, bottomLeft, bottomRight);
+            var bottomRight = 15;
+            var bottomLeft = 20;
+            var spacer = new BorderRadius(topLeft, topRight, bottomRight, bottomLeft);
             spacer.TopLeft.ShouldBe(topLeft);
             spacer.TopRight.ShouldBe(topRight);
             spacer.BottomLeft.ShouldBe(bottomLeft);

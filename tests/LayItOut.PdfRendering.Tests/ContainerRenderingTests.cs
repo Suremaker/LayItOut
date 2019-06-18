@@ -18,21 +18,21 @@ namespace LayItOut.PdfRendering.Tests
             {
                 BackgroundColor = Color.Yellow,
                 Padding = new Spacer(5),
-                Border = new Border(new BorderLine(3, Color.Red)),
+                Border = new Border(3, Color.Red),
                 Alignment = new Alignment(VerticalAlignment.Bottom)
             });
             hbox.AddComponent(new Panel
             {
                 BackgroundColor = Color.Green,
                 Padding = new Spacer(10, 5),
-                Border = new Border(new BorderLine(2, Color.Red)),
+                Border = new Border(2, Color.Red),
                 Alignment = new Alignment(VerticalAlignment.Center)
             });
             hbox.AddComponent(new Panel
             {
                 BackgroundColor = Color.Blue,
                 Padding = new Spacer(15, 5),
-                Border = new Border(new BorderLine(1, Color.Red))
+                Border = new Border(1, Color.Red)
             });
             var panel = new Panel
             {
@@ -100,35 +100,21 @@ namespace LayItOut.PdfRendering.Tests
                 new []{"10 10 0 0","10 0 10 0","10 0 0 10","0 0 10 10" },
                 new []{"10 10 10 0","10 0 10 10","10 10 0 10","10 10 10 10" }
             };
-            var borderLines = new[]
+            foreach (var boxLine in borders)
             {
-                "1 black",
-                "1 black;;;",
-                ";1 black;;",
-                ";;1 black;",
-                ";;;1 black",
-                "1 black;",
-                ";1 black",
-                "1 black;1 black;1 black;",
-                "1 black;;1 black;1 black",
-                "1 black;2 black;3 black;4 black"
-            };
-            foreach (var borderLine in borderLines)
-                foreach (var boxLine in borders)
-                {
-                    var hbox = new HBox();
-                    foreach (var border in boxLine)
-                        hbox.AddComponent(new Panel
-                        {
-                            Margin = new Spacer(1),
-                            BackgroundColor = Color.Orange,
-                            Width = 24,
-                            Height = 24,
-                            Border = Border.Parse(borderLine),
-                            BorderRadius = BorderRadius.Parse(border)
-                        });
-                    vbox.AddComponent(hbox);
-                }
+                var hbox = new HBox();
+                foreach (var border in boxLine)
+                    hbox.AddComponent(new Panel
+                    {
+                        Margin = new Spacer(1),
+                        BackgroundColor = Color.Orange,
+                        Width = 24,
+                        Height = 24,
+                        Border = Border.Parse("1 black"),
+                        BorderRadius = BorderRadius.Parse(border)
+                    });
+                vbox.AddComponent(hbox);
+            }
 
             var doc = new PdfDocument();
             var page = doc.AddPage();

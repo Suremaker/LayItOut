@@ -2,7 +2,6 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using Ghostscript.NET;
 using Ghostscript.NET.Rasterizer;
@@ -56,7 +55,8 @@ namespace LayItOut.PdfRendering.Tests.Helpers
                 if (actual[i] != expected[i]) ++diff;
             }
 
-            return diff * 100.0 / actual.Length < 1;
+            var actualDiff = diff * 100.0 / actual.Length;
+            return actualDiff < 1.5;
         }
     }
 }

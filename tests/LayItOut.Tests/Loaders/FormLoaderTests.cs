@@ -21,7 +21,7 @@ namespace LayItOut.Tests.Loaders
             panel.Margin.ShouldBe(new Spacer(10));
             panel.Padding.ShouldBe(new Spacer(20, 5));
             panel.BackgroundColor.ShouldBe(Color.Black);
-            panel.Border.ShouldBe(Border.Parse("5 #fafaff; 3 red"));
+            panel.Border.ShouldBe(Border.Parse("5 #fafaff"));
 
             var vbox = panel.Inner.ShouldBeOfType<VBox>();
             vbox.Width.ShouldBe(SizeUnit.Unlimited);

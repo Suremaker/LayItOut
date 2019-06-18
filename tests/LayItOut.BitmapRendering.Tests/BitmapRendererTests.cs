@@ -13,9 +13,9 @@ namespace LayItOut.BitmapRendering.Tests
             var renderer = new BitmapRenderer();
 
             var hbox = new HBox { Alignment = Alignment.Center };
-            hbox.AddComponent(new Panel { BackgroundColor = Color.Yellow, Padding = new Spacer(5), Border = new Border(new BorderLine(3, Color.Red)), Alignment = new Alignment(VerticalAlignment.Bottom) });
-            hbox.AddComponent(new Panel { BackgroundColor = Color.Green, Padding = new Spacer(10, 5), Border = new Border(new BorderLine(2, Color.Red)), Alignment = new Alignment(VerticalAlignment.Center) });
-            hbox.AddComponent(new Panel { BackgroundColor = Color.Blue, Padding = new Spacer(15, 5), Border = new Border(new BorderLine(1, Color.Red)) });
+            hbox.AddComponent(new Panel { BackgroundColor = Color.Yellow, Padding = new Spacer(5), Border = new Border(3, Color.Red), Alignment = new Alignment(VerticalAlignment.Bottom) });
+            hbox.AddComponent(new Panel { BackgroundColor = Color.Green, Padding = new Spacer(10, 5), Border = new Border(2, Color.Red), Alignment = new Alignment(VerticalAlignment.Center) });
+            hbox.AddComponent(new Panel { BackgroundColor = Color.Blue, Padding = new Spacer(15, 5), Border = new Border(1, Color.Red) });
             var panel = new Panel
             {
                 Width = SizeUnit.Unlimited,

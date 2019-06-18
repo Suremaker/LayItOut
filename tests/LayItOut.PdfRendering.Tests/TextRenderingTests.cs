@@ -19,7 +19,7 @@ namespace LayItOut.PdfRendering.Tests
                 Height = SizeUnit.Unlimited,
                 BackgroundColor = Color.Yellow,
                 Margin = new Spacer(1),
-                Border = new Border(new BorderLine(1, Color.Black)),
+                Border = new Border(1, Color.Black),
                 Padding = new Spacer(2),
                 Inner = new Label
                 {
@@ -35,7 +35,7 @@ namespace LayItOut.PdfRendering.Tests
                 Height = SizeUnit.Unlimited,
                 BackgroundColor = Color.DarkSeaGreen,
                 Margin = new Spacer(1),
-                Border = new Border(new BorderLine(1, Color.Black)),
+                Border = new Border(1, Color.Black),
                 Padding = new Spacer(2),
                 Inner = new Link
                 {
@@ -59,7 +59,7 @@ namespace LayItOut.PdfRendering.Tests
                 Height = SizeUnit.Unlimited,
                 BackgroundColor = Color.LightYellow,
                 Margin = new Spacer(1),
-                Border = new Border(new BorderLine(1, Color.Black)),
+                Border = new Border(1, Color.Black),
                 Padding = new Spacer(2),
                 Inner = textBox
             });
@@ -148,7 +148,7 @@ namespace LayItOut.PdfRendering.Tests
                     Height = SizeUnit.Unlimited,
                     BackgroundColor = Color.Yellow,
                     Margin = new Spacer(1),
-                    Border = new Border(new BorderLine(1, Color.Black)),
+                    Border = new Border(1, Color.Black),
                     Padding = new Spacer(2),
                     Inner = new Label
                     {
@@ -195,7 +195,7 @@ namespace LayItOut.PdfRendering.Tests
                     Height = SizeUnit.Unlimited,
                     BackgroundColor = Color.Green,
                     Margin = new Spacer(1),
-                    Border = new Border(new BorderLine(1, Color.Black)),
+                    Border = new Border(1, Color.Black),
                     Padding = new Spacer(2),
                     Inner = textBox
                 });
