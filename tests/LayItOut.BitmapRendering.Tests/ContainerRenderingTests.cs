@@ -1,4 +1,5 @@
 using System.Drawing;
+using LayItOut.BitmapRendering.Tests.Helpers;
 using LayItOut.Components;
 using Xunit;
 

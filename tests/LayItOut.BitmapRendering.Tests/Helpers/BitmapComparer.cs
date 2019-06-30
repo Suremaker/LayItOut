@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 
-namespace LayItOut.BitmapRendering.Tests
+namespace LayItOut.BitmapRendering.Tests.Helpers
 {
     static class BitmapComparer
     {

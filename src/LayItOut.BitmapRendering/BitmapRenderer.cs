@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using LayItOut.BitmapRendering.Renderers;
+using LayItOut.Components;
 using LayItOut.Rendering;
 
 namespace LayItOut.BitmapRendering
@@ -14,6 +15,10 @@ namespace LayItOut.BitmapRendering
         public BitmapRenderer(Action<Graphics> configureGraphics = null)
         {
             RegisterRenderer(new PanelRenderer());
+            RegisterRenderer(new TextRenderer<Link>());
+            RegisterRenderer(new TextRenderer<Label>());
+            RegisterRenderer(new TextRenderer<TextBox>());
+            RegisterRenderer(new ImageRenderer());
             _configureGraphics = configureGraphics;
         }
 

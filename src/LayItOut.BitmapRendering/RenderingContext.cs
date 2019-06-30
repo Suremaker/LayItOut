@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Text;
+using System.Text.RegularExpressions;
 using LayItOut.Rendering;
 
 namespace LayItOut.BitmapRendering
 {
-    //TODO: fix
     class RenderingContext : IRenderingContext
     {
         private readonly Graphics _graphics;
@@ -16,12 +17,21 @@ namespace LayItOut.BitmapRendering
 
         public SizeF MeasureText(string text, Font font)
         {
-            throw new NotImplementedException();
+            var state = _graphics.TextRenderingHint;
+            try
+            {
+                _graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+                return _graphics.MeasureString(text, font, new SizeF(int.MaxValue, int.MaxValue), StringFormat.GenericTypographic);
+            }
+            finally
+            {
+                _graphics.TextRenderingHint = state;
+            }
         }
 
         public float GetSpaceWidth(Font font)
         {
-            throw new NotImplementedException();
+            return MeasureText("x x", font).Width - MeasureText("xx", font).Width;
         }
     }
 }
