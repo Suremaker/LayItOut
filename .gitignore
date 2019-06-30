@@ -1,5 +1,5 @@
-bin
-obj
+bin/
+obj/
 *ReSharper*
 *.suo
 *.user
@@ -7,3 +7,4 @@ obj
 *.userprefs
 .vs
 *.orig
+output/

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="..\Common.Tests.props" />
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
-
+    <PlatformTarget>x64</PlatformTarget>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -27,6 +27,15 @@
 
   <ItemGroup>
     <None Update="expected\*.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ahronbd.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="form.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

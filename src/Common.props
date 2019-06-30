@@ -1,0 +1,29 @@
+<Project>
+  <PropertyGroup>
+    <Copyright>Copyright © Wojciech Kotlarski</Copyright>
+    <VersionPrefix>0.0.1</VersionPrefix>
+    <Authors>Wojciech Kotlarski</Authors>
+    <Company>https://github.com/Suremaker/LayItOut</Company>
+    <PackageIconUrl></PackageIconUrl>
+    <PackageProjectUrl>https://github.com/Suremaker/LayItOut</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/Suremaker/LayItOut</RepositoryUrl>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <IncludeSymbols>True</IncludeSymbols>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageOutputPath>$(SolutionDir)\output</PackageOutputPath>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageTags>layout;pdf;forms</PackageTags>
+    <PackageReleaseNotes>Initial implementation of LayItOut engine with support for PDF and Bitmap generation</PackageReleaseNotes>
+    <IsPackable>true</IsPackable>
+    <LangVersion>latest</LangVersion>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
+  </ItemGroup>
+</Project>

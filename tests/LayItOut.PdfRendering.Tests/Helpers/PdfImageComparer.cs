@@ -15,11 +15,16 @@ namespace LayItOut.PdfRendering.Tests.Helpers
         public static void ComparePdfs(string name, PdfDocument doc)
         {
             using (var pdfStream = new MemoryStream())
-            using (var actualStream = new MemoryStream())
             {
                 doc.Save(pdfStream);
-                pdfStream.Seek(0, SeekOrigin.Begin);
-                var image = GetImage(pdfStream);
+                ComparePdfs(name,pdfStream.ToArray());
+            }
+        }
+        public static void ComparePdfs(string name, byte[] pdfBytes)
+        {
+            using (var actualStream = new MemoryStream())
+            {
+                var image = GetImage(pdfBytes);
                 image.Save(actualStream, ImageFormat.Bmp);
                 var actual = actualStream.ToArray();
 
@@ -30,18 +35,18 @@ namespace LayItOut.PdfRendering.Tests.Helpers
                     File.WriteAllBytes(output, actual);
 
                     var outputPdf = $"{AppContext.BaseDirectory}\\{name}.actual.pdf";
-                    File.WriteAllBytes(outputPdf, pdfStream.ToArray());
+                    File.WriteAllBytes(outputPdf, pdfBytes);
                     Assert.True(false, $"Bitmap does not match: {output}");
                 }
             }
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        private static Image GetImage(MemoryStream pdfStream)
+        private static Image GetImage(byte[] pdfBytes)
         {
             using (var rasterizer = new GhostscriptRasterizer())
             {
-                rasterizer.Open(pdfStream, new GhostscriptVersionInfo("gsdll64.dll"), false);
+                rasterizer.Open(new MemoryStream(pdfBytes), new GhostscriptVersionInfo("gsdll64.dll"), false);
                 return rasterizer.GetPage(72, 72, 1);
             }
         }

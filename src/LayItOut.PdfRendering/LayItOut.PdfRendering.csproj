@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="..\Common.props" />
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.2;net461</TargetFrameworks>
   </PropertyGroup>
