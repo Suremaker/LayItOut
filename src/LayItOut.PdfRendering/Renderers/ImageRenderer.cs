@@ -6,9 +6,9 @@ using PdfSharp.Drawing;
 
 namespace LayItOut.PdfRendering.Renderers
 {
-    class ImageRenderer : IComponentRenderer<XGraphics, Image>
+    class ImageRenderer : IComponentRenderer<PdfRendererContext, Image>
     {
-        public void Render(XGraphics graphics, Image component)
+        public void Render(PdfRendererContext ctx, Image component)
         {
             if (component.Src == null)
                 return;
@@ -18,7 +18,7 @@ namespace LayItOut.PdfRendering.Renderers
                 component.Src.Save(mem, ImageFormat.Png);
                 mem.Seek(0, SeekOrigin.Begin);
                 using (var img = XImage.FromStream(mem))
-                    graphics.DrawImage(img, component.Layout.ToXRect());
+                    ctx.Graphics.DrawImage(img, component.Layout.ToXRect());
             }
         }
     }

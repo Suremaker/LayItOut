@@ -4,10 +4,11 @@ using LayItOut.Rendering;
 
 namespace LayItOut.BitmapRendering.Renderers
 {
-    class TextRenderer<T> : IComponentRenderer<Graphics, T> where T : ITextComponent, IComponent
+    class TextRenderer<T> : IComponentRenderer<RendererContext, T> where T : ITextComponent, IComponent
     {
-        public void Render(Graphics graphics, T element)
+        public void Render(RendererContext ctx, T element)
         {
+            var graphics = ctx.Graphics;
             foreach (var area in element.TextLayout.Areas)
             {
                 var rect = area.Area;
@@ -24,7 +25,7 @@ namespace LayItOut.BitmapRendering.Renderers
                 using (var brush = new SolidBrush(meta.Color))
                     graphics.DrawString(
                         area.Block.Text,
-                        meta.Font,
+                        ctx.FontResolver.Resolve(meta.Font),
                         brush,
                         rect, StringFormat.GenericTypographic);
 

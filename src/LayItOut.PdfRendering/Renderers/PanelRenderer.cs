@@ -5,9 +5,9 @@ using PdfSharp.Drawing;
 
 namespace LayItOut.PdfRendering.Renderers
 {
-    internal class PanelRenderer : IComponentRenderer<XGraphics, Panel>
+    internal class PanelRenderer : IComponentRenderer<PdfRendererContext, Panel>
     {
-        public void Render(XGraphics graphics, Panel panel)
+        public void Render(PdfRendererContext ctx, Panel panel)
         {
             if (panel.BackgroundColor.A == 0 && panel.Border.Color.A == 0)
                 return;
@@ -34,11 +34,11 @@ namespace LayItOut.PdfRendering.Renderers
             path.CloseFigure();
 
             if (pen != null && brush != null)
-                graphics.DrawPath(pen, brush, path);
+                ctx.Graphics.DrawPath(pen, brush, path);
             else if (pen != null)
-                graphics.DrawPath(pen, path);
+                ctx.Graphics.DrawPath(pen, path);
             else
-                graphics.DrawPath(brush, path);
+                ctx.Graphics.DrawPath(brush, path);
         }
     }
 }

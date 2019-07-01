@@ -6,7 +6,7 @@ namespace LayItOut.Components
 {
     public interface IComponent
     {
-        void Measure(Size size, IRenderingContext context);
+        void Measure(Size size, IRendererContext context);
         void Arrange(Rectangle area);
 
         SizeUnit Width { get; }

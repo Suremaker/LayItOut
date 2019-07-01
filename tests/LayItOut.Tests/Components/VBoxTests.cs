@@ -17,7 +17,7 @@ namespace LayItOut.Tests.Components
             box.AddComponent(new FixedMeasureComponent(22, 22));
             box.AddComponent(new FixedMeasureComponent(11, 11));
             box.AddComponent(new FixedMeasureComponent(33, 33));
-            box.Measure(new Size(100, 100), TestRenderingContext.Instance);
+            box.Measure(new Size(100, 100), TestRendererContext.Instance);
 
             box.DesiredSize.ShouldBe(new Size(33, 66));
         }
@@ -33,11 +33,11 @@ namespace LayItOut.Tests.Components
             box.AddComponent(c1.Object);
             box.AddComponent(c2.Object);
             box.AddComponent(c3.Object);
-            box.Measure(new Size(100, 30), TestRenderingContext.Instance);
+            box.Measure(new Size(100, 30), TestRendererContext.Instance);
 
-            c1.Verify(x => x.Measure(new Size(100, 30), TestRenderingContext.Instance));
-            c2.Verify(x => x.Measure(new Size(100, 15), TestRenderingContext.Instance));
-            c3.Verify(x => x.Measure(new Size(100, 0), TestRenderingContext.Instance));
+            c1.Verify(x => x.Measure(new Size(100, 30), TestRendererContext.Instance));
+            c2.Verify(x => x.Measure(new Size(100, 15), TestRendererContext.Instance));
+            c3.Verify(x => x.Measure(new Size(100, 0), TestRendererContext.Instance));
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace LayItOut.Tests.Components
             box.AddComponent(c2);
             box.AddComponent(c3);
 
-            box.Measure(area.Size, TestRenderingContext.Instance);
+            box.Measure(area.Size, TestRendererContext.Instance);
             box.Arrange(area);
 
             c1.Layout.ShouldBe(new Rectangle(5, 5, 90, 15));
@@ -76,7 +76,7 @@ namespace LayItOut.Tests.Components
             box.AddComponent(c2);
             box.AddComponent(c3);
 
-            box.Measure(area.Size, TestRenderingContext.Instance);
+            box.Measure(area.Size, TestRendererContext.Instance);
             box.Arrange(area);
             var totalChildrenHeight = box.GetChildren().Sum(x => x.DesiredSize.Height);
             var remainingHeight = area.Height - totalChildrenHeight;
@@ -102,7 +102,7 @@ namespace LayItOut.Tests.Components
             var c1 = new Component { Height = 110, Width = 120 };
             box.AddComponent(c1);
 
-            box.Measure(area.Size, TestRenderingContext.Instance);
+            box.Measure(area.Size, TestRendererContext.Instance);
             box.Arrange(area);
             c1.Layout.ShouldBe(area);
         }
@@ -120,7 +120,7 @@ namespace LayItOut.Tests.Components
             box.AddComponent(c2);
             box.AddComponent(c3);
 
-            box.Measure(area.Size, TestRenderingContext.Instance);
+            box.Measure(area.Size, TestRendererContext.Instance);
             box.Arrange(area);
             c1.Layout.ShouldBe(new Rectangle(5,5,100,40));
             c2.Layout.ShouldBe(new Rectangle(5,45,100,50));
@@ -148,7 +148,7 @@ namespace LayItOut.Tests.Components
             box.AddComponent(c2);
             box.AddComponent(c3);
 
-            box.Measure(area.Size, TestRenderingContext.Instance);
+            box.Measure(area.Size, TestRendererContext.Instance);
             box.Arrange(area);
 
             c1.Layout.ShouldBe(new Rectangle(5, 5, 100, 20 + 12));

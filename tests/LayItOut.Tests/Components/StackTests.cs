@@ -18,7 +18,7 @@ namespace LayItOut.Tests.Components
             stack.AddComponent(new FixedMeasureComponent(30, 5));
             stack.AddComponent(new FixedMeasureComponent(5, 10));
 
-            stack.Measure(new Size(100, 100), TestRenderingContext.Instance);
+            stack.Measure(new Size(100, 100), TestRendererContext.Instance);
 
             stack.DesiredSize.ShouldBe(new Size(30, 20));
         }
@@ -32,9 +32,9 @@ namespace LayItOut.Tests.Components
             var stack = new Stack();
             stack.AddComponent(child.Object);
 
-            stack.Measure(size, TestRenderingContext.Instance);
+            stack.Measure(size, TestRendererContext.Instance);
 
-            child.Verify(x => x.Measure(size, TestRenderingContext.Instance));
+            child.Verify(x => x.Measure(size, TestRendererContext.Instance));
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace LayItOut.Tests.Components
             foreach (var child in children)
                 stack.AddComponent(child.Object);
 
-            stack.Measure(area.Size, TestRenderingContext.Instance);
+            stack.Measure(area.Size, TestRendererContext.Instance);
             stack.Arrange(area);
 
             stack.Layout.ShouldBe(new Rectangle(15, 25, 20, 30));

@@ -10,12 +10,12 @@ namespace LayItOut.Tests.TextFormatting
     public class TextMeasurementTests
     {
         private readonly TextMeasurement _measurement = new TextMeasurement();
-        private readonly Font _font = new Font(FontFamily.GenericMonospace, 10);
+        private readonly FontInfo _font = new FontInfo("Mono", 10);
 
         [Fact]
         public void Measure_should_put_blocks_in_same_line_if_they_fit()
         {
-            var measure = _measurement.Measure(TestRenderingContext.Instance, 20, Block("Hello"), Block("Bob"), Block("my"), Block("friend!"));
+            var measure = _measurement.Measure(TestRendererContext.Instance, 20, Block("Hello"), Block("Bob"), Block("my"), Block("friend!"));
             measure.Lines.Count.ShouldBe(1);
             measure.Lines[0].Blocks.Count.ShouldBe(4);
         }
@@ -23,40 +23,40 @@ namespace LayItOut.Tests.TextFormatting
         [Fact]
         public void Measure_should_measure_all_blocks_sizes_and_space_padding()
         {
-            var measure = _measurement.Measure(TestRenderingContext.Instance, 20, Block("Hello"), Block("Bob"), Block("my"), Block("friend!"));
+            var measure = _measurement.Measure(TestRendererContext.Instance, 20, Block("Hello"), Block("Bob"), Block("my"), Block("friend!"));
             foreach (var area in measure.Lines.SelectMany(x => x.Blocks))
             {
-                area.Measure.ShouldBe(TestRenderingContext.Instance.MeasureText(area.Block.Text, area.Block.Metadata.Font));
-                area.SpacePadding.ShouldBe(TestRenderingContext.Instance.GetSpaceWidth(area.Block.Metadata.Font));
+                area.Measure.ShouldBe(TestRendererContext.Instance.MeasureText(area.Block.Text, area.Block.Metadata.Font));
+                area.SpacePadding.ShouldBe(TestRendererContext.Instance.GetSpaceWidth(area.Block.Metadata.Font));
             }
         }
 
         [Fact]
         public void Measure_should_preserve_empty_line_height()
         {
-            var measure = _measurement.Measure(TestRenderingContext.Instance, 20, Block("Hey\n\nbob!"));
+            var measure = _measurement.Measure(TestRendererContext.Instance, 20, Block("Hey\n\nbob!"));
             measure.Lines.Select(x => x.Blocks.Count).ShouldBe(new[] { 1, 0, 1 });
-            measure.Lines[1].Measure.ShouldBe(new SizeF(0, _font.GetHeight()));
+            measure.Lines[1].Measure.ShouldBe(new SizeF(0, TestRendererContext.Instance.GetHeight(_font)));
         }
 
         [Fact]
         public void Measure_should_normalize_blocks()
         {
-            var measure = _measurement.Measure(TestRenderingContext.Instance, int.MaxValue, Block("How are you"), Block("Bob Smith", isInline: true), Block("my friend?"));
+            var measure = _measurement.Measure(TestRendererContext.Instance, int.MaxValue, Block("How are you"), Block("Bob Smith", isInline: true), Block("my friend?"));
             measure.Lines.SelectMany(x => x.Blocks.Select(b => b.Block.Text)).ShouldBe(new[] { "How", "are", "you", "Bob Smith", "my", "friend?" });
         }
 
         [Fact]
         public void Measure_should_move_block_to_new_line_if_does_not_fit()
         {
-            var measure = _measurement.Measure(TestRenderingContext.Instance, 9, Block("Hello"), Block("Bob"), Block("my"), Block("friend!"));
+            var measure = _measurement.Measure(TestRendererContext.Instance, 9, Block("Hello"), Block("Bob"), Block("my"), Block("friend!"));
             measure.Lines.Select(x => x.Blocks.Count).ShouldBe(new[] { 2, 1, 1 });
         }
 
         [Fact]
         public void Measure_should_move_block_to_new_line_if_encounter_new_line_character()
         {
-            var measure = _measurement.Measure(TestRenderingContext.Instance, int.MaxValue, Block("Hello Bob,\nmy friend!"));
+            var measure = _measurement.Measure(TestRendererContext.Instance, int.MaxValue, Block("Hello Bob,\nmy friend!"));
             measure.Lines.SelectMany(x => x.Blocks.Select(b => b.Block.Text)).ShouldBe(new[] { "Hello", "Bob,", "my", "friend!" });
             measure.Lines.Select(x => x.Blocks.Count).ShouldBe(new[] { 2, 2 });
         }
@@ -69,7 +69,7 @@ namespace LayItOut.Tests.TextFormatting
         [InlineData(TextAlignment.Justify, "Hello", 20, 5, 0f)]
         public void LayOut_should_align_text_accordingly(TextAlignment alignment, string text, int width, int expectedWidth, params float[] positions)
         {
-            var layout = _measurement.LayOut(width, alignment, _measurement.Measure(TestRenderingContext.Instance, width, Block(text)));
+            var layout = _measurement.LayOut(width, alignment, _measurement.Measure(TestRendererContext.Instance, width, Block(text)));
             layout.Size.Width.ShouldBe(expectedWidth);
             layout.Areas.Select(a => a.Position.X).ShouldBe(positions);
         }
@@ -77,7 +77,7 @@ namespace LayItOut.Tests.TextFormatting
         [Fact]
         public void LayOut_should_put_blocks_one_after_another_within_the_same_line_and_separate_by_space()
         {
-            var measure = _measurement.Measure(TestRenderingContext.Instance, 20, Block("Hello"), Block("Bob"), Block("my"), Block("friend!"));
+            var measure = _measurement.Measure(TestRendererContext.Instance, 20, Block("Hello"), Block("Bob"), Block("my"), Block("friend!"));
             var layout = _measurement.LayOut(20, TextAlignment.Left, measure);
             layout.Areas.Count.ShouldBe(4);
             var last = layout.Areas[0];
@@ -92,14 +92,14 @@ namespace LayItOut.Tests.TextFormatting
         [Fact]
         public void LayOut_should_exclude_white_space_on_word_wrap()
         {
-            var measure = _measurement.Measure(TestRenderingContext.Instance, 10, Block("Hello Bob my friend"));
+            var measure = _measurement.Measure(TestRendererContext.Instance, 10, Block("Hello Bob my friend"));
             var layout = _measurement.LayOut(10, TextAlignment.Right, measure);
             layout.Areas.Select(a => a.Position).ShouldBe(new[]
             {
                 new PointF(1,0),
                 new PointF(7,0),
-                new PointF(1,_font.GetHeight()),
-                new PointF(4,_font.GetHeight())
+                new PointF(1,TestRendererContext.Instance.GetHeight(_font)),
+                new PointF(4,TestRendererContext.Instance.GetHeight(_font))
             });
         }
 
@@ -107,8 +107,8 @@ namespace LayItOut.Tests.TextFormatting
         public void LayOut_should_honor_line_height()
         {
             var lineHeight = 0.5f;
-            var origHeight = _font.GetHeight();
-            var measure = _measurement.Measure(TestRenderingContext.Instance, 10, Block("Hello Bob my friend", lineHeight));
+            var origHeight = TestRendererContext.Instance.GetHeight(_font);
+            var measure = _measurement.Measure(TestRendererContext.Instance, 10, Block("Hello Bob my friend", lineHeight));
             var layout = _measurement.LayOut(10, TextAlignment.Right, measure);
             layout.Areas.Select(a => a.Position).ShouldBe(new[]
             {

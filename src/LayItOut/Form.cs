@@ -14,7 +14,7 @@ namespace LayItOut
             Content = content ?? throw new ArgumentNullException(nameof(content));
         }
 
-        public void LayOut(Size size, IRenderingContext context)
+        public void LayOut(Size size, IRendererContext context)
         {
             Content.Measure(size, context);
             Content.Arrange(new Rectangle(Point.Empty, size));

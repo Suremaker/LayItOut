@@ -8,7 +8,7 @@ namespace LayItOut.Components
     {
         public VerticalAlignment ContentAlignment { get; set; }
 
-        protected override Size OnMeasure(Size size, IRenderingContext context)
+        protected override Size OnMeasure(Size size, IRendererContext context)
         {
             var result = Size.Empty;
 

@@ -24,7 +24,7 @@ namespace LayItOut.PdfRendering.Tests
                 Inner = new Label
                 {
                     FontColor = Color.Red,
-                    Font = new Font(FontFamily.GenericSerif, 10, FontStyle.Underline | FontStyle.Italic, GraphicsUnit.World),
+                    Font = new FontInfo(TestFontFamily.Serif, 10, FontInfoStyle.Underline | FontInfoStyle.Italic),
                     Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?"
                 }
             });
@@ -40,19 +40,19 @@ namespace LayItOut.PdfRendering.Tests
                 Inner = new Link
                 {
                     FontColor = Color.Blue,
-                    Font = new Font(FontFamily.GenericSerif, 14, FontStyle.Bold, GraphicsUnit.World),
+                    Font = new FontInfo(TestFontFamily.Serif, 14, FontInfoStyle.Bold),
                     Text = "How are you doing today?",
                     Href = "http://google.com"
                 }
             });
 
             var textBox = new TextBox();
-            textBox.AddComponent(new Label { Text = "Hello!\n", FontColor = Color.Green, Font = new Font(FontFamily.GenericMonospace, 20, FontStyle.Underline, GraphicsUnit.World) });
-            textBox.AddComponent(new Label { Text = "Hi Bob, nice to see you after", FontColor = Color.Black, Font = new Font(FontFamily.GenericSansSerif, 10, GraphicsUnit.World) });
-            textBox.AddComponent(new Label { Text = "20", FontColor = Color.Red, Font = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold, GraphicsUnit.World) });
-            textBox.AddComponent(new Label { Text = "years!\n", FontColor = Color.Black, Font = new Font(FontFamily.GenericSansSerif, 10, GraphicsUnit.World) });
-            textBox.AddComponent(new Label { Text = "I'm sure you'd love to see my new", FontColor = Color.Black, Font = new Font(FontFamily.GenericSansSerif, 10, GraphicsUnit.World) });
-            textBox.AddComponent(new Link { Text = "website", FontColor = Color.Blue, Font = new Font(FontFamily.GenericSansSerif, 12, FontStyle.Italic, GraphicsUnit.World), Href = "http://google.com" });
+            textBox.AddComponent(new Label { Text = "Hello!\n", FontColor = Color.Green, Font = new FontInfo(TestFontFamily.Monospace, 20, FontInfoStyle.Underline) });
+            textBox.AddComponent(new Label { Text = "Hi Bob, nice to see you after", FontColor = Color.Black, Font = new FontInfo(TestFontFamily.SansSerif, 10) });
+            textBox.AddComponent(new Label { Text = "20", FontColor = Color.Red, Font = new FontInfo(TestFontFamily.SansSerif, 10, FontInfoStyle.Bold) });
+            textBox.AddComponent(new Label { Text = "years!\n", FontColor = Color.Black, Font = new FontInfo(TestFontFamily.SansSerif, 10) });
+            textBox.AddComponent(new Label { Text = "I'm sure you'd love to see my new", FontColor = Color.Black, Font = new FontInfo(TestFontFamily.SansSerif, 10) });
+            textBox.AddComponent(new Link { Text = "website", FontColor = Color.Blue, Font = new FontInfo(TestFontFamily.SansSerif, 12, FontInfoStyle.Italic), Href = "http://google.com" });
             content.AddComponent(new Panel
             {
                 Width = SizeUnit.Unlimited,
@@ -88,7 +88,7 @@ namespace LayItOut.PdfRendering.Tests
                 Inner = new Label
                 {
                     FontColor = Color.Red,
-                    Font = new Font(FontFamily.GenericSerif, 10, FontStyle.Underline | FontStyle.Italic, GraphicsUnit.World),
+                    Font = new FontInfo(TestFontFamily.Serif, 10, FontInfoStyle.Underline | FontInfoStyle.Italic),
                     Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?",
                     LineHeight = 1.2f
                 }
@@ -103,7 +103,7 @@ namespace LayItOut.PdfRendering.Tests
                 Inner = new Label
                 {
                     FontColor = Color.Red,
-                    Font = new Font(FontFamily.GenericSerif, 10, FontStyle.Underline | FontStyle.Italic, GraphicsUnit.World),
+                    Font = new FontInfo(TestFontFamily.Serif, 10, FontInfoStyle.Underline | FontInfoStyle.Italic),
                     Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?",
                     LineHeight = 2f
                 }
@@ -118,7 +118,7 @@ namespace LayItOut.PdfRendering.Tests
                 Inner = new Label
                 {
                     FontColor = Color.Red,
-                    Font = new Font(FontFamily.GenericSerif, 10, FontStyle.Underline | FontStyle.Italic, GraphicsUnit.World),
+                    Font = new FontInfo(TestFontFamily.Serif, 10, FontInfoStyle.Underline | FontInfoStyle.Italic),
                     Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?",
                     LineHeight = 0.8f
                 }
@@ -155,7 +155,7 @@ namespace LayItOut.PdfRendering.Tests
                         Width = SizeUnit.Unlimited,
                         FontColor = Color.Red,
                         TextAlignment = align,
-                        Font = new Font(FontFamily.GenericSerif, 10, FontStyle.Underline | FontStyle.Italic, GraphicsUnit.World),
+                        Font = new FontInfo(TestFontFamily.Serif, 10, FontInfoStyle.Underline | FontInfoStyle.Italic),
                         Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?"
                     }
                 });
@@ -173,20 +173,20 @@ namespace LayItOut.PdfRendering.Tests
                 {
                     FontColor = Color.Red,
                     Text = "Hi Bob!",
-                    Font = new Font(FontFamily.GenericSerif, 10, FontStyle.Underline | FontStyle.Italic, GraphicsUnit.World)
+                    Font = new FontInfo(TestFontFamily.Serif, 10, FontInfoStyle.Underline | FontInfoStyle.Italic)
                 });
 
                 textBox.AddComponent(new Link
                 {
                     FontColor = Color.Black,
                     Text = "Check out this: ",
-                    Font = new Font(FontFamily.GenericSerif, 12, FontStyle.Regular, GraphicsUnit.World)
+                    Font = new FontInfo(TestFontFamily.Serif, 12, FontInfoStyle.Regular)
                 });
                 textBox.AddComponent(new Link
                 {
                     FontColor = Color.Purple,
                     Text = "great link!!!",
-                    Font = new Font(FontFamily.GenericSerif, 8, FontStyle.Underline, GraphicsUnit.World),
+                    Font = new FontInfo(TestFontFamily.Serif, 8, FontInfoStyle.Underline),
                     Href = "http://google.com"
                 });
                 areaBox.AddComponent(new Panel

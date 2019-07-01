@@ -5,9 +5,9 @@ using LayItOut.Rendering;
 
 namespace LayItOut.BitmapRendering.Renderers
 {
-    internal class PanelRenderer : IComponentRenderer<Graphics, Panel>
+    internal class PanelRenderer : IComponentRenderer<RendererContext, Panel>
     {
-        public void Render(Graphics graphics, Panel panel)
+        public void Render(RendererContext ctx, Panel panel)
         {
             if (panel.BackgroundColor.A == 0 && panel.Border.Color.A == 0)
                 return;
@@ -35,9 +35,9 @@ namespace LayItOut.BitmapRendering.Renderers
                 path.CloseFigure();
 
                 if (brush != null)
-                    graphics.FillPath(brush, path);
+                    ctx.Graphics.FillPath(brush, path);
                 if (pen != null)
-                    graphics.DrawPath(pen, path);
+                    ctx.Graphics.DrawPath(pen, path);
             }
         }
     }

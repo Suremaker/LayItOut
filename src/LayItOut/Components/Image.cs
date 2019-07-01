@@ -7,7 +7,7 @@ namespace LayItOut.Components
     {
         public Bitmap Src { get; set; }
 
-        protected override Size OnMeasure(Size size, IRenderingContext context)
+        protected override Size OnMeasure(Size size, IRendererContext context)
         {
             return Src?.Size ?? Size.Empty;
         }

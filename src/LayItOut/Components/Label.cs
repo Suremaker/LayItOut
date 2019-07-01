@@ -7,7 +7,7 @@ namespace LayItOut.Components
     public class Label : Component, ITextComponent
     {
         private static readonly TextMeasurement TextMeasurement = new TextMeasurement();
-        public Font Font { get; set; }
+        public FontInfo Font { get; set; }
         public Color FontColor { get; set; } = Color.Black;
         public string Text { get; set; }
         public bool Inline { get; set; }
@@ -19,7 +19,7 @@ namespace LayItOut.Components
 
         public TextBlock GetTextBlock() => new TextBlock(Text, GetTextMetadata(), Inline);
 
-        protected override Size OnMeasure(Size size, IRenderingContext context)
+        protected override Size OnMeasure(Size size, IRendererContext context)
         {
             TextMeasure = TextMeasurement.Measure(context, size.Width, GetTextBlock());
             return TextMeasure.Measure;

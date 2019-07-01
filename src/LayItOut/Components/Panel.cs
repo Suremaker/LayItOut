@@ -25,7 +25,7 @@ namespace LayItOut.Components
                 yield return Inner;
         }
 
-        protected override Size OnMeasure(Size size, IRenderingContext context)
+        protected override Size OnMeasure(Size size, IRendererContext context)
         {
             var panelSize = Margin.GetAbsoluteSize() + Padding.GetAbsoluteSize() + Border.AsSpacer().GetAbsoluteSize();
 

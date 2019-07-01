@@ -13,16 +13,13 @@ namespace LayItOut.Loaders
     {
         private readonly Dictionary<string, Type> _types = new Dictionary<string, Type>();
         private readonly Dictionary<Type, Func<string, object>> _attributeParsers = new Dictionary<Type, Func<string, object>>();
-        public IFontLoader FontParser { get; }
         public IBitmapLoader BitmapLoader { get; }
 
-        public FormLoader(IFontLoader fontParser = null, IBitmapLoader bitmapLoader = null)
+        public FormLoader(IBitmapLoader bitmapLoader = null)
         {
-            FontParser = fontParser ?? new FontParser();
             BitmapLoader = bitmapLoader ?? new BitmapLoader();
 
             WithTypesFrom(typeof(FormLoader).Assembly);
-            _attributeParsers[typeof(Font)] = LoadFont;
             _attributeParsers[typeof(Bitmap)] = LoadBitmap;
         }
 
@@ -101,12 +98,10 @@ namespace LayItOut.Loaders
             return Convert.ChangeType(value, targetType);
         }
         private object LoadBitmap(string src) => BitmapLoader.Load(src);
-        private object LoadFont(string font) => FontParser.Parse(font);
 
         public void Dispose()
         {
             BitmapLoader.Dispose();
-            FontParser.Dispose();
         }
     }
 }

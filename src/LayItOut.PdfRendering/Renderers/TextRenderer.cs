@@ -5,10 +5,11 @@ using PdfSharp.Pdf;
 
 namespace LayItOut.PdfRendering.Renderers
 {
-    class TextRenderer<T> : IComponentRenderer<XGraphics, T> where T : ITextComponent, IComponent
+    class TextRenderer<T> : IComponentRenderer<PdfRendererContext, T> where T : ITextComponent, IComponent
     {
-        public void Render(XGraphics graphics, T element)
+        public void Render(PdfRendererContext ctx, T element)
         {
+            var graphics = ctx.Graphics;
             var format = new XStringFormat
             {
                 Alignment = XStringAlignment.Near,
@@ -37,7 +38,7 @@ namespace LayItOut.PdfRendering.Renderers
                 graphics.IntersectClip(element.Layout.ToXRect());
                 graphics.DrawString(
                     area.Block.Text,
-                    new XFont(meta.Font),
+                    ctx.FontResolver.Resolve(meta.Font),
                     new XSolidBrush(meta.Color.ToXColor()),
                     rect.ToXRect(),
                     format);

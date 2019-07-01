@@ -9,10 +9,13 @@ using PdfSharp.Pdf;
 
 namespace LayItOut.PdfRendering
 {
-    public class PdfRenderer : Renderer<XGraphics>
+    public class PdfRenderer : Renderer<PdfRendererContext>
     {
-        public PdfRenderer()
+        public PdfFontResolver FontResolver { get; }
+
+        public PdfRenderer(PdfFontResolver fontResolver = null)
         {
+            FontResolver = fontResolver ?? new PdfFontResolver();
             RegisterRenderer(new PanelRenderer());
             RegisterRenderer(new TextRenderer<Link>());
             RegisterRenderer(new TextRenderer<Label>());
@@ -29,14 +32,16 @@ namespace LayItOut.PdfRendering
 
             using (var g = CreateGraphics(pdfPage, options))
             {
-                form.LayOut(size, new RendererContext(g));
+                form.LayOut(size, CreateContext(g));
 
                 if (options.AdjustPageSize)
                     AdjustPageSize(form, pdfPage, g);
             }
             using (var g = CreateGraphics(pdfPage, options))
-                Render(g, form.Content);
+                Render(CreateContext(g), form.Content);
         }
+
+        private PdfRendererContext CreateContext(XGraphics g) => new PdfRendererContext(g, FontResolver);
 
         private XGraphics CreateGraphics(PdfPage pdfPage, PdfRendererOptions options)
         {

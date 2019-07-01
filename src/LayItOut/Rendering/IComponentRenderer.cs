@@ -2,8 +2,8 @@
 
 namespace LayItOut.Rendering
 {
-    public interface IComponentRenderer<in TGraphics, in TComponent> where TComponent : IComponent
+    public interface IComponentRenderer<in TRendererContext, in TComponent> where TComponent : IComponent
     {
-        void Render(TGraphics graphics, TComponent component);
+        void Render(TRendererContext graphics, TComponent component);
     }
 }

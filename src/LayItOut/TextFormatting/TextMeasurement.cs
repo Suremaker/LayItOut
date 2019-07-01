@@ -8,9 +8,9 @@ namespace LayItOut.TextFormatting
 {
     public class TextMeasurement
     {
-        public TextMeasure Measure(IRenderingContext context, int maxWidth, params TextBlock[] blocks) => Measure(context, maxWidth, blocks.AsEnumerable());
+        public TextMeasure Measure(IRendererContext context, int maxWidth, params TextBlock[] blocks) => Measure(context, maxWidth, blocks.AsEnumerable());
 
-        public TextMeasure Measure(IRenderingContext context, int maxWidth, IEnumerable<TextBlock> blocks)
+        public TextMeasure Measure(IRendererContext context, int maxWidth, IEnumerable<TextBlock> blocks)
         {
             var results = new List<TextLineMeasure>();
             var line = new List<TextBlockMeasure>();
@@ -105,7 +105,7 @@ namespace LayItOut.TextFormatting
             }
         }
 
-        private static IEnumerable<TextBlockMeasure> ToBlockMeasure(IRenderingContext context, IEnumerable<TextBlock> textBlocks)
+        private static IEnumerable<TextBlockMeasure> ToBlockMeasure(IRendererContext context, IEnumerable<TextBlock> textBlocks)
         {
             foreach (var block in textBlocks.SelectMany(b => b.Normalize()))
             {

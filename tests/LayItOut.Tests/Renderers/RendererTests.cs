@@ -43,7 +43,7 @@ namespace LayItOut.Tests.Renderers
             vbox.AddComponent(panel4);
 
             var form = new Form(hbox);
-            form.LayOut(new Size(int.MaxValue, int.MaxValue), TestRenderingContext.Instance);
+            form.LayOut(new Size(int.MaxValue, int.MaxValue), TestRendererContext.Instance);
             var g = new object();
 
             renderer.Render(g, form);

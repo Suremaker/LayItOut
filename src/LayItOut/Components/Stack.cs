@@ -6,7 +6,7 @@ namespace LayItOut.Components
 {
     public class Stack : Container
     {
-        protected override Size OnMeasure(Size size, IRenderingContext context)
+        protected override Size OnMeasure(Size size, IRendererContext context)
         {
             var result = Size.Empty;
             foreach (var component in GetChildren())

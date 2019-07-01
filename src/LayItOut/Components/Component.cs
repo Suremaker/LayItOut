@@ -13,7 +13,7 @@ namespace LayItOut.Components
         public Size DesiredSize { get; private set; }
         public Rectangle Layout { get; private set; }
 
-        public void Measure(Size size, IRenderingContext context)
+        public void Measure(Size size, IRendererContext context)
         {
             DesiredSize = OnMeasure(size.ApplyIfSet(Width, Height), context).ApplyIfSet(Width, Height);
         }
@@ -28,7 +28,7 @@ namespace LayItOut.Components
 
         public virtual IEnumerable<IComponent> GetChildren() => Enumerable.Empty<IComponent>();
         protected virtual void OnArrange() { }
-        protected virtual Size OnMeasure(Size size, IRenderingContext context) => Size.Empty;
+        protected virtual Size OnMeasure(Size size, IRendererContext context) => Size.Empty;
 
         private Size GetActualSize(Size areaSize)
         {

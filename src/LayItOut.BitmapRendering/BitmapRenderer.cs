@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using LayItOut.BitmapRendering.Renderers;
@@ -8,38 +7,42 @@ using LayItOut.Rendering;
 
 namespace LayItOut.BitmapRendering
 {
-    public class BitmapRenderer : Renderer<Graphics>
+    public class BitmapRenderer : Renderer<RendererContext>
     {
-        private readonly Action<Graphics> _configureGraphics;
+        public FontResolver FontResolver { get; }
 
-        public BitmapRenderer(Action<Graphics> configureGraphics = null)
+        public BitmapRenderer(FontResolver fontResolver = null)
         {
+            FontResolver = fontResolver ?? new FontResolver();
             RegisterRenderer(new PanelRenderer());
             RegisterRenderer(new TextRenderer<Link>());
             RegisterRenderer(new TextRenderer<Label>());
             RegisterRenderer(new TextRenderer<TextBox>());
             RegisterRenderer(new ImageRenderer());
-            _configureGraphics = configureGraphics;
         }
 
-        public void Render(Form form, Bitmap target)
+        public void Render(Form form, Bitmap target, BitmapRendererOptions options = null)
         {
-            using (var g = Graphics.FromImage(target))
+            options = options ?? BitmapRendererOptions.Default;
+
+            using (var g = CreateGraphics(target, options))
             {
-                form.LayOut(target.Size, new RenderingContext(g));
-                ConfigureGraphics(g);
-                Render(g, form.Content);
+                var context = new RendererContext(g, FontResolver);
+                form.LayOut(target.Size, context);
+                Render(context, form.Content);
             }
         }
 
-        private void ConfigureGraphics(Graphics g)
+        private Graphics CreateGraphics(Bitmap target, BitmapRendererOptions options)
         {
+            var g = Graphics.FromImage(target);
             g.CompositingQuality = CompositingQuality.HighQuality;
             g.InterpolationMode = InterpolationMode.High;
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _configureGraphics?.Invoke(g);
+            options.ConfigureGraphics?.Invoke(g);
+            return g;
         }
     }
 }

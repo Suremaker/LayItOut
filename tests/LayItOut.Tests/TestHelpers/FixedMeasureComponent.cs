@@ -13,6 +13,6 @@ namespace LayItOut.Tests.TestHelpers
             _desiredSize = desiredSize;
         }
 
-        protected override Size OnMeasure(Size size, IRenderingContext context) => _desiredSize;
+        protected override Size OnMeasure(Size size, IRendererContext context) => _desiredSize;
     }
 }

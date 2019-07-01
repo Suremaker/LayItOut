@@ -16,13 +16,13 @@ namespace LayItOut.Tests.Components
         {
             var text = "foo bar";
             var box = new Size(20, 30);
-            var font = new Font(FontFamily.GenericSerif, 14);
+            var font = new FontInfo("Test", 14);
             var label = (Label)Activator.CreateInstance(labelType);
             label.Text = text;
             label.Font = font;
 
-            label.Measure(box, TestRenderingContext.Instance);
-            label.DesiredSize.ShouldBe(new Size(text.Length, (int)Math.Ceiling(font.GetHeight())));
+            label.Measure(box, TestRendererContext.Instance);
+            label.DesiredSize.ShouldBe(new Size(text.Length, (int)Math.Ceiling(TestRendererContext.Instance.GetHeight(font))));
         }
     }
 }

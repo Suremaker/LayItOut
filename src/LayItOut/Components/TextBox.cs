@@ -21,7 +21,7 @@ namespace LayItOut.Components
             _blocks.AddRange(label.GetTextBlock().Normalize());
         }
 
-        protected override Size OnMeasure(Size size, IRenderingContext context)
+        protected override Size OnMeasure(Size size, IRendererContext context)
         {
             TextMeasure = TextMeasurement.Measure(context, size.Width, _blocks);
             return TextMeasure.Measure;

@@ -31,7 +31,7 @@ namespace LayItOut.Tests.Components
                 Padding = new Spacer(100, 200, 300, 400),
                 Border = new Border(1000, Color.Black)
             };
-            panel.Measure(new Size(int.MaxValue, int.MaxValue), TestRenderingContext.Instance);
+            panel.Measure(new Size(int.MaxValue, int.MaxValue), TestRendererContext.Instance);
             panel.DesiredSize.ShouldBe(new Size(2661, 2442));
         }
 
@@ -47,7 +47,7 @@ namespace LayItOut.Tests.Components
                 Padding = Spacer.Parse(padding),
                 Border = Border.Parse(border)
             };
-            panel.Measure(new Size(int.MaxValue, int.MaxValue), TestRenderingContext.Instance);
+            panel.Measure(new Size(int.MaxValue, int.MaxValue), TestRendererContext.Instance);
             panel.DesiredSize.ShouldBe(new Size(expectedWidth, expectedHeight));
         }
 
@@ -60,7 +60,7 @@ namespace LayItOut.Tests.Components
                 Padding = new Spacer(100, 200, 300, 400),
                 Border = new Border(1000, Color.Black)
             };
-            panel.Measure(new Size(int.MaxValue, int.MaxValue), TestRenderingContext.Instance);
+            panel.Measure(new Size(int.MaxValue, int.MaxValue), TestRendererContext.Instance);
             panel.DesiredSize.ShouldBe(new Size(2660, 2440));
         }
 
@@ -86,7 +86,7 @@ namespace LayItOut.Tests.Components
                 Padding = new Spacer(10, 20, 10, 20),
                 Border = new Border(10,Color.Black)};
 
-            panel.Measure(new Size(width, height), TestRenderingContext.Instance);
+            panel.Measure(new Size(width, height), TestRendererContext.Instance);
             captured.ShouldBe(new Size(expectedWidth, expectedHeight));
         }
 
@@ -102,7 +102,7 @@ namespace LayItOut.Tests.Components
                 Inner = new Component { Width = 20, Height = 10 }
             };
 
-            panel.Measure(area.Size, TestRenderingContext.Instance);
+            panel.Measure(area.Size, TestRendererContext.Instance);
             panel.Arrange(area);
 
             panel.Layout.ShouldBe(new Rectangle(5, 5, 52, 42));
@@ -124,7 +124,7 @@ namespace LayItOut.Tests.Components
                 Inner = new Component { Width = 20, Height = 20 }
             };
 
-            panel.Measure(area.Size, TestRenderingContext.Instance);
+            panel.Measure(area.Size, TestRendererContext.Instance);
             panel.Arrange(area);
 
             panel.Layout.ShouldBe(new Rectangle(5, 5, 65, 70));
@@ -146,7 +146,7 @@ namespace LayItOut.Tests.Components
                 Inner = new Component { Width = 20, Height = 20 }
             };
 
-            panel.Measure(area.Size, TestRenderingContext.Instance);
+            panel.Measure(area.Size, TestRendererContext.Instance);
             panel.Arrange(area);
 
             panel.Layout.ShouldBe(new Rectangle(5, 5, 45, 50));
@@ -168,7 +168,7 @@ namespace LayItOut.Tests.Components
                 Inner = new Component { Width = 20, Height = 20 }
             };
 
-            panel.Measure(area.Size, TestRenderingContext.Instance);
+            panel.Measure(area.Size, TestRendererContext.Instance);
             panel.Arrange(area);
 
             panel.Layout.ShouldBe(new Rectangle(5, 5, 25, 30));
@@ -190,7 +190,7 @@ namespace LayItOut.Tests.Components
                 Inner = new Component { Width = 20, Height = 20 }
             };
 
-            panel.Measure(area.Size, TestRenderingContext.Instance);
+            panel.Measure(area.Size, TestRendererContext.Instance);
             panel.Arrange(area);
 
             panel.Layout.ShouldBe(new Rectangle(5, 5, 5, 10));
@@ -214,7 +214,7 @@ namespace LayItOut.Tests.Components
             };
 
             var size = new Size(100, 100);
-            panel.Measure(size, TestRenderingContext.Instance);
+            panel.Measure(size, TestRendererContext.Instance);
             panel.Arrange(new Rectangle(Point.Empty, size));
 
             //hor 2

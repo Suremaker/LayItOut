@@ -3,13 +3,13 @@ using LayItOut.Rendering;
 
 namespace LayItOut.BitmapRendering.Renderers
 {
-    class ImageRenderer : IComponentRenderer<Graphics, LayItOut.Components.Image>
+    class ImageRenderer : IComponentRenderer<RendererContext, LayItOut.Components.Image>
     {
-        public void Render(Graphics graphics, LayItOut.Components.Image component)
+        public void Render(RendererContext ctx, LayItOut.Components.Image component)
         {
             if (component.Src == null)
                 return;
-            graphics.DrawImage(component.Src, component.Layout, new Rectangle(Point.Empty, component.Src.Size), GraphicsUnit.Pixel);
+            ctx.Graphics.DrawImage(component.Src, component.Layout, new Rectangle(Point.Empty, component.Src.Size), GraphicsUnit.Pixel);
         }
     }
 }
