@@ -26,7 +26,7 @@ namespace LayItOut.PdfRendering.Tests
 
         private byte[] Generate()
         {
-            var form = _loader.Load(new MemoryStream(_formInBytes));
+            var form = _loader.LoadForm(new MemoryStream(_formInBytes));
             var pdf = new PdfDocument();
             _renderer.Render(form, pdf.AddPage(), new PdfRendererOptions { AdjustPageSize = true });
             _renderer.Render(form, pdf.AddPage(), new PdfRendererOptions { ConfigureGraphics = x => x.ScaleTransform(2, 2) });

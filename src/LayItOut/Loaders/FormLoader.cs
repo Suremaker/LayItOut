@@ -38,17 +38,27 @@ namespace LayItOut.Loaders
         }
 
 
-        public Form Load(Stream stream) => Load(new StreamReader(stream));
-        public Form Load(TextReader reader)
+        public Form LoadForm(Stream stream) => LoadForm(new StreamReader(stream));
+        public Form LoadForm(TextReader reader) => DeserializeForm(XDocument.Load(reader).Root);
+
+        public IEnumerable<Form> LoadForms(Stream stream) => LoadForms(new StreamReader(stream));
+
+        public IEnumerable<Form> LoadForms(TextReader reader)
         {
-            var doc = XDocument.Load(reader);
+            var root = XDocument.Load(reader).Root;
+            if (root?.Name.LocalName != "Forms")
+                throw new InvalidOperationException($"Expected 'Forms' element, but got '{root?.Name.LocalName}'");
+            return root.Elements().Select(DeserializeForm);
+        }
 
-            if (doc.Root?.Name.LocalName != "Form")
-                throw new InvalidOperationException($"Expected {nameof(Form)}, but got {doc.Root?.Name.LocalName}");
+        private Form DeserializeForm(XElement root)
+        {
+            if (root.Name.LocalName != "Form")
+                throw new InvalidOperationException($"Expected '{nameof(Form)}' element, but got '{root.Name.LocalName}'");
 
-            var content = doc.Root.Elements().ToArray();
+            var content = root.Elements().ToArray();
             if (content.Length != 1)
-                throw new InvalidOperationException($"Expected {nameof(Form)} with 1 element, got {content.Length}");
+                throw new InvalidOperationException($"Expected '{nameof(Form)}' element with 1 element, got {content.Length}");
 
             return new Form(Deserialize(content.Single()));
         }
@@ -75,7 +85,7 @@ namespace LayItOut.Loaders
                     containerElement.Inner = element.Elements().Select(Deserialize).SingleOrDefault();
                     break;
                 default:
-                    if (element.Elements().Any()) throw new InvalidOperationException($"Type '{type}' is not a container, so should not have any inner-elements.");
+                    if (element.Elements().Any()) throw new InvalidOperationException($"Type '{type}' is not a container, so should not have any inner-elements");
                     break;
             }
 
@@ -86,7 +96,7 @@ namespace LayItOut.Loaders
         {
             if (_types.TryGetValue(type.LocalName, out var t))
                 return t;
-            throw new InvalidOperationException($"Unable to parse element '{type.LocalName}' - no corresponding type were registered.");
+            throw new InvalidOperationException($"Unable to parse element '{type.LocalName}' - no corresponding type were registered");
         }
 
         private object DeserializeAttribute(Type targetType, string value)
