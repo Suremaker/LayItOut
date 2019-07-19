@@ -15,7 +15,6 @@ namespace LayItOut.DocGen
         {
             var types = typeof(SizeUnit).Assembly.GetTypes().Where(t => t.Namespace == typeof(SizeUnit).Namespace).OrderBy(x => x.Name).ToArray();
             var writer = new PageWriter();
-            writer.WriteTitle("LayItOut Attributes");
             writer.WriteTableOfContent(types.Select(x => x.Name));
 
             foreach (var type in types)

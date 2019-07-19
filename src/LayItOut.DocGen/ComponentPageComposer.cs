@@ -25,7 +25,6 @@ namespace LayItOut.DocGen
                 .ToArray();
 
             var writer = new PageWriter();
-            writer.WriteTitle("LayItOut Components");
             writer.WriteTableOfContent(components.Select(x => x.Name));
 
             foreach (var type in components)
