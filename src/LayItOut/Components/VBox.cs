@@ -1,11 +1,15 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
+using LayItOut.Attributes;
 using LayItOut.Rendering;
 
 namespace LayItOut.Components
 {
+    [Description("A container that will lay-out it's children vertically, one above the other.\n\nWhen measured, it will take a size to fit all it's children.")]
     public class VBox : Container
     {
+        [Description("Specifies how the block of child components should be aligned vertically if their total height is smaller than container height.")]
         public VerticalAlignment ContentAlignment { get; set; }
 
         protected override Size OnMeasure(Size size, IRendererContext context)

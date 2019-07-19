@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using LayItOut.Attributes;
 using LayItOut.Components;
 using LayItOut.PdfRendering.Tests.Helpers;
 using PdfSharp.Pdf;

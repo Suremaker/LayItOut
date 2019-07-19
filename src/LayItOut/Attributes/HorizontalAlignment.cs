@@ -1,4 +1,4 @@
-﻿namespace LayItOut
+﻿namespace LayItOut.Attributes
 {
     public enum HorizontalAlignment : byte
     {

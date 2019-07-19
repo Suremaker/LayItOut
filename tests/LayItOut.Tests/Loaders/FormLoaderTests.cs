@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using LayItOut.Attributes;
 using LayItOut.Components;
 using LayItOut.Loaders;
 using Shouldly;
@@ -24,7 +25,7 @@ namespace LayItOut.Tests.Loaders
             panel.BackgroundColor.ShouldBe(Color.Black);
             panel.Border.ShouldBe(Border.Parse("5 #fafaff"));
 
-            var vbox = panel.Inner.ShouldBeOfType<VBox>();
+            var vbox = panel.GetChildren().Single().ShouldBeOfType<VBox>();
             vbox.Width.ShouldBe(SizeUnit.Unlimited);
             vbox.Height.ShouldBe(SizeUnit.Unlimited);
 

@@ -2,6 +2,6 @@
 {
     public interface IWrappingComponent : IComponent
     {
-        IComponent Inner { get; set; }
+        IComponent Inner { set; }
     }
 }

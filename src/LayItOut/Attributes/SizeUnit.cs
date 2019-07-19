@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using LayItOut.Loaders;
 
-namespace LayItOut
+namespace LayItOut.Attributes
 {
+    [Description("Specifies size that can be absolute, not defined or unlimited")]
     public struct SizeUnit
     {
         private enum SizeMode : byte
@@ -43,6 +45,7 @@ namespace LayItOut
         [Pure]
         public int AbsoluteOrDefault(int defaultValue = 0) => IsAbsolute ? Value : defaultValue;
 
+        [Description("* `-` - not set\n* `*` - take all free space\n* `[absolute]` - absolute value (integer)")]
         [AttributeParser]
         public static SizeUnit Parse(string value)
         {

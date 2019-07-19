@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using LayItOut.Attributes;
 using LayItOut.Rendering;
 using LayItOut.TextFormatting;
 
 namespace LayItOut.Components
 {
+    [Description("Text box container allowing to lay-out text composed of various size/font/color text and link blocks.\n\nThe container can hold multiple instances of **Label** or **Link** components.")]
     public class TextBox : Component, IContainer, ITextComponent
     {
+        [Description("Text alignment used to align all the rendered text. Please note that *TextAlignment* property of child components will be **ignored**.")]
         public TextAlignment TextAlignment { get; set; }
         public TextLayout TextLayout { get; private set; }
         public TextMeasure TextMeasure { get; private set; }

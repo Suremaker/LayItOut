@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using LayItOut.Loaders;
 
-namespace LayItOut
+namespace LayItOut.Attributes
 {
+    [Description("Specifies border radius.")]
     public struct BorderRadius
     {
         public static readonly BorderRadius None = new BorderRadius();
@@ -24,6 +26,7 @@ namespace LayItOut
         public BorderRadius(float top, float bottom) : this(top, top, bottom, bottom) { }
         public BorderRadius(float rounding) : this(rounding, rounding) { }
 
+        [Description("* `[top left] [top right] [bottom right] [bottom left]`\n* `[top] [bottom]`\n* `[all corners]`\n\nwhere all values are floats")]
         [AttributeParser]
         public static BorderRadius Parse(string value)
         {

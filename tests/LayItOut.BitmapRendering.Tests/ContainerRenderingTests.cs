@@ -1,4 +1,5 @@
 using System.Drawing;
+using LayItOut.Attributes;
 using LayItOut.BitmapRendering.Tests.Helpers;
 using LayItOut.Components;
 using Xunit;
@@ -39,7 +40,7 @@ namespace LayItOut.BitmapRendering.Tests
                 Height = SizeUnit.Unlimited,
                 BackgroundColor = Color.LightSteelBlue,
                 Padding = new Spacer(2),
-                Inner = hbox
+                Inner = hbox,
             };
             var form = new Form(panel);
 

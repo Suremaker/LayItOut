@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using LayItOut.Loaders;
 
-namespace LayItOut
+namespace LayItOut.Attributes
 {
+    [Description("Specifies font definition.")]
     public struct FontInfo : IEquatable<FontInfo>
     {
         public static readonly FontInfo None = new FontInfo();
@@ -18,6 +20,7 @@ namespace LayItOut
         public float Size { get; }
         public FontInfoStyle Style { get; }
 
+        [Description("`[font family];[size];[style]` (size is float, style is FontInfoStyle where flags can be combined with `,`)")]
         [AttributeParser]
         public static FontInfo Parse(string value)
         {

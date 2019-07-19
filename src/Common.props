@@ -12,7 +12,6 @@
     <IncludeSymbols>True</IncludeSymbols>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageOutputPath>$(SolutionDir)\output</PackageOutputPath>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageTags>layout;pdf;forms</PackageTags>
     <PackageReleaseNotes>Initial implementation of LayItOut engine with support for PDF and Bitmap generation</PackageReleaseNotes>
     <IsPackable>true</IsPackable>

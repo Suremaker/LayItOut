@@ -1,18 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using LayItOut.Attributes;
 using LayItOut.Rendering;
 
 namespace LayItOut.Components
 {
+    [Description("A panel component that can have margin, border, padding, background color and hold inner component.")]
     public class Panel : Component, IWrappingComponent
     {
-        public IComponent Inner { get; set; }
+        public IComponent Inner { private get; set; }
+        [Description("Margin that is defined around the panel borders. The margin values are included in component overall dimensions (**Width**/**Height**). If background color is specified, it is **not rendered** over the margin area.")]
         public Spacer Margin { get; set; }
+        [Description("Padding that is defined between the border and inner component. The padding values are included in component overall dimensions (**Width**/**Height**). If background color is specified, it is rendered over the padding area.")]
         public Spacer Padding { get; set; }
+        [Description("Border that is defined between panel's margin and padding areas. The border values are included in component overall dimensions (**Width**/**Height**).")]
         public Border Border { get; set; }
+        [Description("Border radius that can be specified if the border should be rounded.")]
         public BorderRadius BorderRadius { get; set; }
+        [Description("Panel background color that would be rendered over padding and inner component area, before rendering the inner component.")]
         public Color BackgroundColor { get; set; }
         public Rectangle BorderLayout { get; private set; }
         public Rectangle PaddingLayout { get; private set; }

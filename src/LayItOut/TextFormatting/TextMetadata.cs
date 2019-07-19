@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using LayItOut.Attributes;
 
 namespace LayItOut.TextFormatting
 {

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
+using LayItOut.Attributes;
 using Shouldly;
 using Xunit;
+
 // ReSharper disable EqualExpressionComparison
 #pragma warning disable CS1718
 
-namespace LayItOut.Tests
+namespace LayItOut.Tests.Attributes
 {
     public class SizeUnitTests
     {

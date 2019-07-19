@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Drawing;
 using System.Drawing.Text;
+using LayItOut.Attributes;
 using LayItOut.Rendering;
 
 namespace LayItOut.BitmapRendering

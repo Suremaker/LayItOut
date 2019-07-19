@@ -1,8 +1,9 @@
 ﻿using System;
+using LayItOut.Attributes;
 using Shouldly;
 using Xunit;
 
-namespace LayItOut.Tests
+namespace LayItOut.Tests.Attributes
 {
     public class BorderRadiusTests
     {

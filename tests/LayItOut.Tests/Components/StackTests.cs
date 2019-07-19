@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Linq;
+using LayItOut.Attributes;
 using LayItOut.Components;
 using LayItOut.Tests.TestHelpers;
 using Moq;

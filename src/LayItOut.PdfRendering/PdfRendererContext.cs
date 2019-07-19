@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Drawing;
+using LayItOut.Attributes;
 using LayItOut.Rendering;
 using PdfSharp.Drawing;
 

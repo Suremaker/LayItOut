@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using LayItOut.Loaders;
 
-namespace LayItOut
+namespace LayItOut.Attributes
 {
+    [Description("Specifies spacer that can be used as margin around component")]
     public struct Spacer
     {
         public static readonly Spacer None = new Spacer();
@@ -31,6 +33,7 @@ namespace LayItOut
         {
         }
 
+        [Description("* `[top] [left] [bottom] [right]`\n* `[vertical]` `[horizontal]`\n* `[all dimensions]`\n\nwhere all values are SizeUnits")]
         [AttributeParser]
         public static Spacer Parse(string value)
         {

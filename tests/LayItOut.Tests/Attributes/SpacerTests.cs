@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Drawing;
+using LayItOut.Attributes;
 using Shouldly;
 using Xunit;
 
-namespace LayItOut.Tests
+namespace LayItOut.Tests.Attributes
 {
     public class SpacerTests
     {

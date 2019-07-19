@@ -1,14 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using LayItOut.Attributes;
 using LayItOut.Rendering;
 
 namespace LayItOut.Components
 {
+    [Description("A generic component that can have dimensions and specified alignment.")]
     public class Component : IComponent
     {
+        [Description("Component width. If **not set**, the minimum measure size will be used. If set to **unlimited**, component will expand to take all free space. It can be set to **absolute** size as well.")]
         public SizeUnit Width { get; set; }
+        [Description("Component height. If **not set**, the minimum measure size will be used. If set to **unlimited**, component will expand to take all free space. It can be set to **absolute** size as well.")]
         public SizeUnit Height { get; set; }
+        [Description("Component alignment. Used when component is given more space to lay-out than it's actual dimensions.")]
         public Alignment Alignment { get; set; }
         public Size DesiredSize { get; private set; }
         public Rectangle Layout { get; private set; }

@@ -1,4 +1,5 @@
-﻿using Shouldly;
+﻿using LayItOut.Attributes;
+using Shouldly;
 using Xunit;
 
 namespace LayItOut.Tests.Loaders

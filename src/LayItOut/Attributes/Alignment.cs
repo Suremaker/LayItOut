@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using LayItOut.Loaders;
 
-namespace LayItOut
+namespace LayItOut.Attributes
 {
+    [Description("Specifies vertical and horizontal alignment.")]
     public struct Alignment
     {
         public static readonly Alignment Center = new Alignment(VerticalAlignment.Center, HorizontalAlignment.Center);
@@ -25,6 +27,7 @@ namespace LayItOut
             return $"{Vertical} {Horizontal}";
         }
 
+        [Description("* `center` (centered horizontally and vertically)\n* `[vertical] [horizontal]` (explicit alignments)")]
         [AttributeParser]
         public static Alignment Parse(string value)
         {

@@ -1,4 +1,6 @@
 ﻿using System.Drawing;
+using System.Linq;
+using LayItOut.Attributes;
 using LayItOut.Components;
 using LayItOut.Tests.TestHelpers;
 using Moq;
@@ -108,7 +110,7 @@ namespace LayItOut.Tests.Components
             panel.Layout.ShouldBe(new Rectangle(5, 5, 52, 42));
             panel.BorderLayout.ShouldBe(new Rectangle(new Point(panel.Layout.Left + 10, panel.Layout.Top + 10), new Size(32, 22)));
             panel.PaddingLayout.ShouldBe(new Rectangle(new Point(panel.BorderLayout.Left + 1, panel.BorderLayout.Top + 1), new Size(30, 20)));
-            panel.Inner.Layout.ShouldBe(new Rectangle(new Point(panel.PaddingLayout.Left + 5, panel.PaddingLayout.Top + 5), new Size(20, 10)));
+            panel.GetChildren().Single().Layout.ShouldBe(new Rectangle(new Point(panel.PaddingLayout.Left + 5, panel.PaddingLayout.Top + 5), new Size(20, 10)));
             panel.ActualBorder.ShouldBe(new Spacer(1));
         }
 
@@ -130,7 +132,7 @@ namespace LayItOut.Tests.Components
             panel.Layout.ShouldBe(new Rectangle(5, 5, 65, 70));
             panel.BorderLayout.ShouldBe(new Rectangle(new Point(panel.Layout.Left + 10, panel.Layout.Top + 10), new Size(45, 50)));
             panel.PaddingLayout.ShouldBe(new Rectangle(new Point(panel.BorderLayout.Left + 10, panel.BorderLayout.Top + 10), new Size(25, 30)));
-            panel.Inner.Layout.ShouldBe(new Rectangle(new Point(panel.PaddingLayout.Left + 10, panel.PaddingLayout.Top + 10), new Size(5, 10)));
+            panel.GetChildren().Single().Layout.ShouldBe(new Rectangle(new Point(panel.PaddingLayout.Left + 10, panel.PaddingLayout.Top + 10), new Size(5, 10)));
             panel.ActualBorder.ShouldBe(new Spacer(10));
         }
 
@@ -152,7 +154,7 @@ namespace LayItOut.Tests.Components
             panel.Layout.ShouldBe(new Rectangle(5, 5, 45, 50));
             panel.BorderLayout.ShouldBe(new Rectangle(new Point(panel.Layout.Left + 10, panel.Layout.Top + 10), new Size(25, 30)));
             panel.PaddingLayout.ShouldBe(new Rectangle(new Point(panel.BorderLayout.Left + 10, panel.BorderLayout.Top + 10), new Size(5, 10)));
-            panel.Inner.Layout.ShouldBe(new Rectangle(new Point(panel.PaddingLayout.Left + 5, panel.PaddingLayout.Top + 10), new Size(0, 0)));
+            panel.GetChildren().Single().Layout.ShouldBe(new Rectangle(new Point(panel.PaddingLayout.Left + 5, panel.PaddingLayout.Top + 10), new Size(0, 0)));
             panel.ActualBorder.ShouldBe(new Spacer(10));
         }
 
@@ -174,7 +176,7 @@ namespace LayItOut.Tests.Components
             panel.Layout.ShouldBe(new Rectangle(5, 5, 25, 30));
             panel.BorderLayout.ShouldBe(new Rectangle(new Point(panel.Layout.Left + 10, panel.Layout.Top + 10), new Size(5, 10)));
             panel.PaddingLayout.ShouldBe(new Rectangle(new Point(panel.BorderLayout.Left + 5, panel.BorderLayout.Top + 10), new Size(0, 0)));
-            panel.Inner.Layout.ShouldBe(new Rectangle(new Point(panel.PaddingLayout.Left, panel.PaddingLayout.Top), new Size(0, 0)));
+            panel.GetChildren().Single().Layout.ShouldBe(new Rectangle(new Point(panel.PaddingLayout.Left, panel.PaddingLayout.Top), new Size(0, 0)));
             panel.ActualBorder.ShouldBe(new Spacer(10, 5, 0, 0));
         }
 
@@ -196,7 +198,7 @@ namespace LayItOut.Tests.Components
             panel.Layout.ShouldBe(new Rectangle(5, 5, 5, 10));
             panel.BorderLayout.ShouldBe(new Rectangle(new Point(panel.Layout.Left + 5, panel.Layout.Top + 10), new Size(0, 0)));
             panel.PaddingLayout.ShouldBe(new Rectangle(new Point(panel.BorderLayout.Left, panel.BorderLayout.Top), new Size(0, 0)));
-            panel.Inner.Layout.ShouldBe(new Rectangle(new Point(panel.PaddingLayout.Left, panel.PaddingLayout.Top), new Size(0, 0)));
+            panel.GetChildren().Single().Layout.ShouldBe(new Rectangle(new Point(panel.PaddingLayout.Left, panel.PaddingLayout.Top), new Size(0, 0)));
             panel.ActualBorder.ShouldBe(new Spacer(0));
         }
 
@@ -223,7 +225,7 @@ namespace LayItOut.Tests.Components
             //tot h 10+10 = 30 => 100-30 = 80 / 3 = 26.6
             panel.BorderLayout.ShouldBe(new Rectangle(10, 26, 80, 47));
             panel.PaddingLayout.ShouldBe(new Rectangle(15, 31, 70, 37));
-            panel.Inner.Layout.ShouldBe(new Rectangle(15, 41, 35, 27));
+            panel.GetChildren().Single().Layout.ShouldBe(new Rectangle(15, 41, 35, 27));
         }
     }
 }

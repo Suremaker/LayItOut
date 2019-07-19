@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using LayItOut.Attributes;
 using LayItOut.Components;
 using LayItOut.Tests.TestHelpers;
 using Shouldly;

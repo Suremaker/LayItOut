@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using LayItOut.Loaders;
 
-namespace LayItOut
+namespace LayItOut.Attributes
 {
+    [Description("Specifies border with size and color.")]
     public struct Border
     {
         public static readonly Border NotSet = new Border();
@@ -18,6 +20,7 @@ namespace LayItOut
 
         public Spacer AsSpacer() => new Spacer(Size);
 
+        [Description("`[size] [color]` (size as integer, color by name, #RRGGBB or #AARRGGBB format)")]
         [AttributeParser]
         public static Border Parse(string value)
         {
