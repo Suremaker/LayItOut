@@ -6,7 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LayItOut.BitmapRendering\LayItOut.BitmapRendering.csproj" />
     <ProjectReference Include="..\LayItOut\LayItOut.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="components\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

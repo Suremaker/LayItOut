@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Component = LayItOut.Components.Component;
 
 namespace LayItOut.DocGen
 {
-    class ComponentPageComposer : IPageComposer
+    class ComponentPageComposer
     {
-        private string _typesFileLink;
+        private readonly string _typesFileLink;
 
         public ComponentPageComposer(string typesFileLink)
         {
             _typesFileLink = typesFileLink;
         }
 
-        public string Compose()
+        public void Compose()
         {
             var components = typeof(Component).Assembly
                 .GetTypes()
@@ -32,10 +33,19 @@ namespace LayItOut.DocGen
                 writer.WriteHeader(type.Name);
                 writer.WriteDescription(type.GetCustomAttribute<DescriptionAttribute>());
 
+                EmbedLongDescription(type, writer);
+
                 writer.WriteTable(new[] { "Member", "Type", "Description" }, ReadMembers(type));
             }
 
-            return writer.ToString();
+            File.WriteAllText("man\\Components.md", writer.ToString());
+        }
+
+        private void EmbedLongDescription(Type type, PageWriter writer)
+        {
+            var file = $"{AppContext.BaseDirectory}\\components\\{type.Name}.md";
+            if (File.Exists(file))
+                writer.WriteLine("**Sample usage:**").WriteLine().WriteLine(new MarkdownCompiler(file).Compile());
         }
 
         private IEnumerable<string[]> ReadMembers(Type type)

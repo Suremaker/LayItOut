@@ -21,7 +21,7 @@ namespace LayItOut.TextFormatting
             foreach (var area in ToBlockMeasure(context, blocks))
             {
                 var space = line.Any() ? area.SpacePadding : 0;
-                if (area.Block.IsLineBreak || totalLength + space + area.Measure.Width > maxWidth)
+                if (area.Block.IsLineBreak || (totalLength + space + area.Measure.Width > maxWidth && totalLength > 0))
                 {
                     max = Math.Max(max, totalLength);
                     var size = new SizeF(totalLength, GetHeight(line, area));

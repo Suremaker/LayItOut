@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using LayItOut.Attributes;
@@ -8,10 +9,11 @@ using LayItOut.Loaders;
 
 namespace LayItOut.DocGen
 {
-    class TypesPageComposer : IPageComposer
+    class TypesPageComposer
     {
         private static readonly IReadOnlyDictionary<Type, MethodInfo> ParseMethods = LoadParseMethods();
-        public string Compose()
+
+        public void Compose()
         {
             var types = typeof(SizeUnit).Assembly.GetTypes().Where(t => t.Namespace == typeof(SizeUnit).Namespace).OrderBy(x => x.Name).ToArray();
             var writer = new PageWriter();
@@ -36,7 +38,7 @@ namespace LayItOut.DocGen
                 }
             }
 
-            return writer.ToString();
+            File.WriteAllText("man\\Types.md", writer.ToString());
         }
 
         private static Dictionary<Type, MethodInfo> LoadParseMethods()

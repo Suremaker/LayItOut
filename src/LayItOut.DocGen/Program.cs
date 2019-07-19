@@ -7,8 +7,9 @@ namespace LayItOut.DocGen
         static void Main(string[] args)
         {
             Directory.CreateDirectory("man");
-            File.WriteAllText("man\\Types.md", new TypesPageComposer().Compose());
-            File.WriteAllText("man\\Components.md", new ComponentPageComposer("Types").Compose());
+            Directory.CreateDirectory("man\\images");
+            new TypesPageComposer().Compose();
+            new ComponentPageComposer("Types").Compose();
         }
     }
 }

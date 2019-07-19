@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Drawing.Text;
 using LayItOut.BitmapRendering.Renderers;
 using LayItOut.Components;
@@ -31,6 +32,21 @@ namespace LayItOut.BitmapRendering
                 form.LayOut(target.Size, context);
                 Render(context, form.Content);
             }
+        }
+
+        public Bitmap Render(Form form, BitmapRendererOptions options = null)
+        {
+            options = options ?? BitmapRendererOptions.Default;
+
+            using (var refBmp = new Bitmap(1, 1))
+            using (var refGraphics = CreateGraphics(refBmp, options))
+                form.LayOut(new Size(int.MaxValue, int.MaxValue), new RendererContext(refGraphics, FontResolver));
+
+            var bitmap = new Bitmap(form.Content.DesiredSize.Width, form.Content.DesiredSize.Height, PixelFormat.Format32bppArgb);
+            using (var graphics = CreateGraphics(bitmap, options))
+                Render(new RendererContext(graphics, FontResolver), form.Content);
+
+            return bitmap;
         }
 
         private Graphics CreateGraphics(Bitmap target, BitmapRendererOptions options)
