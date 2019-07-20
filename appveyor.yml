@@ -13,9 +13,10 @@ test_script:
     {
         $version = "0.0.1-dev$($env:APPVEYOR_REPO_COMMIT.Substring(0, 7))"
     }
-    & dotnet test -c Release /p:Version=$version
-    & dotnet run -p src\LayItOut.DocGen
 
+    & dotnet test -c Release /p:Version=$version
+
+    & dotnet run -p src\LayItOut.DocGen
 artifacts:
 - path: output\*.*
   name: packages
