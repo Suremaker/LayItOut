@@ -22,4 +22,4 @@ Features:
   * rendering form into bitmaps using `LayItOut.BitmapRendering` package,
   * rendering form into PDF documents using `LayItOut.BitmapRendering` package.
 
-More information can be found on: [Wiki page](https://github.com/Suremaker/LayItOut/wiki)
+More information can be found on: [wiki page](https://github.com/Suremaker/LayItOut/wiki)
