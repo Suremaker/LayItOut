@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Form>
+  <HBox>
+    <Panel Margin="10" Padding="20 5" BackgroundColor="black" Border="5 #fafaff">
+      <VBox Width="*" Height="*">
+        <Label Text="Hello world!" Font="Aharoni;10" TextAlignment="center"/>
+      </VBox>
+    </Panel>
+  </HBox>
+</Form>

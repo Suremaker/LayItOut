@@ -1,0 +1,11 @@
+bin/
+obj/
+*ReSharper*
+*.suo
+*.user
+*.bak
+*.userprefs
+.vs
+*.orig
+output/
+man/
