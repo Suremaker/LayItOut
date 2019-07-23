@@ -8,7 +8,7 @@ using Image = LayItOut.Components.Image;
 
 namespace LayItOut.BitmapRendering.Tests
 {
-    public class ImageRenderingTests 
+    public class ImageRenderingTests
     {
         [Fact]
         public void It_should_render_images()
@@ -17,15 +17,34 @@ namespace LayItOut.BitmapRendering.Tests
             var blueYellow = CreateBitmap(Brushes.Blue, Brushes.Yellow, 30, 30);
 
             var renderer = new BitmapRenderer();
-            var content = new HBox { Width = SizeUnit.Unlimited };
-            content.AddComponent(new Image { Src = redBlue, Width = 40, Height = 40 });
-            content.AddComponent(new Image { Src = redBlue, Width = 10, Height = 20 });
-            content.AddComponent(new Image { Src = blueYellow });
-            var form = new Form(content);
+            var vBox = new VBox();
+            var hBox = new HBox();
+            AddComponent(hBox, new Image { Src = redBlue, Width = 40, Height = 40, Scaling = ImageScaling.Uniform });
+            AddComponent(hBox, new Image { Src = redBlue, Width = 40, Height = 30, Scaling = ImageScaling.Uniform, Alignment = Alignment.Center });
+            AddComponent(hBox, new Image { Src = redBlue, Width = 40, Height = 30, Scaling = ImageScaling.Uniform, Alignment = Alignment.Parse("center left") });
+            AddComponent(hBox, new Image { Src = redBlue, Width = 40, Height = 30, Scaling = ImageScaling.Uniform, Alignment = Alignment.Parse("center right") });
+            vBox.AddComponent(hBox);
+            hBox = new HBox();
+            AddComponent(hBox, new Image { Src = redBlue, Width = 30, Height = 40, Scaling = ImageScaling.Uniform, Alignment = Alignment.Center });
+            AddComponent(hBox, new Image { Src = redBlue, Width = 30, Height = 40, Scaling = ImageScaling.Uniform, Alignment = Alignment.Parse("top center") });
+            AddComponent(hBox, new Image { Src = redBlue, Width = 30, Height = 40, Scaling = ImageScaling.Uniform, Alignment = Alignment.Parse("bottom center") });
+            vBox.AddComponent(hBox);
+            hBox = new HBox();
+            AddComponent(hBox, new Image { Src = redBlue, Width = 10, Height = 20, Scaling = ImageScaling.Fill });
+            AddComponent(hBox, new Image { Src = blueYellow });
+            AddComponent(hBox, new Image { Src = blueYellow, Width = 20, Height = 20, Alignment = Alignment.Center });
+            AddComponent(hBox, new Image { Src = blueYellow, Width = 20, Height = 20, Alignment = Alignment.Parse("top left") });
+            AddComponent(hBox, new Image { Src = blueYellow, Width = 20, Height = 20, Alignment = Alignment.Parse("bottom right") });
+            vBox.AddComponent(hBox);
+            var form = new Form(vBox);
 
-            var bmp = new Bitmap(80,40);
-            renderer.Render(form, bmp);
+            var bmp = renderer.Render(form);
             BitmapComparer.CompareBitmaps("bitmaps", bmp);
+        }
+
+        private void AddComponent(IContainer container, Image image)
+        {
+            container.AddComponent(new Panel { Margin = Spacer.Parse("1"), Border = Border.Parse("1 green"), Inner = image });
         }
 
         private Bitmap CreateBitmap(Brush back, Brush fore, int width, int height)

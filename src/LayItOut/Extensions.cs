@@ -30,6 +30,7 @@ namespace LayItOut
         }
 
         public static Size GetShift(this Alignment alignment, Size size) => alignment.Horizontal.GetShift(size.Width) + alignment.Vertical.GetShift(size.Height);
+        public static Size Ceiling(this SizeF s) => new Size((int)Math.Ceiling(s.Width), (int)Math.Ceiling(s.Height));
 
         public static Rectangle ShrinkBy(this Rectangle rect, Spacer spacer)
         {

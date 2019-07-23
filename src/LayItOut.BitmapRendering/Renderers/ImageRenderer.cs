@@ -9,7 +9,7 @@ namespace LayItOut.BitmapRendering.Renderers
         {
             if (component.Src == null)
                 return;
-            ctx.Graphics.DrawImage(component.Src, component.Layout, new Rectangle(Point.Empty, component.Src.Size), GraphicsUnit.Pixel);
+            ctx.Graphics.DrawImage(component.Src, component.ImageLayout, component.ImageSourceRegion, GraphicsUnit.Pixel);
         }
     }
 }
