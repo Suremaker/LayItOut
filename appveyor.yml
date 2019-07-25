@@ -20,8 +20,9 @@ test_script:
 artifacts:
 - path: output\*.*
   name: packages
-- path: man\*.*
+- path: man
   name: manpages
+  type: zip
 
 deploy:
   provider: NuGet
