@@ -13,16 +13,18 @@ namespace LayItOut.TextFormatting
         public ITextMetadata Metadata { get; }
         public bool IsInline { get; }
         public bool IsNormalized { get; }
+        public bool IsContinuation { get; }
         public bool IsLineBreak => Text == LineBreak;
 
-        public TextBlock(string text, ITextMetadata metadata, bool isInline) : this(text, metadata, isInline, IsTextNormalized(isInline, text)) { }
+        public TextBlock(string text, ITextMetadata metadata, bool isInline, bool isContinuation) : this(text, metadata, isInline, isContinuation, IsTextNormalized(isInline, text)) { }
 
-        private TextBlock(string text, ITextMetadata metadata, bool isInline, bool isNormalized)
+        private TextBlock(string text, ITextMetadata metadata, bool isInline, bool isContinuation, bool isNormalized)
         {
             Text = text;
             Metadata = metadata;
             IsInline = isInline;
             IsNormalized = isNormalized;
+            IsContinuation = isContinuation;
         }
 
         private static bool IsTextNormalized(bool isInline, string text)
@@ -104,7 +106,7 @@ namespace LayItOut.TextFormatting
 
         private TextBlock CloneNormalized(string text)
         {
-            return new TextBlock(text, Metadata, true, true);
+            return new TextBlock(text, Metadata, true, IsContinuation, true);
         }
     }
 }

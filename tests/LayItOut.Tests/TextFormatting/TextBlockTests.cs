@@ -28,7 +28,7 @@ namespace LayItOut.Tests.TextFormatting
         [InlineData("Hello\rworld!?", true, false)]
         public void Should_determine_if_text_is_normalized(string text, bool isInline, bool expectedIsNormalized)
         {
-            new TextBlock(text, _meta, isInline).IsNormalized.ShouldBe(expectedIsNormalized);
+            new TextBlock(text, _meta, isInline, false).IsNormalized.ShouldBe(expectedIsNormalized);
         }
 
         [Theory]
@@ -36,7 +36,7 @@ namespace LayItOut.Tests.TextFormatting
         [InlineData("\r\t Hello my friend!\r\nHow\tare\ryou?\r\t ", true, "Hello my friend! How are you?")]
         public void Normalize_should_split_blocks_and_normalize_text(string text, bool isInline, params string[] expectedBlocks)
         {
-            var blocks = new TextBlock(text, _meta, isInline)
+            var blocks = new TextBlock(text, _meta, isInline, false)
                 .Normalize()
                 .ToArray();
 
@@ -46,10 +46,20 @@ namespace LayItOut.Tests.TextFormatting
             blocks.ShouldAllBe(x => x.Metadata == _meta);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Normalize_should_preserve_continuation(bool continuation)
+        {
+            new TextBlock("hello world", _meta, false, continuation)
+                .Normalize()
+                .ShouldAllBe(x => x.IsContinuation == continuation);
+        }
+
         [Fact]
         public void Normalize_of_normalized_block_should_return_self()
         {
-            var original = new TextBlock("Hi!\r", _meta, true);
+            var original = new TextBlock("Hi!\r", _meta, true, false);
             var normalized = original.Normalize().Single();
 
             normalized.ShouldNotBeSameAs(original);
@@ -59,7 +69,7 @@ namespace LayItOut.Tests.TextFormatting
         [Fact]
         public void IsLineBreak_should_identify_line_breaks()
         {
-            var blocks = new TextBlock("Hi\nBob", _meta, false).Normalize().ToArray();
+            var blocks = new TextBlock("Hi\nBob", _meta, false, false).Normalize().ToArray();
             blocks.Select(b => b.Text).ShouldBe(new[] { "Hi", "\n", "Bob" });
             blocks.Select(b => b.IsLineBreak).ShouldBe(new[] { false, true, false });
         }

@@ -78,19 +78,26 @@ namespace LayItOut.TextFormatting
             var lineRemainingSpace = Math.Max(0, actualWidth - line.Measure.Width);
             var x = GetAlignmentOffset(lineRemainingSpace, alignment);
             var wordSpace = GetAlignmentWordSpace(line.Blocks, lineRemainingSpace, alignment);
-            foreach (var block in line.Blocks)
+            for (var index = 0; index < line.Blocks.Count; index++)
             {
+                var block = line.Blocks[index];
+
+                if (index > 0 && block.SpacePadding > 0)
+                    x += block.SpacePadding + wordSpace;
+
                 var position = new PointF(x, top + (line.Measure.Height - block.Measure.Height) / 2);
                 yield return new TextArea(position, block.Measure, block.Block, block.SpacePadding);
-                x += block.Measure.Width + block.SpacePadding + wordSpace;
+                x += block.Measure.Width;
             }
         }
 
         private static float GetAlignmentWordSpace(IReadOnlyList<TextBlockMeasure> line, float lineRemainingSpace, TextAlignment alignment)
         {
-            if (line.Count < 2 || alignment != TextAlignment.Justify)
+            var breakCount = line.Skip(1).Count(x => x.SpacePadding > 0);
+
+            if (breakCount < 1 || alignment != TextAlignment.Justify)
                 return 0;
-            return lineRemainingSpace / (line.Count - 1);
+            return lineRemainingSpace / breakCount;
         }
 
         private float GetAlignmentOffset(float lineRemainingSpace, TextAlignment alignment)

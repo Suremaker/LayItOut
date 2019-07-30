@@ -18,6 +18,8 @@ namespace LayItOut.Components
         public string Text { get; set; }
         [Description("Specifies if whole text should render in-line or can break line between words.")]
         public bool Inline { get; set; }
+        [Description("Specifies if that block of text should be rendered immediately after the last one")]
+        public bool TextContinuation { get; set; }
         [Description("Text alignment within component dimensions.")]
         public TextAlignment TextAlignment { get; set; }
         [Description("Line height multiplier. Default value: `1`")]
@@ -26,7 +28,7 @@ namespace LayItOut.Components
         public TextMeasure TextMeasure { get; private set; }
         public override string ToString() => Text;
 
-        public TextBlock GetTextBlock() => new TextBlock(Text, GetTextMetadata(), Inline);
+        public TextBlock GetTextBlock() => new TextBlock(Text, GetTextMetadata(), Inline, TextContinuation);
 
         protected override Size OnMeasure(Size size, IRendererContext context)
         {

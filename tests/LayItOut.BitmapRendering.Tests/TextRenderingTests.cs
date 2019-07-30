@@ -52,7 +52,8 @@ namespace LayItOut.BitmapRendering.Tests
             textBox.AddComponent(new Label { Text = "20", FontColor = Color.Red, Font = new FontInfo(TestFontFamily.SansSerif, 10, FontInfoStyle.Bold) });
             textBox.AddComponent(new Label { Text = "years!\n", FontColor = Color.Black, Font = new FontInfo(TestFontFamily.SansSerif, 10) });
             textBox.AddComponent(new Label { Text = "I'm sure you'd love to see my new", FontColor = Color.Black, Font = new FontInfo(TestFontFamily.SansSerif, 10) });
-            textBox.AddComponent(new Link { Text = "website", FontColor = Color.Blue, Font = new FontInfo(TestFontFamily.SansSerif, 12, FontInfoStyle.Italic), Href = "http://google.com" });
+            textBox.AddComponent(new Link { Text = "web", FontColor = Color.Blue, Font = new FontInfo(TestFontFamily.SansSerif, 12, FontInfoStyle.Italic), Href = "http://google.com" });
+            textBox.AddComponent(new Link { Text = "site", FontColor = Color.Green, TextContinuation = true, Font = new FontInfo(TestFontFamily.SansSerif, 12, FontInfoStyle.Italic), Href = "http://google.com" });
             content.AddComponent(new Panel
             {
                 Width = SizeUnit.Unlimited,

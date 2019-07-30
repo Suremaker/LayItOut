@@ -8,7 +8,7 @@ namespace LayItOut.TextFormatting
         {
             Block = block;
             Measure = measure;
-            SpacePadding = spacePadding;
+            SpacePadding = block.IsContinuation ? 0 : spacePadding;
         }
 
         public TextBlock Block { get; }

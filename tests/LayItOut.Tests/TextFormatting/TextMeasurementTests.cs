@@ -33,6 +33,22 @@ namespace LayItOut.Tests.TextFormatting
         }
 
         [Fact]
+        public void Measure_should_honor_text_continuation()
+        {
+            var measure = _measurement.Measure(TestRendererContext.Instance, int.MaxValue,
+                Block("Hell"),
+                Block("o", isContinuation: true),
+                Block("Bob"));
+
+            var line = measure.Lines.Single();
+            line.Blocks[0].SpacePadding.ShouldBe(TestRendererContext.Instance.GetSpaceWidth(_font));
+            line.Blocks[1].SpacePadding.ShouldBe(0);
+            line.Blocks[2].SpacePadding.ShouldBe(TestRendererContext.Instance.GetSpaceWidth(_font));
+
+            line.Measure.Width.ShouldBe(line.Blocks.Sum(x => x.Measure.Width) + line.Blocks[2].SpacePadding);
+        }
+
+        [Fact]
         public void Measure_should_preserve_empty_line_height()
         {
             var measure = _measurement.Measure(TestRendererContext.Instance, 20, Block("Hey\n\nbob!"));
@@ -71,6 +87,19 @@ namespace LayItOut.Tests.TextFormatting
         public void LayOut_should_align_text_accordingly(TextAlignment alignment, string text, int width, int expectedWidth, params float[] positions)
         {
             var layout = _measurement.LayOut(width, alignment, _measurement.Measure(TestRendererContext.Instance, width, Block(text)));
+            layout.Size.Width.ShouldBe(expectedWidth);
+            layout.Areas.Select(a => a.Position.X).ShouldBe(positions);
+        }
+
+        [Theory]
+        [InlineData(TextAlignment.Left, 20, 15, 0f, 1f, 4f, 6f, 9f)]
+        [InlineData(TextAlignment.Right, 20, 20, 5f, 6f, 9f, 11f, 14f)]
+        [InlineData(TextAlignment.Center, 20, 18, 2.5f, 3.5f, 6.5f, 8.5f, 11.5f)]
+        [InlineData(TextAlignment.Justify, 20, 20, 0f, 1f, 4f, 8.5f, 14f)]
+        public void LayOut_should_align_continued_text_accordingly(TextAlignment alignment, int width, int expectedWidth, params float[] positions)
+        {
+            var layout = _measurement.LayOut(width, alignment, _measurement.Measure(TestRendererContext.Instance, width,
+                Block("H"), Block("ell", isContinuation: true), Block("o", isContinuation: true), Block("my friend")));
             layout.Size.Width.ShouldBe(expectedWidth);
             layout.Areas.Select(a => a.Position.X).ShouldBe(positions);
         }
@@ -120,9 +149,9 @@ namespace LayItOut.Tests.TextFormatting
             });
         }
 
-        private TextBlock Block(string text, float lineHeight = 1, bool isInline = false)
+        private TextBlock Block(string text, float lineHeight = 1, bool isInline = false, bool isContinuation = false)
         {
-            return new TextBlock(text, new TextMetadata(_font, Color.Blue, lineHeight), isInline);
+            return new TextBlock(text, new TextMetadata(_font, Color.Blue, lineHeight), isInline, isContinuation);
         }
     }
 }
