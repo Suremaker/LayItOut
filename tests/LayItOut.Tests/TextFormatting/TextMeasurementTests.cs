@@ -22,6 +22,15 @@ namespace LayItOut.Tests.TextFormatting
         }
 
         [Fact]
+        public void Measure_should_not_break_line_if_it_is_a_first_block()
+        {
+            var measure = _measurement.Measure(TestRendererContext.Instance, 4, Block("Hello"), Block("Bob"));
+            measure.Lines.Count.ShouldBe(2);
+            measure.Lines[0].Blocks.Select(x => x.Block.Text).ShouldBe(new[] { "Hello" });
+            measure.Lines[1].Blocks.Select(x => x.Block.Text).ShouldBe(new[] { "Bob" });
+        }
+
+        [Fact]
         public void Measure_should_measure_all_blocks_sizes_and_space_padding()
         {
             var measure = _measurement.Measure(TestRendererContext.Instance, 20, Block("Hello"), Block("Bob"), Block("my"), Block("friend!"));
