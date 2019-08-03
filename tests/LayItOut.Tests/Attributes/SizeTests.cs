@@ -30,5 +30,13 @@ namespace LayItOut.Tests.Attributes
         {
             new Size(w1, h1).Union(new Size(w2, h2)).ShouldBe(new Size(expectedW, expectedH));
         }
+
+        [Theory]
+        [InlineData(2, 3, 2, 3)]
+        [InlineData(2.1f, 3.05f, 3, 4)]
+        public void Ceiling_should_convert_to_Size(float w, float h, int expectedW, int expectedH)
+        {
+            new SizeF(w, h).Ceiling().ShouldBe(new Size(expectedW, expectedH));
+        }
     }
 }

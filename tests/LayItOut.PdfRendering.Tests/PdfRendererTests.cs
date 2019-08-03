@@ -56,5 +56,20 @@ namespace LayItOut.PdfRendering.Tests
             page.Width.ShouldBe(100);
             page.Height.ShouldBe(50);
         }
+
+        [Fact]
+        public void Render_should_honor_size_transformation_in_measure()
+        {
+            var renderer = new PdfRenderer();
+            var form = new Form(new Panel { Width = SizeUnit.Unlimited, Height = SizeUnit.Unlimited });
+            var page = new PdfDocument().AddPage();
+            page.Width = 100;
+            page.Height = 30;
+            renderer.Render(form, page, new PdfRendererOptions
+            {
+                ConfigureGraphics = g => g.ScaleTransform(2, 0.5)
+            });
+            form.Content.Layout.ShouldBe(new Rectangle(0, 0, 50, 60));
+        }
     }
 }

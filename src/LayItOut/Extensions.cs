@@ -29,7 +29,27 @@ namespace LayItOut
             return new Size(0, Math.Max(0, height));
         }
 
+        public static SizeF GetShift(this HorizontalAlignment alignment, float width)
+        {
+            if (alignment == HorizontalAlignment.Center)
+                width /= 2;
+            else if (alignment == HorizontalAlignment.Left)
+                width = 0;
+            return new SizeF(Math.Max(0, width), 0);
+        }
+
+        public static SizeF GetShift(this VerticalAlignment alignment, float height)
+        {
+            if (alignment == VerticalAlignment.Center)
+                height /= 2;
+            else if (alignment == VerticalAlignment.Top)
+                height = 0;
+            return new SizeF(0, Math.Max(0, height));
+        }
+
         public static Size GetShift(this Alignment alignment, Size size) => alignment.Horizontal.GetShift(size.Width) + alignment.Vertical.GetShift(size.Height);
+        public static SizeF GetShift(this Alignment alignment, SizeF size) => alignment.Horizontal.GetShift(size.Width) + alignment.Vertical.GetShift(size.Height);
+        public static Size Ceiling(this SizeF s) => new Size((int)Math.Ceiling(s.Width), (int)Math.Ceiling(s.Height));
 
         public static Rectangle ShrinkBy(this Rectangle rect, Spacer spacer)
         {

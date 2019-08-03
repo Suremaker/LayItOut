@@ -18,18 +18,36 @@ namespace LayItOut.PdfRendering.Tests
             var blueYellow = CreateBitmap(Brushes.Blue, Brushes.Yellow, 30, 30);
 
             var renderer = new PdfRenderer();
-            var content = new HBox { Width = SizeUnit.Unlimited };
-            content.AddComponent(new Image { Src = redBlue, Width = 40, Height = 40 });
-            content.AddComponent(new Image { Src = redBlue, Width = 10, Height = 20 });
-            content.AddComponent(new Image { Src = blueYellow });
-            var form = new Form(content);
+            var vBox = new VBox();
+            var hBox = new HBox();
+            AddComponent(hBox, new Image { Src = redBlue, Width = 40, Height = 40, Scaling = ImageScaling.Uniform });
+            AddComponent(hBox, new Image { Src = redBlue, Width = 40, Height = 30, Scaling = ImageScaling.Uniform, Alignment = Alignment.Center });
+            AddComponent(hBox, new Image { Src = redBlue, Width = 40, Height = 30, Scaling = ImageScaling.Uniform, Alignment = Alignment.Parse("center left") });
+            AddComponent(hBox, new Image { Src = redBlue, Width = 40, Height = 30, Scaling = ImageScaling.Uniform, Alignment = Alignment.Parse("center right") });
+            vBox.AddComponent(hBox);
+            hBox = new HBox();
+            AddComponent(hBox, new Image { Src = redBlue, Width = 30, Height = 40, Scaling = ImageScaling.Uniform, Alignment = Alignment.Center });
+            AddComponent(hBox, new Image { Src = redBlue, Width = 30, Height = 40, Scaling = ImageScaling.Uniform, Alignment = Alignment.Parse("top center") });
+            AddComponent(hBox, new Image { Src = redBlue, Width = 30, Height = 40, Scaling = ImageScaling.Uniform, Alignment = Alignment.Parse("bottom center") });
+            vBox.AddComponent(hBox);
+            hBox = new HBox();
+            AddComponent(hBox, new Image { Src = redBlue, Width = 10, Height = 20, Scaling = ImageScaling.Fill });
+            AddComponent(hBox, new Image { Src = blueYellow });
+            AddComponent(hBox, new Image { Src = blueYellow, Width = 20, Height = 20, Alignment = Alignment.Center });
+            AddComponent(hBox, new Image { Src = blueYellow, Width = 20, Height = 20, Alignment = Alignment.Parse("top left") });
+            AddComponent(hBox, new Image { Src = blueYellow, Width = 20, Height = 20, Alignment = Alignment.Parse("bottom right") });
+            vBox.AddComponent(hBox);
+            var form = new Form(vBox);
 
             var doc = new PdfDocument();
             var page = doc.AddPage();
-            page.Width = 80;
-            page.Height = 40;
-            renderer.Render(form, page);
+            renderer.Render(form, page, new PdfRendererOptions { AdjustPageSize = true });
             PdfImageComparer.ComparePdfs("bitmaps", doc);
+        }
+
+        private void AddComponent(IContainer container, Image image)
+        {
+            container.AddComponent(new Panel { Margin = Spacer.Parse("1"), Border = Border.Parse("1 green"), Inner = image });
         }
 
         private Bitmap CreateBitmap(Brush back, Brush fore, int width, int height)

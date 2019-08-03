@@ -71,5 +71,38 @@ namespace LayItOut.Tests.Attributes
         {
             new Alignment(vertical, horizontal).GetShift(new Size(width, height)).ShouldBe(new Size(expectedWidth, expectedHeight));
         }
+
+        [Theory]
+        [InlineData(HorizontalAlignment.Center, 45, 22.5)]
+        [InlineData(HorizontalAlignment.Left, 45, 0)]
+        [InlineData(HorizontalAlignment.Right, 45, 45)]
+        [InlineData(HorizontalAlignment.Right, -1, 0)]
+        [InlineData(HorizontalAlignment.Left, -1, 0)]
+        [InlineData(HorizontalAlignment.Center, -1, 0)]
+        public void GetShift_should_calculate_horizontal_shift_wth_floats(HorizontalAlignment alignment, float remaining, float result)
+        {
+            alignment.GetShift(remaining).ShouldBe(new SizeF(result, 0));
+        }
+
+        [Theory]
+        [InlineData(VerticalAlignment.Center, 45, 22.5)]
+        [InlineData(VerticalAlignment.Top, 45, 0)]
+        [InlineData(VerticalAlignment.Bottom, 45, 45)]
+        [InlineData(VerticalAlignment.Bottom, -1, 0)]
+        [InlineData(VerticalAlignment.Top, -1, 0)]
+        [InlineData(VerticalAlignment.Center, -1, 0)]
+        public void GetShift_should_calculate_vertical_shift_with_floats(VerticalAlignment alignment, float remaining, float result)
+        {
+            alignment.GetShift(remaining).ShouldBe(new SizeF(0, result));
+        }
+
+        [Theory]
+        [InlineData(VerticalAlignment.Center, HorizontalAlignment.Center, 31, 41, 15.5, 20.5)]
+        [InlineData(VerticalAlignment.Bottom, HorizontalAlignment.Left, 31, 41, 0, 41)]
+        [InlineData(VerticalAlignment.Top, HorizontalAlignment.Right, 31, 41, 31, 0)]
+        public void GetShift_should_calculate_alignment_shift_with_floats(VerticalAlignment vertical, HorizontalAlignment horizontal, float width, float height, float expectedWidth, float expectedHeight)
+        {
+            new Alignment(vertical, horizontal).GetShift(new SizeF(width, height)).ShouldBe(new SizeF(expectedWidth, expectedHeight));
+        }
     }
 }
