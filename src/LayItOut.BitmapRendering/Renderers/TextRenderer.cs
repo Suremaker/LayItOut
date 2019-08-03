@@ -4,9 +4,9 @@ using LayItOut.Rendering;
 
 namespace LayItOut.BitmapRendering.Renderers
 {
-    class TextRenderer<T> : IComponentRenderer<RendererContext, T> where T : ITextComponent, IComponent
+    class TextRenderer<T> : ComponentRenderer<BitmapRendererContext, T> where T : ITextComponent, IComponent
     {
-        public void Render(RendererContext ctx, T element)
+        protected override void OnRender(BitmapRendererContext ctx, T element)
         {
             var graphics = ctx.Graphics;
             foreach (var area in element.TextLayout.Areas)

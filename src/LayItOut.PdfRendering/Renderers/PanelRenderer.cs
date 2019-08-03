@@ -5,9 +5,9 @@ using PdfSharp.Drawing;
 
 namespace LayItOut.PdfRendering.Renderers
 {
-    internal class PanelRenderer : IComponentRenderer<PdfRendererContext, Panel>
+    internal class PanelRenderer : ComponentRenderer<PdfRendererContext, Panel>
     {
-        public void Render(PdfRendererContext ctx, Panel panel)
+        protected override void OnRender(PdfRendererContext ctx, Panel panel)
         {
             if (panel.BackgroundColor.A == 0 && panel.Border.Color.A == 0)
                 return;

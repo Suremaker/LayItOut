@@ -41,8 +41,8 @@ namespace LayItOut.Tests.Components
         [InlineData("uniform", "15x30", "5:5|10x50", "bottom left", "0:0|15x30", "5:35|10x20")]
         public void Arrange_should_arrange_image_accordingly_to_scaling_and_aligning_options(string scaling, string image, string area, string alignment, string expectedSourceRegion, string expectedImageLayout)
         {
-            var imgSize = ToSize(image);
-            var areaRect = ToRect(area);
+            var imgSize = RectParser.ToSize(image);
+            var areaRect = RectParser.ToRect(area);
             var img = new Image
             {
                 Src = new Bitmap(imgSize.Width, imgSize.Height),
@@ -54,44 +54,8 @@ namespace LayItOut.Tests.Components
             img.Measure(areaRect.Size, TestRendererContext.Instance);
             img.Arrange(areaRect);
 
-            img.ImageSourceRegion.ShouldBe(ToRectF(expectedSourceRegion));
-            img.ImageLayout.ShouldBe(ToRectF(expectedImageLayout));
-        }
-
-        private Size ToSize(string text)
-        {
-            var parts = text.Split('x').Select(int.Parse).ToArray();
-            return new Size(parts[0], parts[1]);
-        }
-
-        private SizeF ToSizeF(string text)
-        {
-            var parts = text.Split('x').Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
-            return new SizeF(parts[0], parts[1]);
-        }
-
-        private Point ToPoint(string text)
-        {
-            var parts = text.Split(':').Select(int.Parse).ToArray();
-            return new Point(parts[0], parts[1]);
-        }
-
-        private PointF ToPointF(string text)
-        {
-            var parts = text.Split(':').Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
-            return new PointF(parts[0], parts[1]);
-        }
-
-        private Rectangle ToRect(string text)
-        {
-            var parts = text.Split('|');
-            return new Rectangle(ToPoint(parts[0]), ToSize(parts[1]));
-        }
-
-        private RectangleF ToRectF(string text)
-        {
-            var parts = text.Split('|');
-            return new RectangleF(ToPointF(parts[0]), ToSizeF(parts[1]));
+            img.ImageSourceRegion.ShouldBe(RectParser.ToRectF(expectedSourceRegion));
+            img.ImageLayout.ShouldBe(RectParser.ToRectF(expectedImageLayout));
         }
     }
 }

@@ -4,7 +4,7 @@ using LayItOut.Attributes;
 
 namespace LayItOut.BitmapRendering
 {
-    public class FontResolver
+    public class BitmapFontResolver
     {
         private readonly ConcurrentDictionary<FontInfo, Font> _cache = new ConcurrentDictionary<FontInfo, Font>();
 

@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using LayItOut.Components;
 using LayItOut.Rendering;
 using LayItOut.Tests.TestHelpers;
@@ -17,9 +18,9 @@ namespace LayItOut.Tests.Renderers
         [Fact]
         public void Render_should_traverse_through_child_hierarchy_and_render_all_which_size_is_greater_than_0()
         {
-            var panelRenderer = new Mock<IComponentRenderer<object, Panel>>();
-            var hboxRenderer = new Mock<IComponentRenderer<object, HBox>>();
-            var componentRenderer = new Mock<IComponentRenderer<object, Component>>();
+            var panelRenderer = CreateMockRenderer<Panel>();
+            var hboxRenderer = CreateMockRenderer<HBox>();
+            var componentRenderer = CreateMockRenderer<Component>();
             var renderer = new TestableRenderer();
             renderer.RegisterRenderer(panelRenderer.Object);
             renderer.RegisterRenderer(hboxRenderer.Object);
@@ -48,16 +49,27 @@ namespace LayItOut.Tests.Renderers
 
             renderer.Render(g, form);
 
-            hboxRenderer.Verify(x => x.Render(g, hbox), Times.Once);
-            panelRenderer.Verify(x => x.Render(g, panel1), Times.Once);
-            panelRenderer.Verify(x => x.Render(g, panel2), Times.Never);
-            panelRenderer.Verify(x => x.Render(g, panel3), Times.Never);
-            panelRenderer.Verify(x => x.Render(g, panel4), Times.Once);
+            hboxRenderer.Verify(x => x.Render(g, hbox, It.IsAny<Action<object, IComponent>>()), Times.Once);
+            panelRenderer.Verify(x => x.Render(g, panel1, It.IsAny<Action<object, IComponent>>()), Times.Once);
+            panelRenderer.Verify(x => x.Render(g, panel2, It.IsAny<Action<object, IComponent>>()), Times.Never);
+            panelRenderer.Verify(x => x.Render(g, panel3, It.IsAny<Action<object, IComponent>>()), Times.Never);
+            panelRenderer.Verify(x => x.Render(g, panel4, It.IsAny<Action<object, IComponent>>()), Times.Once);
 
-            componentRenderer.Verify(x => x.Render(g, component1), Times.Once);
-            componentRenderer.Verify(x => x.Render(g, component2), Times.Never);
-            componentRenderer.Verify(x => x.Render(g, component3), Times.Never);
-            componentRenderer.Verify(x => x.Render(g, component4), Times.Once);
+            componentRenderer.Verify(x => x.Render(g, component1, It.IsAny<Action<object, IComponent>>()), Times.Once);
+            componentRenderer.Verify(x => x.Render(g, component2, It.IsAny<Action<object, IComponent>>()), Times.Never);
+            componentRenderer.Verify(x => x.Render(g, component3, It.IsAny<Action<object, IComponent>>()), Times.Never);
+            componentRenderer.Verify(x => x.Render(g, component4, It.IsAny<Action<object, IComponent>>()), Times.Once);
+        }
+
+        private static Mock<IComponentRenderer<object, T>> CreateMockRenderer<T>() where T : IComponent
+        {
+            var mock = new Mock<IComponentRenderer<object, T>>();
+            mock.Setup(x => x.Render(It.IsAny<object>(), It.IsAny<T>(), It.IsAny<Action<object, IComponent>>()))
+                .Callback((object ctx, T c, Action<object, IComponent> renderChildren) =>
+                {
+                    foreach (var child in c.GetChildren()) renderChildren(ctx, child);
+                });
+            return mock;
         }
     }
 }

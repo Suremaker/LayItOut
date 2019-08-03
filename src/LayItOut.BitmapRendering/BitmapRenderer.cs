@@ -8,18 +8,19 @@ using LayItOut.Rendering;
 
 namespace LayItOut.BitmapRendering
 {
-    public class BitmapRenderer : Renderer<RendererContext>
+    public class BitmapRenderer : Renderer<BitmapRendererContext>
     {
-        public FontResolver FontResolver { get; }
+        public BitmapFontResolver FontResolver { get; }
 
-        public BitmapRenderer(FontResolver fontResolver = null)
+        public BitmapRenderer(BitmapFontResolver fontResolver = null)
         {
-            FontResolver = fontResolver ?? new FontResolver();
+            FontResolver = fontResolver ?? new BitmapFontResolver();
             RegisterRenderer(new PanelRenderer());
             RegisterRenderer(new TextRenderer<Link>());
             RegisterRenderer(new TextRenderer<Label>());
             RegisterRenderer(new TextRenderer<TextBox>());
             RegisterRenderer(new ImageRenderer());
+            RegisterRenderer(new ViewportRenderer());
         }
 
         public void Render(Form form, Bitmap target, BitmapRendererOptions options = null)
@@ -28,7 +29,7 @@ namespace LayItOut.BitmapRendering
 
             using (var g = CreateGraphics(target, options))
             {
-                var context = new RendererContext(g, FontResolver);
+                var context = new BitmapRendererContext(g, FontResolver);
                 form.LayOut(target.Size, context);
                 Render(context, form.Content);
             }
@@ -40,11 +41,11 @@ namespace LayItOut.BitmapRendering
 
             using (var refBmp = new Bitmap(1, 1))
             using (var refGraphics = CreateGraphics(refBmp, options))
-                form.LayOut(new Size(int.MaxValue, int.MaxValue), new RendererContext(refGraphics, FontResolver));
+                form.LayOut(new Size(int.MaxValue, int.MaxValue), new BitmapRendererContext(refGraphics, FontResolver));
 
             var bitmap = new Bitmap(form.Content.DesiredSize.Width, form.Content.DesiredSize.Height, PixelFormat.Format32bppArgb);
             using (var graphics = CreateGraphics(bitmap, options))
-                Render(new RendererContext(graphics, FontResolver), form.Content);
+                Render(new BitmapRendererContext(graphics, FontResolver), form.Content);
 
             return bitmap;
         }

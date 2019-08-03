@@ -3,9 +3,9 @@ using LayItOut.Rendering;
 
 namespace LayItOut.BitmapRendering.Renderers
 {
-    class ImageRenderer : IComponentRenderer<RendererContext, LayItOut.Components.Image>
+    class ImageRenderer : ComponentRenderer<BitmapRendererContext, LayItOut.Components.Image>
     {
-        public void Render(RendererContext ctx, LayItOut.Components.Image component)
+        protected override void OnRender(BitmapRendererContext ctx, LayItOut.Components.Image component)
         {
             if (component.Src == null)
                 return;

@@ -1,9 +1,10 @@
-﻿using LayItOut.Components;
+﻿using System;
+using LayItOut.Components;
 
 namespace LayItOut.Rendering
 {
-    public interface IComponentRenderer<in TRendererContext, in TComponent> where TComponent : IComponent
+    public interface IComponentRenderer<TRendererContext, in TComponent> where TComponent : IComponent
     {
-        void Render(TRendererContext graphics, TComponent component);
+        void Render(TRendererContext context, TComponent component, Action<TRendererContext, IComponent> renderChild);
     }
 }

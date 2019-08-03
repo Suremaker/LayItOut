@@ -6,13 +6,13 @@ using LayItOut.Rendering;
 
 namespace LayItOut.BitmapRendering
 {
-    public class RendererContext : IRendererContext
+    public class BitmapRendererContext : IRendererContext
     {
         private readonly ConcurrentDictionary<FontInfo, float> _spaceSizes = new ConcurrentDictionary<FontInfo, float>();
-        public FontResolver FontResolver { get; }
+        public BitmapFontResolver FontResolver { get; }
         public Graphics Graphics { get; }
 
-        public RendererContext(Graphics graphics, FontResolver fontResolver)
+        public BitmapRendererContext(Graphics graphics, BitmapFontResolver fontResolver)
         {
             FontResolver = fontResolver;
             Graphics = graphics;

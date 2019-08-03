@@ -5,9 +5,9 @@ using LayItOut.Rendering;
 
 namespace LayItOut.BitmapRendering.Renderers
 {
-    internal class PanelRenderer : IComponentRenderer<RendererContext, Panel>
+    internal class PanelRenderer : ComponentRenderer<BitmapRendererContext, Panel>
     {
-        public void Render(RendererContext ctx, Panel panel)
+        protected override void OnRender(BitmapRendererContext ctx, Panel panel)
         {
             if (panel.BackgroundColor.A == 0 && panel.Border.Color.A == 0)
                 return;

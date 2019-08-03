@@ -5,9 +5,9 @@ using PdfSharp.Pdf;
 
 namespace LayItOut.PdfRendering.Renderers
 {
-    class TextRenderer<T> : IComponentRenderer<PdfRendererContext, T> where T : ITextComponent, IComponent
+    class TextRenderer<T> : ComponentRenderer<PdfRendererContext, T> where T : ITextComponent, IComponent
     {
-        public void Render(PdfRendererContext ctx, T element)
+        protected override void OnRender(PdfRendererContext ctx, T element)
         {
             var graphics = ctx.Graphics;
             var format = new XStringFormat

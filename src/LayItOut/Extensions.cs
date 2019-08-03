@@ -63,6 +63,9 @@ namespace LayItOut
             return new Rectangle(rect.Left + l, rect.Top + t, size.Width, size.Height);
         }
 
+        public static Size Add(this Size s1, Size s2) => new Size(s1.Width + s2.Width, s1.Height + s2.Height);
+        public static Size Subtract(this Size s1, Size s2) => new Size(Math.Max(0, s1.Width - s2.Width), Math.Max(0, s1.Height - s2.Height));
+
         internal static T GetNext<T>(this IEnumerator<T> enumerator) => enumerator.MoveNext() ? enumerator.Current : throw new IndexOutOfRangeException();
     }
 }

@@ -6,11 +6,12 @@ namespace LayItOut.Rendering
 {
     public abstract class Renderer<TRendererContext>
     {
+        private static readonly IComponentRenderer<TRendererContext, IComponent> DefaultRenderer = new ComponentRenderer<TRendererContext, IComponent>();
         private readonly Dictionary<Type, Action<TRendererContext, IComponent>> _renderers = new Dictionary<Type, Action<TRendererContext, IComponent>>();
 
         public void RegisterRenderer<TComponent>(IComponentRenderer<TRendererContext, TComponent> renderer) where TComponent : IComponent
         {
-            _renderers[typeof(TComponent)] = (ctx, c) => renderer.Render(ctx, (TComponent)c);
+            _renderers[typeof(TComponent)] = (ctx, c) => renderer.Render(ctx, (TComponent)c, Render);
         }
 
         protected void Render(TRendererContext ctx, IComponent component)
@@ -20,8 +21,8 @@ namespace LayItOut.Rendering
 
             if (_renderers.TryGetValue(component.GetType(), out var render))
                 render(ctx, component);
-            foreach (var child in component.GetChildren())
-                Render(ctx, child);
+            else
+                DefaultRenderer.Render(ctx, component, Render);
         }
     }
 }

@@ -21,6 +21,7 @@ namespace LayItOut.PdfRendering
             RegisterRenderer(new TextRenderer<Label>());
             RegisterRenderer(new TextRenderer<TextBox>());
             RegisterRenderer(new ImageRenderer());
+            RegisterRenderer(new ViewportRenderer());
         }
 
         public void Render(Form form, PdfPage pdfPage, PdfRendererOptions options = null)

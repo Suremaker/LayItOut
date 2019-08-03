@@ -8,9 +8,9 @@ using Image = LayItOut.Components.Image;
 
 namespace LayItOut.PdfRendering.Renderers
 {
-    class ImageRenderer : IComponentRenderer<PdfRendererContext, Image>
+    class ImageRenderer : ComponentRenderer<PdfRendererContext, Image>
     {
-        public void Render(PdfRendererContext ctx, Image component)
+        protected override void OnRender(PdfRendererContext ctx, Image component)
         {
             if (component.Src == null)
                 return;
