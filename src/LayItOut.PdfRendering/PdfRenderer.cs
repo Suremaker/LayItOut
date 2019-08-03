@@ -26,12 +26,11 @@ namespace LayItOut.PdfRendering
         public void Render(Form form, PdfPage pdfPage, PdfRendererOptions options = null)
         {
             options = options ?? PdfRendererOptions.Default;
-            var size = options.AdjustPageSize
-                ? new Size(int.MaxValue, int.MaxValue)
-                : new Size(pdfPage.Width.ToLayout(), pdfPage.Height.ToLayout());
+
 
             using (var g = CreateGraphics(pdfPage, options))
             {
+                var size = DetermineMaxSize(pdfPage, options, g);
                 form.LayOut(size, CreateContext(g));
 
                 if (options.AdjustPageSize)
@@ -39,6 +38,19 @@ namespace LayItOut.PdfRendering
             }
             using (var g = CreateGraphics(pdfPage, options))
                 Render(CreateContext(g), form.Content);
+        }
+
+        private static Size DetermineMaxSize(PdfPage pdfPage, PdfRendererOptions options, XGraphics g)
+        {
+            if (options.AdjustPageSize)
+                return new Size(int.MaxValue, int.MaxValue);
+
+            var pageSize = new Size(pdfPage.Width.ToLayout(), pdfPage.Height.ToLayout());
+            var scaledSize = GetTransformedSize(g, pageSize);
+            var upscaledSize = new Size(
+                (int)(pageSize.Width / scaledSize.Width * pageSize.Width),
+                (int)(pageSize.Height / scaledSize.Height * pageSize.Height));
+            return upscaledSize;
         }
 
         private PdfRendererContext CreateContext(XGraphics g) => new PdfRendererContext(g, FontResolver);
@@ -53,18 +65,24 @@ namespace LayItOut.PdfRendering
 
         private static void AdjustPageSize(Form form, PdfPage pdfPage, XGraphics g)
         {
+            var size = GetTransformedSize(g, form.Content.Layout.Size);
+            pdfPage.Width = size.Width;
+            pdfPage.Height = size.Height;
+        }
+
+        private static SizeF GetTransformedSize(XGraphics g, Size size)
+        {
             var points = new[]
             {
                 new XPoint(0, 0),
-                new XPoint(form.Content.Layout.Width, 0),
-                new XPoint(form.Content.Layout.Width, form.Content.Layout.Height),
-                new XPoint(0, form.Content.Layout.Height),
+                new XPoint(size.Width, 0),
+                new XPoint(size.Width, size.Height),
+                new XPoint(0, size.Height),
             };
             g.Transform.Transform(points);
-            var width = Math.Max(0, points.Max(x => x.X));
-            var height = Math.Max(0, points.Max(y => y.Y));
-            pdfPage.Width = width;
-            pdfPage.Height = height;
+            var width = Math.Max(0, points.Max(x => x.X) - points.Min(x => x.X));
+            var height = Math.Max(0, points.Max(y => y.Y) - points.Min(y => y.Y));
+            return new SizeF((float)width, (float)height);
         }
     }
 }
