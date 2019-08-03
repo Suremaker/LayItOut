@@ -52,7 +52,7 @@ namespace LayItOut.Components
 
         private RectangleF ToRegion(Rectangle rect, SizeF viewSize)
         {
-            var shift = Alignment.GetShift(rect.Size - viewSize.Ceiling());
+            var shift = Alignment.GetShift(rect.Size - viewSize);
             var result = new RectangleF(rect.Location, viewSize);
             result.X += rect.Width > viewSize.Width ? shift.Width : -shift.Width;
             result.Y += rect.Height > viewSize.Height ? shift.Height : -shift.Height;
