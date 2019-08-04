@@ -28,16 +28,16 @@ namespace LayItOut.PdfRendering.Tests.Helpers
                 image.Save(actualStream, ImageFormat.Bmp);
                 var actual = actualStream.ToArray();
 
-                var expected = File.ReadAllBytes($"{AppContext.BaseDirectory}\\expected\\{name}.bmp");
-                if (!IsTheSame(actual, expected))
-                {
-                    var output = $"{AppContext.BaseDirectory}\\{name}.actual.bmp";
-                    File.WriteAllBytes(output, actual);
+                var output = $"{AppContext.BaseDirectory}\\{name}.actual.bmp";
+                File.WriteAllBytes(output, actual);
 
-                    var outputPdf = $"{AppContext.BaseDirectory}\\{name}.actual.pdf";
-                    File.WriteAllBytes(outputPdf, pdfBytes);
+                var outputPdf = $"{AppContext.BaseDirectory}\\{name}.actual.pdf";
+                File.WriteAllBytes(outputPdf, pdfBytes);
+
+                var expected = File.ReadAllBytes($"{AppContext.BaseDirectory}\\expected\\{name}.bmp");
+
+                if (!IsTheSame(actual, expected))
                     Assert.True(false, $"Bitmap does not match: {output}");
-                }
             }
         }
 

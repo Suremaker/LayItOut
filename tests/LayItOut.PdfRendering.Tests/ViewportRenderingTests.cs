@@ -1,4 +1,6 @@
+using System;
 using System.Drawing;
+using System.IO;
 using LayItOut.Attributes;
 using LayItOut.Components;
 using LayItOut.PdfRendering.Tests.Helpers;
@@ -185,6 +187,5 @@ namespace LayItOut.PdfRendering.Tests
             renderer.Render(form, doc.AddPage(), new PdfRendererOptions { AdjustPageSize = true });
             PdfImageComparer.ComparePdfs("viewport2", doc);
         }
-
     }
 }
