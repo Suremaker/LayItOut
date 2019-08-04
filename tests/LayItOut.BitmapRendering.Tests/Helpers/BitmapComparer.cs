@@ -15,13 +15,11 @@ namespace LayItOut.BitmapRendering.Tests.Helpers
             {
                 bmp.Save(stream, ImageFormat.Bmp);
                 var actual = stream.ToArray();
+                var output = $"{AppContext.BaseDirectory}\\{name}.actual.bmp";
+                File.WriteAllBytes(output, actual);
                 var expected = File.ReadAllBytes($"{AppContext.BaseDirectory}\\expected\\{name}.bmp");
                 if (!actual.SequenceEqual(expected))
-                {
-                    var output = $"{AppContext.BaseDirectory}\\{name}.actual.bmp";
-                    File.WriteAllBytes(output, actual);
                     Assert.True(false, $"Bitmap does not match: {output}");
-                }
             }
         }
     }
