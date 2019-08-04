@@ -11,10 +11,16 @@ namespace LayItOut.PdfRendering
 {
     public class PdfRenderer : Renderer<PdfRendererContext>
     {
+        private readonly bool _disposeBitmapCache;
+        private readonly bool _disposeFontResolver;
+        public PdfBitmapCache BitmapCache { get; }
         public PdfFontResolver FontResolver { get; }
 
-        public PdfRenderer(PdfFontResolver fontResolver = null)
+        public PdfRenderer(PdfFontResolver fontResolver = null, PdfBitmapCache bitmapCache = null)
         {
+            _disposeBitmapCache = bitmapCache == null;
+            _disposeFontResolver = fontResolver == null;
+            BitmapCache = bitmapCache ?? new PdfBitmapCache();
             FontResolver = fontResolver ?? new PdfFontResolver();
             RegisterRenderer(new PanelRenderer());
             RegisterRenderer(new TextRenderer<Link>());
@@ -28,17 +34,20 @@ namespace LayItOut.PdfRendering
         {
             options = options ?? PdfRendererOptions.Default;
 
-
-            using (var g = CreateGraphics(pdfPage, options))
+            using (var localBitmapCache = new PdfBitmapCache())
             {
-                var size = DetermineMaxSize(pdfPage, options, g);
-                form.LayOut(size, CreateContext(g));
+                using (var g = CreateGraphics(pdfPage, options))
+                {
+                    var size = DetermineMaxSize(pdfPage, options, g);
+                    form.LayOut(size, CreateContext(g, localBitmapCache));
 
-                if (options.AdjustPageSize)
-                    AdjustPageSize(form, pdfPage, g);
+                    if (options.AdjustPageSize)
+                        AdjustPageSize(form, pdfPage, g);
+                }
+
+                using (var g = CreateGraphics(pdfPage, options))
+                    Render(CreateContext(g, localBitmapCache), form.Content);
             }
-            using (var g = CreateGraphics(pdfPage, options))
-                Render(CreateContext(g), form.Content);
         }
 
         private static Size DetermineMaxSize(PdfPage pdfPage, PdfRendererOptions options, XGraphics g)
@@ -54,7 +63,7 @@ namespace LayItOut.PdfRendering
             return upscaledSize;
         }
 
-        private PdfRendererContext CreateContext(XGraphics g) => new PdfRendererContext(g, FontResolver);
+        private PdfRendererContext CreateContext(XGraphics g, PdfBitmapCache localBitmapCache) => new PdfRendererContext(g, FontResolver, BitmapCache, localBitmapCache);
 
         private XGraphics CreateGraphics(PdfPage pdfPage, PdfRendererOptions options)
         {
@@ -84,6 +93,15 @@ namespace LayItOut.PdfRendering
             var width = Math.Max(0, points.Max(x => x.X) - points.Min(x => x.X));
             var height = Math.Max(0, points.Max(y => y.Y) - points.Min(y => y.Y));
             return new SizeF((float)width, (float)height);
+        }
+
+        public override void Dispose()
+        {
+            if (_disposeBitmapCache)
+                BitmapCache.Dispose();
+            if (_disposeFontResolver)
+                FontResolver.Dispose();
+            base.Dispose();
         }
     }
 }

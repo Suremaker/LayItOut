@@ -1,5 +1,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
 using LayItOut.Attributes;
 using LayItOut.Components;
 using LayItOut.PdfRendering.Tests.Helpers;
@@ -50,7 +52,7 @@ namespace LayItOut.PdfRendering.Tests
             container.AddComponent(new Panel { Margin = Spacer.Parse("1"), Border = Border.Parse("1 green"), Inner = image });
         }
 
-        private Bitmap CreateBitmap(Brush back, Brush fore, int width, int height)
+        private AssetSource CreateBitmap(Brush back, Brush fore, int width, int height)
         {
             var bitmap = new Bitmap(width, height);
             using (var g = Graphics.FromImage(bitmap))
@@ -61,8 +63,9 @@ namespace LayItOut.PdfRendering.Tests
                 g.FillEllipse(back, 0, 0, width, height);
                 g.FillEllipse(fore, 0.2f * width, 0.2f * height, 0.6f * width, 0.6f * height);
             }
-
-            return bitmap;
+            var mem = new MemoryStream();
+            bitmap.Save(mem, ImageFormat.Png);
+            return new AssetSource(null, mem.ToArray(), false);
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Globalization;
-using System.Linq;
 using LayItOut.Attributes;
 using LayItOut.Tests.TestHelpers;
 using Shouldly;
@@ -23,7 +21,7 @@ namespace LayItOut.Tests.Components
         [Fact]
         public void Measure_should_use_image_dimensions()
         {
-            var img = new Image { Src = new Bitmap(10, 20) };
+            var img = new Image { Src = new Bitmap(10, 20).ToAssetSource() };
             img.Measure(new Size(100, 100), TestRendererContext.Instance);
             img.DesiredSize.ShouldBe(new Size(10, 20));
         }
@@ -45,7 +43,7 @@ namespace LayItOut.Tests.Components
             var areaRect = RectParser.ToRect(area);
             var img = new Image
             {
-                Src = new Bitmap(imgSize.Width, imgSize.Height),
+                Src = new Bitmap(imgSize.Width, imgSize.Height).ToAssetSource(),
                 Scaling = Enum.Parse<ImageScaling>(scaling, true),
                 Alignment = Alignment.Parse(alignment),
                 Width = SizeUnit.Unlimited,

@@ -1,125 +1,106 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using LayItOut.Attributes;
 using LayItOut.Loaders;
 using Shouldly;
 using Xunit;
 
 namespace LayItOut.Tests.Loaders
 {
-    public class BitmapLoaderTests : IDisposable
+    public class AssetLoaderTests : IDisposable
     {
         private readonly string _tempFile = Path.GetTempFileName();
 
         [Fact]
-        public void Loader_should_support_inline_bitmaps()
+        public async Task Loader_should_support_inline_assets()
         {
-            var loader = new BitmapLoader();
-            var expected = MakeBmp();
+            var loader = new AssetLoader();
+            var expected = "hello";
             var base64 = StoreAsBase64(expected);
-            var actual = loader.Load($"{BitmapLoader.Base64Prefix}{base64}");
-            AssertBitmap(expected, actual);
+            var actual = await loader.LoadAsync($"{AssetLoader.Base64Prefix}{base64}");
+            AssertStringAsset(expected, actual);
         }
 
         [Fact]
-        public void Loader_should_load_files_by_default()
+        public async Task Loader_should_load_files_by_default()
         {
-            var loader = new BitmapLoader();
-            var expected = MakeBmp();
-            expected.Save(_tempFile, ImageFormat.Bmp);
-            var actual = loader.Load(_tempFile);
-            AssertBitmap(expected, actual);
+            var loader = new AssetLoader();
+            var expected = "hello";
+            File.WriteAllText(_tempFile, expected);
+            var actual = await loader.LoadAsync(_tempFile);
+            AssertStringAsset(expected, actual);
         }
 
         [Fact]
-        public void Loader_should_load_files_but_do_not_cache_them_by_default()
+        public async Task Loader_should_load_files_but_do_not_cache_them_by_default()
         {
-            var loader = new BitmapLoader();
-            var expected = MakeBmp();
-            expected.Save(_tempFile, ImageFormat.Bmp);
-            var actual = loader.Load(_tempFile);
-            AssertBitmap(expected, actual);
+            var loader = new AssetLoader();
+            var expected = "hi!";
+            File.WriteAllText(_tempFile, expected);
+            var actual = await loader.LoadAsync(_tempFile);
+            AssertStringAsset(expected, actual);
 
             File.Delete(_tempFile);
-            Assert.Throws<FileNotFoundException>(() => loader.Load(_tempFile));
+            await Assert.ThrowsAsync<FileNotFoundException>(() => loader.LoadAsync(_tempFile));
         }
 
         [Fact]
-        public void Loader_should_cache_images_if_specified()
+        public async Task Loader_should_cache_images_if_specified()
         {
-            var loader = new BitmapLoader(src => true);
-            var expected = MakeBmp();
-            expected.Save(_tempFile, ImageFormat.Bmp);
+            var loader = new AssetLoader(src => true);
+            var expected = "hello";
+            File.WriteAllText(_tempFile, expected);
 
-            var actual = loader.Load(_tempFile);
-            AssertBitmap(expected, actual);
+            var actual = await loader.LoadAsync(_tempFile);
+            AssertStringAsset(expected, actual);
             File.Delete(_tempFile);
 
-            var actual2 = loader.Load(_tempFile);
-            AssertBitmap(actual,actual2);
+            var actual2 = await loader.LoadAsync(_tempFile);
+            AssertStringAsset(expected, actual2);
         }
 
         [Fact]
-        public void Loader_should_allow_custom_resolve_method()
+        public async Task Loader_should_allow_custom_resolve_method()
         {
-            var expected = MakeBmp();
-            var loader = new BitmapLoader(bitmapResolveFn: _ => expected);
-            loader.Load("anything").ShouldBeSameAs(expected);
+
+            var expected = new byte[] { 1, 2, 3 };
+            var loader = new AssetLoader(assetResolveFn: _ => Task.FromResult(expected));
+            var actual = await loader.LoadAsync("anything");
+            actual.Content.ShouldBeSameAs(expected);
         }
 
         [Fact]
-        public void Loader_should_allow_prepopulate_cache()
+        public async Task Loader_should_allow_prepopulate_cache()
         {
-            var expected1 = MakeBmp();
-            var expected2 = MakeBmp(Brushes.Blue);
+            var expected1 = "hello";
+            var expected2 = "hi!";
 
-            var loader = new BitmapLoader();
-            loader.Cache("red", expected1);
-            loader.Cache("blue", expected2);
-            AssertBitmap(expected1,loader.Load("red"));
-            AssertBitmap(expected2,loader.Load("blue"));
+            var loader = new AssetLoader();
+            loader.Cache("red", Encoding.UTF8.GetBytes(expected1));
+            loader.Cache("blue", Encoding.UTF8.GetBytes(expected2));
+            AssertStringAsset(expected1, await loader.LoadAsync("red"));
+            AssertStringAsset(expected2, await loader.LoadAsync("blue"));
         }
 
         [Fact]
-        public void ClearCache_should_clear_cache()
+        public async Task ClearCache_should_clear_cache()
         {
-            var expected = MakeBmp();
-            var loader = new BitmapLoader(bitmapResolveFn: _ => throw new IOException());
-            loader.Cache("red", expected);
-            AssertBitmap(expected,loader.Load("red"));
+            var expected = "hello";
+            var loader = new AssetLoader(assetResolveFn: _ => throw new IOException());
+            loader.Cache("red", Encoding.UTF8.GetBytes(expected));
+            AssertStringAsset(expected, await loader.LoadAsync("red"));
             loader.ClearCache();
-            Assert.Throws<IOException>(() => loader.Load("red"));
+            await Assert.ThrowsAsync<IOException>(() => loader.LoadAsync("red"));
         }
 
-        private void AssertBitmap(Bitmap expected, Bitmap actual)
+        private void AssertStringAsset(string expected, AssetSource actual)
         {
-            actual.Size.ShouldBe(expected.Size);
-            for (int x = 0; x < expected.Width; ++x)
-                for (int y = 0; y < expected.Height; ++y)
-                    actual.GetPixel(x, y).ShouldBe(expected.GetPixel(x, y), $"pixels at {x},{y} does not match");
+            Encoding.UTF8.GetString(actual.Content).ShouldBe(expected);
         }
 
-        private string StoreAsBase64(Bitmap bmp)
-        {
-            using (var memory = new MemoryStream())
-            {
-                bmp.Save(memory, ImageFormat.Png);
-                return Convert.ToBase64String(memory.ToArray());
-            }
-        }
-
-        private static Bitmap MakeBmp(Brush bg = null)
-        {
-            var bmp = new Bitmap(10, 10);
-            using (var g = Graphics.FromImage(bmp))
-            {
-                g.FillRectangle(bg ?? Brushes.Red, 0, 0, 10, 10);
-                g.FillRectangle(Brushes.Yellow, 2, 2, 6, 6);
-            }
-
-            return bmp;
-        }
+        private string StoreAsBase64(string text) => Convert.ToBase64String(Encoding.UTF8.GetBytes(text));
 
         public void Dispose()
         {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
+using LayItOut.Attributes;
 using LayItOut.Components;
 
 namespace LayItOut.Loaders
@@ -13,14 +13,14 @@ namespace LayItOut.Loaders
     {
         private readonly Dictionary<string, Type> _types = new Dictionary<string, Type>();
         private readonly Dictionary<Type, Func<string, object>> _attributeParsers = new Dictionary<Type, Func<string, object>>();
-        public IBitmapLoader BitmapLoader { get; }
+        public IAssetLoader AssetLoader { get; }
 
-        public FormLoader(IBitmapLoader bitmapLoader = null)
+        public FormLoader(IAssetLoader assetLoader = null)
         {
-            BitmapLoader = bitmapLoader ?? new BitmapLoader();
+            AssetLoader = assetLoader ?? new AssetLoader();
 
             WithTypesFrom(typeof(FormLoader).Assembly);
-            _attributeParsers[typeof(Bitmap)] = LoadBitmap;
+            _attributeParsers[typeof(AssetSource)] = LoadAsset;
         }
 
         public FormLoader WithTypesFrom(params Assembly[] assemblies)
@@ -107,11 +107,12 @@ namespace LayItOut.Loaders
                 return Enum.Parse(targetType, value.Trim(), true);
             return Convert.ChangeType(value, targetType);
         }
-        private object LoadBitmap(string src) => BitmapLoader.Load(src);
+        //TODO
+        private object LoadAsset(string src) => AssetLoader.LoadAsync(src).GetAwaiter().GetResult();
 
         public void Dispose()
         {
-            BitmapLoader.Dispose();
+            AssetLoader.Dispose();
         }
     }
 }
