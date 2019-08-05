@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace LayItOut.DocGen
 {
@@ -14,7 +15,7 @@ namespace LayItOut.DocGen
             _file = file;
             _name = Path.GetFileNameWithoutExtension(file);
         }
-        public string Compile()
+        public async Task<string> Compile()
         {
             var snippetStart = "```!SNIPPET";
             var snippetEnd = "```";
@@ -25,23 +26,23 @@ namespace LayItOut.DocGen
             int current;
             while ((current = content.IndexOf(snippetStart, last, StringComparison.Ordinal)) >= 0)
             {
-                var end = content.IndexOf(snippetEnd, current+snippetStart.Length, StringComparison.Ordinal);
+                var end = content.IndexOf(snippetEnd, current + snippetStart.Length, StringComparison.Ordinal);
                 if (end < 0) throw new InvalidOperationException($"{_file}:{current} Snippet does not have end!");
 
                 var snippet = content.Substring(current + snippetStart.Length, end - current - snippetStart.Length);
                 builder.Append(content, last, current);
                 last = end + snippetEnd.Length;
-                CompileSnippet(snippet, builder);
+                await CompileSnippet(snippet, builder);
             }
             builder.Append(content, last, content.Length - last);
             return builder.ToString();
         }
 
-        private void CompileSnippet(string snippet, StringBuilder builder)
+        private async Task CompileSnippet(string snippet, StringBuilder builder)
         {
             builder.Append("```xml").Append(snippet).AppendLine("```");
             var snippetName = $"{_name}_snippet_{++_snippets}.png";
-            SnippetCompiler.Instance.Compile(snippetName, snippet);
+            await SnippetCompiler.Instance.Compile(snippetName, snippet);
             builder.AppendLine($"![{snippetName}](images/{snippetName})");
         }
     }

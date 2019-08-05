@@ -24,9 +24,9 @@ namespace LayItOut.BitmapRendering.Tests
             BitmapComparer.CompareBitmaps("form", bmps.Last());
         }
 
-        private Bitmap Generate()
+        private async Task<Bitmap> Generate()
         {
-            var form = _loader.LoadForm(new MemoryStream(_formInBytes));
+            var form = await _loader.LoadForm(new MemoryStream(_formInBytes));
             return _renderer.Render(form);
         }
     }

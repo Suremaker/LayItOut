@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using LayItOut.Attributes;
 using LayItOut.Components;
 using LayItOut.Loaders;
@@ -14,9 +15,9 @@ namespace LayItOut.Tests.Loaders
     public class FormLoaderTests
     {
         [Fact]
-        public void LoadForm_should_load_form()
+        public async Task LoadForm_should_load_form()
         {
-            var form = LoadForm("form.xml");
+            var form = await LoadForm("form.xml");
             var hbox = form.Content.ShouldBeOfType<HBox>();
 
             var panel = hbox.GetChildren().Single().ShouldBeOfType<Panel>();
@@ -36,61 +37,61 @@ namespace LayItOut.Tests.Loaders
         }
 
         [Fact]
-        public void LoadForms_should_load_multiple_forms()
+        public async Task LoadForms_should_load_multiple_forms()
         {
-            var forms = LoadForms("forms.xml").ToArray();
-            forms.Length.ShouldBe(2);
+            var forms = await LoadForms("forms.xml");
+            forms.Count.ShouldBe(2);
             forms[0].Content.ShouldBeOfType<Panel>().BackgroundColor.ShouldBe(Color.Yellow);
             forms[1].Content.ShouldBeOfType<Panel>().BackgroundColor.ShouldBe(Color.Green);
         }
 
         [Fact]
-        public void LoadForm_should_throw_meaningful_exception_if_cannot_parse_the_element()
+        public async Task LoadForm_should_throw_meaningful_exception_if_cannot_parse_the_element()
         {
             var text = "<Form><unknown /></Form>";
             var loader = new FormLoader();
-            var ex = Assert.Throws<InvalidOperationException>(() => loader.LoadForm(new StringReader(text)));
+            var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => loader.LoadForm(new StringReader(text)));
             ex.Message.ShouldBe("Unable to parse element 'unknown' - no corresponding type were registered");
         }
 
         [Fact]
-        public void LoadForm_should_throw_meaningful_exception_if_cannot_parse_form_element()
+        public async Task LoadForm_should_throw_meaningful_exception_if_cannot_parse_form_element()
         {
             var text = "<Something/>";
             var loader = new FormLoader();
-            var ex = Assert.Throws<InvalidOperationException>(() => loader.LoadForm(new StringReader(text)));
+            var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => loader.LoadForm(new StringReader(text)));
             ex.Message.ShouldBe("Expected 'Form' element, but got 'Something'");
         }
 
         [Fact]
-        public void LoadForms_should_throw_meaningful_exception_if_cannot_parse_forms_element()
+        public async Task LoadForms_should_throw_meaningful_exception_if_cannot_parse_forms_element()
         {
             var text = "<Something/>";
             var loader = new FormLoader();
-            var ex = Assert.Throws<InvalidOperationException>(() => loader.LoadForms(new StringReader(text)));
+            var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => loader.LoadForms(new StringReader(text)));
             ex.Message.ShouldBe("Expected 'Forms' element, but got 'Something'");
         }
 
         [Fact]
-        public void LoadForms_should_support_no_forms()
+        public async Task LoadForms_should_support_no_forms()
         {
             var text = "<Forms/>";
             var loader = new FormLoader();
-            Assert.Empty(loader.LoadForms(new StringReader(text)));
+            Assert.Empty(await loader.LoadForms(new StringReader(text)));
         }
 
-        private static Form LoadForm(string formName)
+        private static async Task<Form> LoadForm(string formName)
         {
             using (var stream = File.OpenRead($"{AppContext.BaseDirectory}\\Loaders\\{formName}"))
             {
-                return new FormLoader().LoadForm(stream);
+                return await new FormLoader().LoadForm(stream);
             }
         }
-        private static IEnumerable<Form> LoadForms(string formName)
+        private static async Task<IReadOnlyList<Form>> LoadForms(string formName)
         {
             using (var stream = File.OpenRead($"{AppContext.BaseDirectory}\\Loaders\\{formName}"))
             {
-                return new FormLoader().LoadForms(stream);
+                return await new FormLoader().LoadForms(stream);
             }
         }
     }

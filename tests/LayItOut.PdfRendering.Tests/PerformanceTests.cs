@@ -24,9 +24,9 @@ namespace LayItOut.PdfRendering.Tests
             PdfImageComparer.ComparePdfs("form", pdfs.Last());
         }
 
-        private byte[] Generate()
+        private async Task<byte[]> Generate()
         {
-            var form = _loader.LoadForm(new MemoryStream(_formInBytes));
+            var form = await _loader.LoadForm(new MemoryStream(_formInBytes));
             var pdf = new PdfDocument();
             _renderer.Render(form, pdf.AddPage(), new PdfRendererOptions { AdjustPageSize = true });
             _renderer.Render(form, pdf.AddPage(), new PdfRendererOptions { ConfigureGraphics = x => x.ScaleTransform(0.5, 0.5) });
