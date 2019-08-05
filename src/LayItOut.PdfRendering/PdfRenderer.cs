@@ -11,16 +11,12 @@ namespace LayItOut.PdfRendering
 {
     public class PdfRenderer : Renderer<PdfRendererContext>
     {
-        private readonly bool _disposeBitmapCache;
         private readonly bool _disposeFontResolver;
-        public PdfBitmapCache BitmapCache { get; }
         public PdfFontResolver FontResolver { get; }
 
-        public PdfRenderer(PdfFontResolver fontResolver = null, PdfBitmapCache bitmapCache = null)
+        public PdfRenderer(PdfFontResolver fontResolver = null)
         {
-            _disposeBitmapCache = bitmapCache == null;
             _disposeFontResolver = fontResolver == null;
-            BitmapCache = bitmapCache ?? new PdfBitmapCache();
             FontResolver = fontResolver ?? new PdfFontResolver();
             RegisterRenderer(new PanelRenderer());
             RegisterRenderer(new TextRenderer<Link>());
@@ -63,7 +59,7 @@ namespace LayItOut.PdfRendering
             return upscaledSize;
         }
 
-        private PdfRendererContext CreateContext(XGraphics g, PdfBitmapCache localBitmapCache) => new PdfRendererContext(g, FontResolver, BitmapCache, localBitmapCache);
+        private PdfRendererContext CreateContext(XGraphics g, PdfBitmapCache localBitmapCache) => new PdfRendererContext(g, FontResolver, localBitmapCache);
 
         private XGraphics CreateGraphics(PdfPage pdfPage, PdfRendererOptions options)
         {
@@ -97,8 +93,6 @@ namespace LayItOut.PdfRendering
 
         public override void Dispose()
         {
-            if (_disposeBitmapCache)
-                BitmapCache.Dispose();
             if (_disposeFontResolver)
                 FontResolver.Dispose();
             base.Dispose();
