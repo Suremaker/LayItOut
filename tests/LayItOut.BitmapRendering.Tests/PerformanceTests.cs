@@ -14,7 +14,7 @@ namespace LayItOut.BitmapRendering.Tests
     {
         private readonly byte[] _formInBytes = File.ReadAllBytes($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}form.xml");
         private readonly BitmapRenderer _renderer = new BitmapRenderer();
-        private readonly FormLoader _loader = new FormLoader(new BitmapLoader(x => true));
+        private readonly FormLoader _loader = new FormLoader(new AssetLoader(x => true));
 
         [Fact]
         public async Task It_should_allow_concurrent_processing()
