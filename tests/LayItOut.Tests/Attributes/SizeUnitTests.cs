@@ -20,7 +20,7 @@ namespace LayItOut.Tests.Attributes
             x.IsAbsolute.ShouldBeFalse();
             x.IsUnlimited.ShouldBeFalse();
             x.IsNotSet.ShouldBeTrue();
-            x.ToString().ShouldBe("not set");
+            x.ToString().ShouldBe("-");
         }
 
         [Fact]
