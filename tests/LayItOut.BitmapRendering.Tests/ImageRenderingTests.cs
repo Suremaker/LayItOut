@@ -33,10 +33,10 @@ namespace LayItOut.BitmapRendering.Tests
             vBox.AddComponent(hBox);
             hBox = new HBox();
             AddComponent(hBox, new Image { Src = redBlue, Width = 10, Height = 20, Scaling = ImageScaling.Fill });
-            AddComponent(hBox, new Image { Src = blueYellow });
-            AddComponent(hBox, new Image { Src = blueYellow, Width = 20, Height = 20, Alignment = Alignment.Center });
-            AddComponent(hBox, new Image { Src = blueYellow, Width = 20, Height = 20, Alignment = Alignment.Parse("top left") });
-            AddComponent(hBox, new Image { Src = blueYellow, Width = 20, Height = 20, Alignment = Alignment.Parse("bottom right") });
+            AddComponent(hBox, new Image { Src = blueYellow, Scaling = ImageScaling.None });
+            AddComponent(hBox, new Image { Src = blueYellow, Width = 20, Height = 20, Alignment = Alignment.Center, Scaling = ImageScaling.None });
+            AddComponent(hBox, new Image { Src = blueYellow, Width = 20, Height = 20, Alignment = Alignment.Parse("top left"), Scaling = ImageScaling.None });
+            AddComponent(hBox, new Image { Src = blueYellow, Width = 20, Height = 20, Alignment = Alignment.Parse("bottom right"), Scaling = ImageScaling.None });
             vBox.AddComponent(hBox);
             var form = new Form(vBox);
 
