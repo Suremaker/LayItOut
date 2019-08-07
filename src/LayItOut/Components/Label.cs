@@ -12,17 +12,17 @@ namespace LayItOut.Components
         private static readonly TextMeasurement TextMeasurement = new TextMeasurement();
         [Description("Font details.")]
         public FontInfo Font { get; set; }
-        [Description("Color used to render font.")]
-        public Color FontColor { get; set; } = Color.Black;
+        [Description("Color used to render text.")]
+        public Color TextColor { get; set; } = Color.Black;
         [Description("Text to render.")]
         public string Text { get; set; }
         [Description("Specifies if whole text should render in-line or can break line between words.")]
         public bool Inline { get; set; }
-        [Description("Specifies if that block of text should be rendered immediately after the last one")]
+        [Description("Specifies if that block of text should be rendered immediately after the last one.")]
         public bool TextContinuation { get; set; }
         [Description("Text alignment within component dimensions.")]
         public TextAlignment TextAlignment { get; set; }
-        [Description("Line height multiplier. Default value: `1`")]
+        [Description("Line height multiplier.")]
         public float LineHeight { get; set; } = 1;
         public TextLayout TextLayout { get; private set; }
         public TextMeasure TextMeasure { get; private set; }
@@ -41,6 +41,6 @@ namespace LayItOut.Components
             TextLayout = TextMeasurement.LayOut(Layout.Width, TextAlignment, TextMeasure);
         }
 
-        protected virtual TextMetadata GetTextMetadata() => new TextMetadata(Font, FontColor, LineHeight);
+        protected virtual TextMetadata GetTextMetadata() => new TextMetadata(Font, TextColor, LineHeight);
     }
 }

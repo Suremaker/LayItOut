@@ -30,7 +30,7 @@ namespace LayItOut.DocGen
                 if (end < 0) throw new InvalidOperationException($"{_file}:{current} Snippet does not have end!");
 
                 var snippet = content.Substring(current + snippetStart.Length, end - current - snippetStart.Length);
-                builder.Append(content, last, current);
+                builder.Append(content, last, current - last);
                 last = end + snippetEnd.Length;
                 await CompileSnippet(snippet, builder);
             }
@@ -43,7 +43,7 @@ namespace LayItOut.DocGen
             builder.Append("```xml").Append(snippet).AppendLine("```");
             var snippetName = $"{_name}_snippet_{++_snippets}.png";
             await SnippetCompiler.Instance.Compile(snippetName, snippet);
-            builder.AppendLine($"![{snippetName}](images/{snippetName})");
+            builder.AppendLine($"![{snippetName}](assets/{snippetName})");
         }
     }
 }

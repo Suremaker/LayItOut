@@ -8,7 +8,7 @@ namespace LayItOut.DocGen
         static async Task Main(string[] args)
         {
             Directory.CreateDirectory("man");
-            Directory.CreateDirectory("man\\images");
+            Directory.CreateDirectory("man\\assets");
             new TypesPageComposer().Compose();
             await new ComponentPageComposer("Types").Compose();
         }

@@ -34,7 +34,7 @@ namespace LayItOut.Attributes
         public override string ToString()
         {
             if (Mode == SizeMode.NotSet)
-                return "not set";
+                return "-";
             if (Mode == SizeMode.Unlimited)
                 return "*";
             return $"{Value}";

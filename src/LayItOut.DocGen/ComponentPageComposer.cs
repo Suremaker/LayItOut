@@ -36,7 +36,7 @@ namespace LayItOut.DocGen
 
                 await EmbedLongDescription(type, writer);
 
-                writer.WriteTable(new[] { "Member", "Type", "Description" }, ReadMembers(type));
+                writer.WriteTable(new[] { "Member", "Type", "Description", "Default value" }, ReadMembers(type));
             }
 
             File.WriteAllText("man\\Components.md", writer.ToString());
@@ -51,14 +51,21 @@ namespace LayItOut.DocGen
 
         private IEnumerable<string[]> ReadMembers(Type type)
         {
+            var instance = Activator.CreateInstance(type);
             return type.GetProperties().Where(p => (p.SetMethod?.IsPublic ?? false) && (p.GetMethod?.IsPublic ?? false))
                 .OrderBy(p => p.Name)
                 .Select(p => new[]
                 {
                     p.Name,
                     LinkType(p.PropertyType),
-                    p.GetCustomAttribute<DescriptionAttribute>()?.Description
+                    p.GetCustomAttribute<DescriptionAttribute>()?.Description,
+                    GetPropertyDefaultValue(p, instance)
                 });
+        }
+
+        private static string GetPropertyDefaultValue(PropertyInfo p, object instance)
+        {
+            return $"`{p.GetValue(instance) ?? "null"}`";
         }
 
         private string LinkType(Type type)

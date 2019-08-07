@@ -7,9 +7,14 @@ namespace LayItOut
 {
     public class Form
     {
-        public IComponent Content { get; }
+        public IComponent Content { get; private set; }
 
         public Form(IComponent content)
+        {
+            UpdateContent(content);
+        }
+
+        public void UpdateContent(IComponent content)
         {
             Content = content ?? throw new ArgumentNullException(nameof(content));
         }

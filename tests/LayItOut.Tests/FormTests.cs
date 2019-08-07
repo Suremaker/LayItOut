@@ -25,6 +25,23 @@ namespace LayItOut.Tests
         }
 
         [Fact]
+        public void Update_can_only_set_a_valid_content()
+        {
+            var form = new Form(Mock.Of<IComponent>());
+            Assert.Throws<ArgumentNullException>(() => form.UpdateContent(null));
+        }
+
+        [Fact]
+        public void Update_can_override_content()
+        {
+            var content1 = Mock.Of<IComponent>();
+            var content2 = Mock.Of<IComponent>();
+            var form = new Form(content1);
+            form.UpdateContent(content2);
+            form.Content.ShouldBeSameAs(content2);
+        }
+
+        [Fact]
         public void LayOut_calls_Measure_then_Arrange_on_content()
         {
             var size = new Size(10, 20);

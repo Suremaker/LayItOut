@@ -18,5 +18,12 @@ namespace LayItOut.Attributes
             Content = content ?? throw new ArgumentNullException(nameof(content));
             IsCached = isCached;
         }
+
+        public override string ToString()
+        {
+            if (IsNone)
+                return "-none-";
+            return Location ?? "-inline-";
+        }
     }
 }

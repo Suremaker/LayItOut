@@ -23,7 +23,7 @@ namespace LayItOut.BitmapRendering.Tests
                 Padding = new Spacer(2),
                 Inner = new Label
                 {
-                    FontColor = Color.Red,
+                    TextColor = Color.Red,
                     Font = new FontInfo(TestFontFamily.Serif, 10, FontInfoStyle.Underline | FontInfoStyle.Italic),
                     Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?"
                 }
@@ -39,7 +39,7 @@ namespace LayItOut.BitmapRendering.Tests
                 Padding = new Spacer(2),
                 Inner = new Link
                 {
-                    FontColor = Color.Blue,
+                    TextColor = Color.Blue,
                     Font = new FontInfo(TestFontFamily.Serif, 14, FontInfoStyle.Bold),
                     Text = "How are you doing today?",
                     Href = "http://google.com"
@@ -47,13 +47,13 @@ namespace LayItOut.BitmapRendering.Tests
             });
 
             var textBox = new TextBox();
-            textBox.AddComponent(new Label { Text = "Hello!\n", FontColor = Color.Green, Font = new FontInfo(TestFontFamily.Monospace, 20, FontInfoStyle.Underline) });
-            textBox.AddComponent(new Label { Text = "Hi Bob, nice to see you after", FontColor = Color.Black, Font = new FontInfo(TestFontFamily.SansSerif, 10) });
-            textBox.AddComponent(new Label { Text = "20", FontColor = Color.Red, Font = new FontInfo(TestFontFamily.SansSerif, 10, FontInfoStyle.Bold) });
-            textBox.AddComponent(new Label { Text = "years!\n", FontColor = Color.Black, Font = new FontInfo(TestFontFamily.SansSerif, 10) });
-            textBox.AddComponent(new Label { Text = "I'm sure you'd love to see my new", FontColor = Color.Black, Font = new FontInfo(TestFontFamily.SansSerif, 10) });
-            textBox.AddComponent(new Link { Text = "web", FontColor = Color.Blue, Font = new FontInfo(TestFontFamily.SansSerif, 12, FontInfoStyle.Italic), Href = "http://google.com" });
-            textBox.AddComponent(new Link { Text = "site", FontColor = Color.Green, TextContinuation = true, Font = new FontInfo(TestFontFamily.SansSerif, 12, FontInfoStyle.Italic), Href = "http://google.com" });
+            textBox.AddComponent(new Label { Text = "Hello!\n", TextColor = Color.Green, Font = new FontInfo(TestFontFamily.Monospace, 20, FontInfoStyle.Underline) });
+            textBox.AddComponent(new Label { Text = "Hi Bob, nice to see you after", TextColor = Color.Black, Font = new FontInfo(TestFontFamily.SansSerif, 10) });
+            textBox.AddComponent(new Label { Text = "20", TextColor = Color.Red, Font = new FontInfo(TestFontFamily.SansSerif, 10, FontInfoStyle.Bold) });
+            textBox.AddComponent(new Label { Text = "years!\n", TextColor = Color.Black, Font = new FontInfo(TestFontFamily.SansSerif, 10) });
+            textBox.AddComponent(new Label { Text = "I'm sure you'd love to see my new", TextColor = Color.Black, Font = new FontInfo(TestFontFamily.SansSerif, 10) });
+            textBox.AddComponent(new Link { Text = "web", TextColor = Color.Blue, Font = new FontInfo(TestFontFamily.SansSerif, 12, FontInfoStyle.Italic), Href = "http://google.com" });
+            textBox.AddComponent(new Link { Text = "site", TextColor = Color.Green, TextContinuation = true, Font = new FontInfo(TestFontFamily.SansSerif, 12, FontInfoStyle.Italic), Href = "http://google.com" });
             content.AddComponent(new Panel
             {
                 Width = SizeUnit.Unlimited,
@@ -85,7 +85,7 @@ namespace LayItOut.BitmapRendering.Tests
                 Margin = new Spacer(1),
                 Inner = new Label
                 {
-                    FontColor = Color.Red,
+                    TextColor = Color.Red,
                     Font = new FontInfo(TestFontFamily.Serif, 10, FontInfoStyle.Underline | FontInfoStyle.Italic),
                     Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?",
                     LineHeight = 1.2f
@@ -100,7 +100,7 @@ namespace LayItOut.BitmapRendering.Tests
                 Margin = new Spacer(1),
                 Inner = new Label
                 {
-                    FontColor = Color.Red,
+                    TextColor = Color.Red,
                     Font = new FontInfo(TestFontFamily.Serif, 10, FontInfoStyle.Underline | FontInfoStyle.Italic),
                     Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?",
                     LineHeight = 2f
@@ -115,7 +115,7 @@ namespace LayItOut.BitmapRendering.Tests
                 Margin = new Spacer(1),
                 Inner = new Label
                 {
-                    FontColor = Color.Red,
+                    TextColor = Color.Red,
                     Font = new FontInfo(TestFontFamily.Serif, 10, FontInfoStyle.Underline | FontInfoStyle.Italic),
                     Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?",
                     LineHeight = 0.8f
@@ -148,7 +148,7 @@ namespace LayItOut.BitmapRendering.Tests
                     Inner = new Label
                     {
                         Width = SizeUnit.Unlimited,
-                        FontColor = Color.Red,
+                        TextColor = Color.Red,
                         TextAlignment = align,
                         Font = new FontInfo(TestFontFamily.Serif, 10, FontInfoStyle.Underline | FontInfoStyle.Italic),
                         Text = "Hello my friend!\nIt's nice to see you!\n\nWhat is a nice and sunny day, is not it?"
@@ -166,20 +166,20 @@ namespace LayItOut.BitmapRendering.Tests
                 };
                 textBox.AddComponent(new Label
                 {
-                    FontColor = Color.Red,
+                    TextColor = Color.Red,
                     Text = "Hi Bob!",
                     Font = new FontInfo(TestFontFamily.Serif, 10, FontInfoStyle.Underline | FontInfoStyle.Italic)
                 });
 
                 textBox.AddComponent(new Link
                 {
-                    FontColor = Color.Black,
+                    TextColor = Color.Black,
                     Text = "Check out this: ",
                     Font = new FontInfo(TestFontFamily.Serif, 12, FontInfoStyle.Regular)
                 });
                 textBox.AddComponent(new Link
                 {
-                    FontColor = Color.Purple,
+                    TextColor = Color.Purple,
                     Text = "great link!!!",
                     Font = new FontInfo(TestFontFamily.Serif, 8, FontInfoStyle.Underline),
                     Href = "http://google.com"

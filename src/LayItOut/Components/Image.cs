@@ -13,7 +13,7 @@ namespace LayItOut.Components
         public AssetSource Src { get; set; }
 
         [Description("Specifies if and how image is scaled to the actual size of the component.")]
-        public ImageScaling Scaling { get; set; }
+        public ImageScaling Scaling { get; set; } = ImageScaling.Fill;
         public RectangleF ImageLayout { get; private set; }
         public RectangleF ImageSourceRegion { get; private set; }
         public Size MeasuredImageSize { get; private set; }
