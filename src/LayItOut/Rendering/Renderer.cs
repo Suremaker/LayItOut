@@ -24,5 +24,7 @@ namespace LayItOut.Rendering
             else
                 DefaultRenderer.Render(ctx, component, Render);
         }
+
+        public virtual void Dispose() { }
     }
 }

@@ -14,7 +14,7 @@ namespace LayItOut.BitmapRendering.Tests
     {
         private readonly byte[] _formInBytes = File.ReadAllBytes($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}form.xml");
         private readonly BitmapRenderer _renderer = new BitmapRenderer();
-        private readonly FormLoader _loader = new FormLoader(new BitmapLoader(x => true));
+        private readonly FormLoader _loader = new FormLoader(new AssetLoader(x => true));
 
         [Fact]
         public async Task It_should_allow_concurrent_processing()
@@ -24,9 +24,9 @@ namespace LayItOut.BitmapRendering.Tests
             BitmapComparer.CompareBitmaps("form", bmps.Last());
         }
 
-        private Bitmap Generate()
+        private async Task<Bitmap> Generate()
         {
-            var form = _loader.LoadForm(new MemoryStream(_formInBytes));
+            var form = await _loader.LoadForm(new MemoryStream(_formInBytes));
             return _renderer.Render(form);
         }
     }

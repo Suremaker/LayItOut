@@ -7,5 +7,6 @@ namespace LayItOut.Rendering
     {
         SizeF MeasureText(string text, FontInfo font);
         float GetSpaceWidth(FontInfo font);
+        Size MeasureBitmap(AssetSource bitmap);
     }
 }

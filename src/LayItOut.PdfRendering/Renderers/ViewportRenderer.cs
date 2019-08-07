@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Drawing;
 using LayItOut.Components;
 using LayItOut.Rendering;
-using PdfSharp.Drawing;
 
 namespace LayItOut.PdfRendering.Renderers
 {

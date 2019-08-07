@@ -8,12 +8,14 @@ namespace LayItOut.PdfRendering
 {
     public class PdfRendererContext : IRendererContext
     {
+        private readonly PdfBitmapCache _localBitmapCache;
         private readonly ConcurrentDictionary<FontInfo, float> _spaceSizes = new ConcurrentDictionary<FontInfo, float>();
         public XGraphics Graphics { get; }
         public PdfFontResolver FontResolver { get; }
 
-        public PdfRendererContext(XGraphics graphics, PdfFontResolver fontResolver)
+        public PdfRendererContext(XGraphics graphics, PdfFontResolver fontResolver, PdfBitmapCache localBitmapCache)
         {
+            _localBitmapCache = localBitmapCache;
             Graphics = graphics;
             FontResolver = fontResolver;
         }
@@ -27,6 +29,17 @@ namespace LayItOut.PdfRendering
         public float GetSpaceWidth(FontInfo font)
         {
             return _spaceSizes.GetOrAdd(font, CalculateSpaceSize);
+        }
+
+        public Size MeasureBitmap(AssetSource bitmap)
+        {
+            var bmp = GetBitmap(bitmap);
+            return new Size(bmp.PixelWidth, bmp.PixelHeight);
+        }
+
+        public XImage GetBitmap(AssetSource bitmap)
+        {
+            return _localBitmapCache.Resolve(bitmap);
         }
 
         private float CalculateSpaceSize(FontInfo font)

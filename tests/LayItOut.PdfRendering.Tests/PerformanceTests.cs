@@ -13,7 +13,7 @@ namespace LayItOut.PdfRendering.Tests
     {
         private readonly byte[] _formInBytes = File.ReadAllBytes($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}form.xml");
         private readonly PdfRenderer _renderer = new PdfRenderer();
-        private readonly FormLoader _loader = new FormLoader(new BitmapLoader(x => true));
+        private readonly FormLoader _loader = new FormLoader(new AssetLoader(x => true));
 
         [Fact]
         public async Task It_should_allow_concurrent_processing()
@@ -24,9 +24,9 @@ namespace LayItOut.PdfRendering.Tests
             PdfImageComparer.ComparePdfs("form", pdfs.Last());
         }
 
-        private byte[] Generate()
+        private async Task<byte[]> Generate()
         {
-            var form = _loader.LoadForm(new MemoryStream(_formInBytes));
+            var form = await _loader.LoadForm(new MemoryStream(_formInBytes));
             var pdf = new PdfDocument();
             _renderer.Render(form, pdf.AddPage(), new PdfRendererOptions { AdjustPageSize = true });
             _renderer.Render(form, pdf.AddPage(), new PdfRendererOptions { ConfigureGraphics = x => x.ScaleTransform(0.5, 0.5) });

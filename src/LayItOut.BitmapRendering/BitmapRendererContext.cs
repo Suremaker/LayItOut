@@ -8,12 +8,14 @@ namespace LayItOut.BitmapRendering
 {
     public class BitmapRendererContext : IRendererContext
     {
+        private readonly BitmapCache _localBitmapCache;
         private readonly ConcurrentDictionary<FontInfo, float> _spaceSizes = new ConcurrentDictionary<FontInfo, float>();
         public BitmapFontResolver FontResolver { get; }
         public Graphics Graphics { get; }
 
-        public BitmapRendererContext(Graphics graphics, BitmapFontResolver fontResolver)
+        public BitmapRendererContext(Graphics graphics, BitmapFontResolver fontResolver, BitmapCache localBitmapCache)
         {
+            _localBitmapCache = localBitmapCache;
             FontResolver = fontResolver;
             Graphics = graphics;
         }
@@ -35,6 +37,16 @@ namespace LayItOut.BitmapRendering
         public float GetSpaceWidth(FontInfo font)
         {
             return _spaceSizes.GetOrAdd(font, CalculateSpaceSize);
+        }
+
+        public Size MeasureBitmap(AssetSource bitmap)
+        {
+            return GetBitmap(bitmap).Size;
+        }
+
+        public Bitmap GetBitmap(AssetSource bitmap)
+        {
+            return _localBitmapCache.Resolve(bitmap);
         }
 
         private float CalculateSpaceSize(FontInfo font)

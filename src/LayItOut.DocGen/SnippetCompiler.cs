@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
+﻿using System.Drawing.Text;
 using System.IO;
+using System.Threading.Tasks;
 using LayItOut.BitmapRendering;
 using LayItOut.Loaders;
 
@@ -19,9 +17,9 @@ namespace LayItOut.DocGen
             _renderer = new BitmapRenderer();
         }
 
-        public void Compile(string name, string snippet)
+        public async Task Compile(string name, string snippet)
         {
-            var form = _loader.LoadForm(new StringReader(snippet));
+            var form = await _loader.LoadForm(new StringReader(snippet));
             var opt = new BitmapRendererOptions
             {
                 ConfigureGraphics = g => { g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit; }

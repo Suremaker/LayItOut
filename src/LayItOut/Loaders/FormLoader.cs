@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Xml.Linq;
+using LayItOut.Attributes;
 using LayItOut.Components;
 
 namespace LayItOut.Loaders
@@ -12,15 +13,15 @@ namespace LayItOut.Loaders
     public class FormLoader : IDisposable
     {
         private readonly Dictionary<string, Type> _types = new Dictionary<string, Type>();
-        private readonly Dictionary<Type, Func<string, object>> _attributeParsers = new Dictionary<Type, Func<string, object>>();
-        public IBitmapLoader BitmapLoader { get; }
+        private readonly Dictionary<Type, Func<string, Task<object>>> _attributeParsers = new Dictionary<Type, Func<string, Task<object>>>();
+        public IAssetLoader AssetLoader { get; }
 
-        public FormLoader(IBitmapLoader bitmapLoader = null)
+        public FormLoader(IAssetLoader assetLoader = null)
         {
-            BitmapLoader = bitmapLoader ?? new BitmapLoader();
+            AssetLoader = assetLoader ?? new AssetLoader();
 
             WithTypesFrom(typeof(FormLoader).Assembly);
-            _attributeParsers[typeof(Bitmap)] = LoadBitmap;
+            _attributeParsers[typeof(AssetSource)] = LoadAsset;
         }
 
         public FormLoader WithTypesFrom(params Assembly[] assemblies)
@@ -37,21 +38,25 @@ namespace LayItOut.Loaders
             return this;
         }
 
+        public Task<Form> LoadForm(Stream stream) => LoadForm(new StreamReader(stream));
+        public Task<Form> LoadForm(TextReader reader) => DeserializeForm(XDocument.Load(reader).Root);
 
-        public Form LoadForm(Stream stream) => LoadForm(new StreamReader(stream));
-        public Form LoadForm(TextReader reader) => DeserializeForm(XDocument.Load(reader).Root);
+        public Task<IReadOnlyList<Form>> LoadForms(Stream stream) => LoadForms(new StreamReader(stream));
 
-        public IEnumerable<Form> LoadForms(Stream stream) => LoadForms(new StreamReader(stream));
-
-        public IEnumerable<Form> LoadForms(TextReader reader)
+        public async Task<IReadOnlyList<Form>> LoadForms(TextReader reader)
         {
             var root = XDocument.Load(reader).Root;
             if (root?.Name.LocalName != "Forms")
                 throw new InvalidOperationException($"Expected 'Forms' element, but got '{root?.Name.LocalName}'");
-            return root.Elements().Select(DeserializeForm);
+
+            var results = new List<Form>();
+            foreach (var element in root.Elements())
+                results.Add(await DeserializeForm(element));
+
+            return results;
         }
 
-        private Form DeserializeForm(XElement root)
+        private async Task<Form> DeserializeForm(XElement root)
         {
             if (root.Name.LocalName != "Form")
                 throw new InvalidOperationException($"Expected '{nameof(Form)}' element, but got '{root.Name.LocalName}'");
@@ -60,10 +65,10 @@ namespace LayItOut.Loaders
             if (content.Length != 1)
                 throw new InvalidOperationException($"Expected '{nameof(Form)}' element with 1 element, got {content.Length}");
 
-            return new Form(Deserialize(content.Single()));
+            return new Form(await Deserialize(content.Single()));
         }
 
-        private IComponent Deserialize(XElement element)
+        private async Task<IComponent> Deserialize(XElement element)
         {
             var type = Resolve(element.Name);
             var item = (IComponent)Activator.CreateInstance(type);
@@ -72,17 +77,18 @@ namespace LayItOut.Loaders
                 var prop = type.GetProperty(attribute.Name.LocalName);
                 if (prop == null)
                     throw new InvalidOperationException($"Property '{attribute.Name.LocalName}' does not exists on '{type}'");
-                prop.SetValue(item, DeserializeAttribute(prop.PropertyType, attribute.Value));
+                prop.SetValue(item, await DeserializeAttribute(prop.PropertyType, attribute.Value));
             }
 
             switch (item)
             {
                 case IContainer container:
                     foreach (var component in element.Elements().Select(Deserialize))
-                        container.AddComponent(component);
+                        container.AddComponent(await component);
                     break;
                 case IWrappingComponent containerElement:
-                    containerElement.Inner = element.Elements().Select(Deserialize).SingleOrDefault();
+                    var task = element.Elements().Select(Deserialize).SingleOrDefault();
+                    containerElement.Inner = task != null ? await task : null;
                     break;
                 default:
                     if (element.Elements().Any()) throw new InvalidOperationException($"Type '{type}' is not a container, so should not have any inner-elements");
@@ -99,19 +105,19 @@ namespace LayItOut.Loaders
             throw new InvalidOperationException($"Unable to parse element '{type.LocalName}' - no corresponding type were registered");
         }
 
-        private object DeserializeAttribute(Type targetType, string value)
+        private async Task<object> DeserializeAttribute(Type targetType, string value)
         {
             if (_attributeParsers.TryGetValue(targetType, out var parser))
-                return parser(value);
+                return await parser(value);
             if (targetType.IsEnum)
                 return Enum.Parse(targetType, value.Trim(), true);
             return Convert.ChangeType(value, targetType);
         }
-        private object LoadBitmap(string src) => BitmapLoader.Load(src);
+        private async Task<object> LoadAsset(string src) => await AssetLoader.LoadAsync(src);
 
         public void Dispose()
         {
-            BitmapLoader.Dispose();
+            AssetLoader.Dispose();
         }
     }
 }

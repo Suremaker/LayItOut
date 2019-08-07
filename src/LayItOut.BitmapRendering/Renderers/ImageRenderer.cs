@@ -7,9 +7,9 @@ namespace LayItOut.BitmapRendering.Renderers
     {
         protected override void OnRender(BitmapRendererContext ctx, LayItOut.Components.Image component)
         {
-            if (component.Src == null)
+            if (component.Src.IsNone)
                 return;
-            ctx.Graphics.DrawImage(component.Src, component.ImageLayout, component.ImageSourceRegion, GraphicsUnit.Pixel);
+            ctx.Graphics.DrawImage(ctx.GetBitmap(component.Src), component.ImageLayout, component.ImageSourceRegion, GraphicsUnit.Pixel);
         }
     }
 }

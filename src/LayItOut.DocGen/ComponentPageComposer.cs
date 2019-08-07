@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Component = LayItOut.Components.Component;
 
 namespace LayItOut.DocGen
@@ -17,7 +18,7 @@ namespace LayItOut.DocGen
             _typesFileLink = typesFileLink;
         }
 
-        public void Compose()
+        public async Task Compose()
         {
             var components = typeof(Component).Assembly
                 .GetTypes()
@@ -33,7 +34,7 @@ namespace LayItOut.DocGen
                 writer.WriteHeader(type.Name);
                 writer.WriteDescription(type.GetCustomAttribute<DescriptionAttribute>());
 
-                EmbedLongDescription(type, writer);
+                await EmbedLongDescription(type, writer);
 
                 writer.WriteTable(new[] { "Member", "Type", "Description" }, ReadMembers(type));
             }
@@ -41,11 +42,11 @@ namespace LayItOut.DocGen
             File.WriteAllText("man\\Components.md", writer.ToString());
         }
 
-        private void EmbedLongDescription(Type type, PageWriter writer)
+        private async Task EmbedLongDescription(Type type, PageWriter writer)
         {
             var file = $"{AppContext.BaseDirectory}\\components\\{type.Name}.md";
             if (File.Exists(file))
-                writer.WriteLine("**Sample usage:**").WriteLine().WriteLine(new MarkdownCompiler(file).Compile());
+                writer.WriteLine("**Sample usage:**").WriteLine().WriteLine(await new MarkdownCompiler(file).Compile());
         }
 
         private IEnumerable<string[]> ReadMembers(Type type)

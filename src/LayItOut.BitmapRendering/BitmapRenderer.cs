@@ -10,10 +10,12 @@ namespace LayItOut.BitmapRendering
 {
     public class BitmapRenderer : Renderer<BitmapRendererContext>
     {
+        private readonly bool _disposeFontResolver;
         public BitmapFontResolver FontResolver { get; }
 
         public BitmapRenderer(BitmapFontResolver fontResolver = null)
         {
+            _disposeFontResolver = fontResolver == null;
             FontResolver = fontResolver ?? new BitmapFontResolver();
             RegisterRenderer(new PanelRenderer());
             RegisterRenderer(new TextRenderer<Link>());
@@ -27,9 +29,10 @@ namespace LayItOut.BitmapRendering
         {
             options = options ?? BitmapRendererOptions.Default;
 
+            using (var localBitmapCache = new BitmapCache())
             using (var g = CreateGraphics(target, options))
             {
-                var context = new BitmapRendererContext(g, FontResolver);
+                var context = CreateContext(g, localBitmapCache);
                 form.LayOut(target.Size, context);
                 Render(context, form.Content);
             }
@@ -39,15 +42,24 @@ namespace LayItOut.BitmapRendering
         {
             options = options ?? BitmapRendererOptions.Default;
 
-            using (var refBmp = new Bitmap(1, 1))
-            using (var refGraphics = CreateGraphics(refBmp, options))
-                form.LayOut(new Size(int.MaxValue, int.MaxValue), new BitmapRendererContext(refGraphics, FontResolver));
+            using (var localBitmapCache = new BitmapCache())
+            {
+                using (var refBmp = new Bitmap(1, 1))
+                using (var refGraphics = CreateGraphics(refBmp, options))
+                    form.LayOut(new Size(int.MaxValue, int.MaxValue), CreateContext(refGraphics, localBitmapCache));
 
-            var bitmap = new Bitmap(form.Content.DesiredSize.Width, form.Content.DesiredSize.Height, PixelFormat.Format32bppArgb);
-            using (var graphics = CreateGraphics(bitmap, options))
-                Render(new BitmapRendererContext(graphics, FontResolver), form.Content);
+                var bitmap = new Bitmap(form.Content.DesiredSize.Width, form.Content.DesiredSize.Height,
+                    PixelFormat.Format32bppArgb);
+                using (var graphics = CreateGraphics(bitmap, options))
+                    Render(CreateContext(graphics, localBitmapCache), form.Content);
 
-            return bitmap;
+                return bitmap;
+            }
+        }
+
+        private BitmapRendererContext CreateContext(Graphics graphics, BitmapCache localBitmapCache)
+        {
+            return new BitmapRendererContext(graphics, FontResolver, localBitmapCache);
         }
 
         private Graphics CreateGraphics(Bitmap target, BitmapRendererOptions options)
@@ -60,6 +72,13 @@ namespace LayItOut.BitmapRendering
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             options.ConfigureGraphics?.Invoke(g);
             return g;
+        }
+
+        public override void Dispose()
+        {
+            if (_disposeFontResolver)
+                FontResolver.Dispose();
+            base.Dispose();
         }
     }
 }

@@ -1,13 +1,11 @@
-﻿using System.Collections.Concurrent;
-using LayItOut.Attributes;
+﻿using LayItOut.Attributes;
+using LayItOut.Caching;
 using PdfSharp.Drawing;
 
 namespace LayItOut.PdfRendering
 {
-    public class PdfFontResolver
+    public class PdfFontResolver : CachingResolver<FontInfo, XFont>
     {
-        private readonly ConcurrentDictionary<FontInfo, XFont> _cache = new ConcurrentDictionary<FontInfo, XFont>();
-
-        public XFont Resolve(FontInfo font) => _cache.GetOrAdd(font, i => new XFont(i.Family, i.Size, i.Style.ToXFontStyle()));
+        protected override XFont Create(FontInfo i) => new XFont(i.Family, i.Size, i.Style.ToXFontStyle());
     }
 }
