@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -111,7 +112,7 @@ namespace LayItOut.Loaders
                 return await parser(value);
             if (targetType.IsEnum)
                 return Enum.Parse(targetType, value.Trim(), true);
-            return Convert.ChangeType(value, targetType);
+            return Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
         }
         private async Task<object> LoadAsset(string src) => await AssetLoader.LoadAsync(src);
 

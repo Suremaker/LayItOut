@@ -5,13 +5,18 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using LayItOut.Components;
 using Component = LayItOut.Components.Component;
+using IComponent = LayItOut.Components.IComponent;
+using IContainer = LayItOut.Components.IContainer;
 
 namespace LayItOut.DocGen
 {
     class ComponentPageComposer
     {
         private readonly string _typesFileLink;
+
+        private static readonly Type[] Interfaces = new[] { typeof(IContainer), typeof(IWrappingComponent), typeof(IComponent) };
 
         public ComponentPageComposer(string typesFileLink)
         {
@@ -24,23 +29,41 @@ namespace LayItOut.DocGen
                 .GetTypes()
                 .Where(t => typeof(Component).IsAssignableFrom(t) && !t.IsAbstract)
                 .OrderBy(t => t.Name)
+                .GroupBy(GetInterface)
+                .OrderByDescending(x => Array.IndexOf(Interfaces, x.Key))
                 .ToArray();
 
             var writer = new PageWriter();
-            writer.WriteTableOfContent(components.Select(x => x.Name));
-
-            foreach (var type in components)
+            foreach (var group in components)
             {
-                writer.WriteHeader(type.Name);
-                writer.WriteDescription(type.GetCustomAttribute<DescriptionAttribute>());
-
-                await EmbedLongDescription(type, writer);
-
-                writer.WriteTable(new[] { "Member", "Type", "Description", "Default value" }, ReadMembers(type));
+                writer.WriteLine($"* {group.Key.Name}");
+                writer.WriteTableOfContent(group.Select(x => x.Name), 1);
             }
 
+            foreach (var group in components)
+            {
+                writer.WriteHeader(group.Key.Name, 2);
+                writer.WriteDescription(group.Key.GetCustomAttribute<DescriptionAttribute>());
+                writer.WriteLine();
+
+                foreach (var type in group)
+                {
+                    writer.WriteHeader(type.Name, 3);
+                    writer.WriteLine($"Implements: `{GetInterface(type).Name}`").WriteLine();
+                    writer.WriteDescription(type.GetCustomAttribute<DescriptionAttribute>());
+
+                    await EmbedLongDescription(type, writer);
+
+                    writer.WriteHeader($"{type.Name} members", 3);
+
+                    writer.WriteTable(new[] { "Member", "Type", "Default value", "Description" }, ReadMembers(type));
+                }
+
+            }
             File.WriteAllText("man\\Components.md", writer.ToString());
         }
+
+        private Type GetInterface(Type type) => Interfaces.First(i => i.IsAssignableFrom(type));
 
         private async Task EmbedLongDescription(Type type, PageWriter writer)
         {
@@ -58,8 +81,8 @@ namespace LayItOut.DocGen
                 {
                     p.Name,
                     LinkType(p.PropertyType),
-                    p.GetCustomAttribute<DescriptionAttribute>()?.Description,
-                    GetPropertyDefaultValue(p, instance)
+                    GetPropertyDefaultValue(p, instance),
+                    p.GetCustomAttribute<DescriptionAttribute>()?.Description
                 });
         }
 
@@ -71,7 +94,7 @@ namespace LayItOut.DocGen
         private string LinkType(Type type)
         {
             if (type.Assembly == typeof(Component).Assembly)
-                return $"[{type.FullName}]({_typesFileLink}#{PageWriter.ToAnchor(type.Name)})";
+                return $"[{type.Name}]({_typesFileLink}#{PageWriter.ToAnchor(type.Name)})";
             return type.FullName;
         }
     }

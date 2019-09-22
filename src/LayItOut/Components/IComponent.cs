@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using LayItOut.Attributes;
 using LayItOut.Rendering;
 
 namespace LayItOut.Components
 {
+    [Description("Basic interface describing any component.")]
     public interface IComponent
     {
         void Measure(Size size, IRendererContext context);

@@ -21,7 +21,7 @@ namespace LayItOut.DocGen
 
             foreach (var type in types)
             {
-                writer.WriteHeader(type.Name);
+                writer.WriteHeader(type.Name, 2);
                 writer.WriteDescription(type.GetCustomAttribute<DescriptionAttribute>());
 
                 if (type.IsEnum)

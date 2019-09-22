@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace LayItOut.DocGen
         public static readonly SnippetCompiler Instance = new SnippetCompiler();
         private SnippetCompiler()
         {
-            _loader = new FormLoader();
+            _loader = new FormLoader(new AssetLoader(null, name => File.ReadAllBytesAsync($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}{name}")));
             _renderer = new BitmapRenderer();
         }
 

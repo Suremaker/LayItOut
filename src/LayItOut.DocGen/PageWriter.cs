@@ -9,27 +9,22 @@ namespace LayItOut.DocGen
     {
         private readonly StringBuilder _builder = new StringBuilder();
 
-        public PageWriter WriteTableOfContent(IEnumerable<string> names)
+        public PageWriter WriteTableOfContent(IEnumerable<string> names, int level = 0)
         {
-            _builder.AppendLine();
             foreach (var name in names)
             {
                 var link = ToAnchor(name);
+                for (int i = 0; i < level; ++i)
+                    _builder.Append("  ");
                 _builder.AppendLine($"* [{name}](#{link})");
             }
             _builder.AppendLine();
             return this;
         }
 
-        public PageWriter WriteHeader(string title)
+        public PageWriter WriteHeader(string title, int level)
         {
-            _builder.AppendLine($"## {title}").AppendLine();
-            return this;
-        }
-
-        public PageWriter WriteTitle(string title)
-        {
-            _builder.AppendLine($"# {title}").AppendLine();
+            _builder.AppendLine($"{new string('#', level)} {title}").AppendLine();
             return this;
         }
 

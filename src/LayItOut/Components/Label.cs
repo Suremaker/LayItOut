@@ -22,7 +22,7 @@ namespace LayItOut.Components
         public bool TextContinuation { get; set; }
         [Description("Text alignment within component dimensions.")]
         public TextAlignment TextAlignment { get; set; }
-        [Description("Line height multiplier.")]
+        [Description("Line height multiplier, where 1.0 is a default size.")]
         public float LineHeight { get; set; } = 1;
         public TextLayout TextLayout { get; private set; }
         public TextMeasure TextMeasure { get; private set; }

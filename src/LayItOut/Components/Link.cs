@@ -3,15 +3,15 @@ using LayItOut.TextFormatting;
 
 namespace LayItOut.Components
 {
-    [Description("A link component allowing to include text in the layout with **Href** metadata.")]
+    [Description("A link component allowing to include text in the layout with **Uri** metadata.")]
     public class Link : Label
     {
         [Description("Link reference.")]
-        public string Href { get; set; }
+        public string Uri { get; set; }
 
         protected override TextMetadata GetTextMetadata()
         {
-            return new TextMetadata(Font, TextColor, LineHeight) { LinkHref = Href };
+            return new TextMetadata(Font, TextColor, LineHeight) { LinkHref = Uri };
         }
     }
 }
