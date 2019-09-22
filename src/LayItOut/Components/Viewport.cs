@@ -7,6 +7,7 @@ using LayItOut.Rendering;
 
 namespace LayItOut.Components
 {
+    [Description("Allows rendering a part of a bigger component in the smaller container.")]
     public class Viewport : Component, IWrappingComponent
     {
         [Description("Allows to clip the inner component from left,right,top and bottom directions")]

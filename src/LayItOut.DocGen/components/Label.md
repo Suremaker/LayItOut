@@ -22,8 +22,10 @@ The `LineHeight` allow to control height of the line, where `1.0` is default fon
 ```!SNIPPET
 <Form>
   <VBox Width="300">
-    <Label LineHeight="1.2" Font="Calibri;20" TextColor="green" Text="Hello friend, what's a beautiful day today, don't you agree?" />
-	<Label LineHeight="0.8" Font="Calibri;20" TextColor="blue" Text="Hello friend, what's a beautiful day today, don't you agree?" />
+    <Label LineHeight="1.2" Font="Calibri;20" TextColor="green"
+      Text="Hello friend, what's a beautiful day today, don't you agree?" />
+    <Label LineHeight="0.8" Font="Calibri;20" TextColor="blue"
+      Text="Hello friend, what's a beautiful day today, don't you agree?" />
   </VBox>
 </Form>
 ```
