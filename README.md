@@ -16,7 +16,7 @@ Features:
   * text components, including composition of text having different fonts / sizes,
   * images,
   * panels with colored background and/or borders, including rounded borders,
-  * containers such as Stack, VBox, HBox allowing to arrange components accordingly,
+  * containers such as Stack, VBox, HBox, Viewport allowing to arrange components accordingly,
 * Ability to create forms programmatically or load it from XML,
 * Renderers:
   * rendering form into bitmaps using `LayItOut.BitmapRendering` package,
