@@ -34,17 +34,6 @@ If it is bigger than required size, it will lay the components as is:
 </Form>
 ```
 
-The `ContentAlignment` allows to control horizontal alignment of the components, allowing to align them right as well:
-```!SNIPPET
-<Form>
-  <HBox Width="200" Height="80" ContentAlignment="right" >
-    <Panel Width="50" Height="50" BackgroundColor="red" />
-    <Panel Width="30" Height="30" BackgroundColor="green" />
-    <Panel Width="40" Height="40" BackgroundColor="blue" />
-  </HBox>
-</Form>
-```
-
 It honors components with `unlimited size`, distributing it evenly between all of them:
 ```!SNIPPET
 <Form>

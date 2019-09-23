@@ -9,9 +9,6 @@ namespace LayItOut.Components
     [Description("A container that will lay-out it's children horizontally, one next to the other.\n\nWhen measured, it will take a size to fit all it's children.")]
     public class HBox : Container
     {
-        [Description("Specifies how the block of child components should be aligned horizontally if together their total width is smaller than container width.")]
-        public HorizontalAlignment ContentAlignment { get; set; }
-
         protected override Size OnMeasure(Size size, IRendererContext context)
         {
             var result = Size.Empty;
@@ -64,7 +61,7 @@ namespace LayItOut.Components
 
             if (unlimited > 0)
                 return (Size.Empty, SizeUnit.Distribute(Math.Max(0,remaining), unlimited));
-            return (ContentAlignment.GetShift(remaining), Array.Empty<int>());
+            return (Size.Empty, Array.Empty<int>());
         }
     }
 }

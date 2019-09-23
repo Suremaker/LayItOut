@@ -62,59 +62,13 @@ namespace LayItOut.Tests.Components
             c3.Layout.ShouldBe(new Rectangle(5 + 15 + 15, 5, 0, 100));
         }
 
-        [Theory]
-        [InlineData(HorizontalAlignment.Center)]
-        [InlineData(HorizontalAlignment.Left)]
-        [InlineData(HorizontalAlignment.Right)]
-        public void Arrange_should_use_ContentAlignment_to_layout_children_if_they_are_not_taking_whole_space(HorizontalAlignment alignment)
-        {
-            var area = new Rectangle(5, 5, 100, 100);
-            var box = new HBox { Width = 100, ContentAlignment = alignment };
-            var c1 = new Component { Width = 20, Height = 100 };
-            var c2 = new Component { Width = 20, Height = 100 };
-            var c3 = new Component { Width = 20, Height = 100 };
-            box.AddComponent(c1);
-            box.AddComponent(c2);
-            box.AddComponent(c3);
-
-            box.Measure(area.Size, TestRendererContext.Instance);
-            box.Arrange(area);
-            var totalChildrenWidth = box.GetChildren().Sum(x => x.DesiredSize.Width);
-            var remainingWidth = area.Width - totalChildrenWidth;
-
-            var shiftX = alignment == HorizontalAlignment.Center
-                ? remainingWidth / 2
-                : (alignment == HorizontalAlignment.Right ? remainingWidth : 0);
-            var shift = new Size(shiftX, 0);
-
-            c1.Layout.ShouldBe(new Rectangle(area.Location + shift, c1.DesiredSize));
-            c2.Layout.ShouldBe(new Rectangle(new Point(c1.Layout.Right, area.Top), c2.DesiredSize));
-            c3.Layout.ShouldBe(new Rectangle(new Point(c2.Layout.Right, area.Top), c3.DesiredSize));
-        }
-
-        [Theory]
-        [InlineData(HorizontalAlignment.Center)]
-        [InlineData(HorizontalAlignment.Left)]
-        [InlineData(HorizontalAlignment.Right)]
-        public void Arrange_should_ignore_ContentAlignment_if_children_are_taking_the_whole_space(HorizontalAlignment alignment)
-        {
-            var area = new Rectangle(5, 5, 100, 100);
-            var box = new HBox { Width = 100, ContentAlignment = alignment };
-            var c1 = new Component { Width = 120, Height = 110 };
-            box.AddComponent(c1);
-
-            box.Measure(area.Size, TestRendererContext.Instance);
-            box.Arrange(area);
-            c1.Layout.ShouldBe(area);
-        }
-
         [Fact]
         public void Arrange_should_layout_items_honoring_their_desired_size()
         {
             var area = new Rectangle(5, 5, 100, 100);
-            var box = new HBox { Width = 100};
+            var box = new HBox { Width = 100 };
             var c1 = new Component { Width = 40, Height = 100 };
-            var c2 = new TestableComponent { Width = SizeUnit.Unlimited, Height = 100,OnMeasureCallback = _=>new Size(50,100)};
+            var c2 = new TestableComponent { Width = SizeUnit.Unlimited, Height = 100, OnMeasureCallback = _ => new Size(50, 100) };
             var c3 = new Component { Width = 40, Height = 100 };
             box.AddComponent(c1);
             box.AddComponent(c2);
@@ -122,22 +76,18 @@ namespace LayItOut.Tests.Components
 
             box.Measure(area.Size, TestRendererContext.Instance);
             box.Arrange(area);
-            c1.Layout.ShouldBe(new Rectangle(5,5,40,100));
-            c2.Layout.ShouldBe(new Rectangle(45,5,50,100));
-            c3.Layout.ShouldBe(new Rectangle(95,5,10,100));
+            c1.Layout.ShouldBe(new Rectangle(5, 5, 40, 100));
+            c2.Layout.ShouldBe(new Rectangle(45, 5, 50, 100));
+            c3.Layout.ShouldBe(new Rectangle(95, 5, 10, 100));
         }
 
-        [Theory]
-        [InlineData(HorizontalAlignment.Center)]
-        [InlineData(HorizontalAlignment.Left)]
-        [InlineData(HorizontalAlignment.Right)]
-        public void Arrange_should_distribute_remaining_width_between_components_with_unlimited_width_ignoring_ContentAlignment(HorizontalAlignment alignment)
+        [Fact]
+        public void Arrange_should_distribute_remaining_width_between_components_with_unlimited_width()
         {
             var area = new Rectangle(5, 5, 100, 100);
 
             var box = new HBox
             {
-                ContentAlignment = alignment,
                 Width = 100
             };
             var c1 = new FixedMeasureComponent(20, 100) { Width = SizeUnit.Unlimited };

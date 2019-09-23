@@ -34,17 +34,6 @@ If it is bigger than required size, it will lay the components as is:
 </Form>
 ```
 
-The `ContentAlignment` allows to control vertical alignment of the components, allowing to align them bottom as well:
-```!SNIPPET
-<Form>
-  <VBox Width="80" Height="200" ContentAlignment="bottom" >
-    <Panel Width="50" Height="50" BackgroundColor="red" />
-    <Panel Width="30" Height="30" BackgroundColor="green" />
-    <Panel Width="40" Height="40" BackgroundColor="blue" />
-  </VBox>
-</Form>
-```
-
 It honors components with `unlimited size`, distributing it evenly between all of them:
 ```!SNIPPET
 <Form>
