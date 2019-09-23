@@ -8,7 +8,7 @@
 |LayItOut.BitmapRendering|[![NuGet Badge](https://buildstats.info/nuget/LayItOut.BitmapRendering?includePreReleases=true)](https://www.nuget.org/packages/LayItOut.BitmapRendering/)|
 
 Library allowing to:
-* design forms containing text, images, panels using abolute or relative positioning and sizing,
+* design forms containing text, images, panels using absolute or relative positioning and sizing,
 * render forms to bitmap or PDF document.
 
 Features:
